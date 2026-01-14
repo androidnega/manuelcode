@@ -1,0 +1,22 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Prevent access to sensitive files
+<FilesMatch "\.(sql|log|md)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Route /dashboard/* requests to dashboard router
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^dashboard/(.*)$ dashboard/router.php?route=$1 [L,QSA]
+
+# Route /dashboard to dashboard router (empty route)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^dashboard/?$ dashboard/router.php?route= [L,QSA]
+
+# Standard directory index
+DirectoryIndex index.php index.html
+

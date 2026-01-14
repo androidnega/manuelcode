@@ -1,0 +1,21 @@
+{
+  "name": "ManuelCode",
+  "short_name": "ManuelCode",
+  "description": "Professional Software Engineer specializing in full-stack development, custom web applications, mobile solutions, and innovative software architecture.",
+  "icons": [
+    {
+      "src": "assets/favi/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/favi/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#2D3E50",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/"
+}

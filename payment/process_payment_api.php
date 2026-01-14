@@ -1,0 +1,253 @@
+<?php
+session_start();
+include '../includes/db.php';
+include '../includes/coupon_helper.php';
+include '../config/payment_config.php';
+
+header('Content-Type: application/json');
+
+// Get JSON input
+$input = json_decode(file_get_contents('php://input'), true);
+
+if (!$input || !isset($input['product_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Product ID is required']);
+    exit;
+}
+
+$product_id = (int)$input['product_id'];
+$is_guest = isset($input['is_guest']) && $input['is_guest'] === 'true';
+$coupon_data = $input['coupon_data'] ?? null;
+
+try {
+    // Get product details
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ? AND status = 'active'");
+    $stmt->execute([$product_id]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$product) {
+        echo json_encode(['success' => false, 'message' => 'Product not found']);
+        exit;
+    }
+    
+    if ($is_guest) {
+        // Handle guest payment
+        if (!isset($_SESSION['guest_data'])) {
+            echo json_encode(['success' => false, 'message' => 'Guest data not found']);
+            exit;
+        }
+        
+        $guest_data = $_SESSION['guest_data'];
+        $email = $guest_data['email'];
+        $name = $guest_data['name'];
+        $phone = $guest_data['phone'] ?? '';
+        
+        // Generate unique payment reference
+        $reference = generatePaymentReference('GUEST_' . time());
+        
+        // Create pending guest order record (this will be updated to 'paid' only after successful payment)
+        $stmt = $pdo->prepare("
+            INSERT INTO guest_orders (email, name, phone, product_id, total_amount, reference, status, created_at) 
+            VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())
+        ");
+        $stmt->execute([$email, $name, $phone, $product_id, $product['price'], $reference]);
+        
+    } else {
+        // Handle logged-in user payment
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(['success' => false, 'message' => 'User not logged in']);
+            exit;
+        }
+        
+        $user_id = $_SESSION['user_id'];
+        
+        // Get user details
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$user) {
+            echo json_encode(['success' => false, 'message' => 'User not found']);
+            exit;
+        }
+        
+        // Generate unique user ID if not exists
+        if (empty($user['user_id'])) {
+            $unique_user_id = generateUniqueUserId();
+            $stmt = $pdo->prepare("UPDATE users SET user_id = ? WHERE id = ?");
+            $stmt->execute([$unique_user_id, $user_id]);
+            $user['user_id'] = $unique_user_id;
+        }
+        
+        // Check if user already purchased this product
+        $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM purchases WHERE user_id = ? AND product_id = ? AND status = 'paid'");
+        $stmt->execute([$user_id, $product_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result['count'] > 0) {
+            echo json_encode(['success' => false, 'message' => 'You have already purchased this product']);
+            exit;
+        }
+        
+        $email = $user['email'];
+        $name = $user['name'];
+        $phone = $user['phone'] ?? '';
+        
+        // Generate unique payment reference
+        $reference = generatePaymentReference($user['user_id']);
+        
+        // Create pending purchase record (this will be updated to 'paid' only after successful payment)
+        $stmt = $pdo->prepare("
+            INSERT INTO purchases (user_id, product_id, payment_ref, reference, amount, status, created_at) 
+            VALUES (?, ?, ?, ?, ?, 'pending', NOW())
+        ");
+        $stmt->execute([$user_id, $product_id, $reference, $reference, $product['price']]);
+    }
+    
+    // Calculate final amount with coupon discount
+    $final_amount = $product['price'];
+    $discount_amount = 0;
+    $coupon_id = null;
+    
+    // FIXED: Check for discounted amount in session first
+    if ($is_guest && isset($_SESSION['guest_discounted_amount'])) {
+        $final_amount = $_SESSION['guest_discounted_amount'];
+        $discount_amount = $_SESSION['guest_discount_amount'] ?? 0;
+        error_log("Using guest discounted amount from session: {$final_amount}");
+    } elseif (!$is_guest && isset($_SESSION['user_discounted_amount'])) {
+        $final_amount = $_SESSION['user_discounted_amount'];
+        $discount_amount = $_SESSION['user_discount_amount'] ?? 0;
+        error_log("Using user discounted amount from session: {$final_amount}");
+    } elseif ($coupon_data) {
+        try {
+            // Use CouponManager for validation
+            $couponManager = new CouponManager($pdo);
+            $validation_result = $couponManager->validateCoupon($coupon_data['code'], $user_id ?? null, $product_id, $product['price']);
+            
+            if ($validation_result['valid']) {
+                $coupon = $validation_result['coupon'];
+                $discount_amount = $couponManager->calculateDiscount($coupon, $product['price']);
+                $final_amount = $product['price'] - $discount_amount;
+                $coupon_id = $coupon['id'];
+                
+                // Ensure final amount doesn't go below 0
+                $final_amount = max(0, $final_amount);
+            } else {
+                // Return error message if coupon is invalid
+                echo json_encode(['success' => false, 'message' => $validation_result['message']]);
+                exit;
+            }
+        } catch (Exception $e) {
+            error_log("Coupon processing error: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Error processing coupon']);
+            exit;
+        }
+    }
+    
+    // Check if product becomes free after discount
+    if ($final_amount <= 0) {
+        // Handle free product download directly
+        if ($is_guest) {
+            // For guests, redirect to login for free products
+            echo json_encode(['success' => false, 'message' => 'Free products require login. Please login to download.']);
+            exit;
+        } else {
+            // For logged-in users, create a free purchase record
+            $stmt = $pdo->prepare("
+                UPDATE purchases SET status = 'paid', amount = 0, updated_at = NOW() 
+                WHERE user_id = ? AND product_id = ? AND status = 'pending'
+            ");
+            $stmt->execute([$user_id, $product_id]);
+            
+            echo json_encode([
+                'success' => true,
+                'redirect_url' => '../download_free_product.php?id=' . $product_id,
+                'message' => 'Free product added to your purchases!'
+            ]);
+            exit;
+        }
+    }
+    
+    // FIXED: Initialize Paystack payment with proper integer conversion
+    // Convert to kobo (smallest currency unit) and ensure it's an integer
+    $amount = 0;
+    
+    if (is_numeric($final_amount) && $final_amount > 0) {
+        $amount = intval(round($final_amount * 100));
+        error_log("Amount conversion: Final amount: {$final_amount}, Kobo: {$amount}");
+    } else {
+        error_log("Invalid final amount: " . var_export($final_amount, true));
+        echo json_encode(['success' => false, 'message' => 'Invalid amount for payment']);
+        exit;
+    }
+    
+    $data = [
+        'amount' => $amount,
+        'email' => $email,
+        'reference' => $reference,
+        'callback_url' => $is_guest ? PAYSTACK_GUEST_CALLBACK_URL : PAYSTACK_CALLBACK_URL,
+        'metadata' => [
+            'user_id' => $user_id ?? null,
+            'product_id' => $product_id,
+            'is_guest' => $is_guest,
+            'customer_name' => $name,
+            'customer_phone' => $phone,
+            'coupon_id' => $coupon_id,
+            'discount_amount' => $discount_amount,
+            'final_amount' => $final_amount
+        ]
+    ];
+    
+    $ch = curl_init('https://api.paystack.co/transaction/initialize');
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . PAYSTACK_SECRET_KEY,
+        'Content-Type: application/json'
+    ]);
+    
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    $result = json_decode($response, true);
+    
+    if ($http_code === 200 && isset($result['status']) && $result['status'] === true) {
+        echo json_encode([
+            'success' => true,
+            'authorization_url' => $result['data']['authorization_url'],
+            'reference' => $reference,
+            'amount' => $final_amount
+        ]);
+    } else {
+        // If Paystack initialization failed, delete the pending record
+        if ($is_guest) {
+            $stmt = $pdo->prepare("DELETE FROM guest_orders WHERE reference = ?");
+            $stmt->execute([$reference]);
+        } else {
+            $stmt = $pdo->prepare("DELETE FROM purchases WHERE reference = ?");
+            $stmt->execute([$reference]);
+        }
+        
+        echo json_encode([
+            'success' => false, 
+            'message' => 'Failed to initialize payment: ' . ($result['message'] ?? 'Unknown error')
+        ]);
+    }
+    
+} catch (Exception $e) {
+    error_log("Payment initialization error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false, 
+        'message' => 'An error occurred while processing your payment. Please try again.'
+    ]);
+}
+
+function generatePaymentReference($prefix) {
+    return $prefix . '_' . time() . '_' . rand(1000, 9999);
+}
+
+function generateUniqueUserId() {
+    return 'U' . strtoupper(substr(md5(uniqid()), 0, 5));
+}
+?>

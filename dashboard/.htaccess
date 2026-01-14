@@ -1,0 +1,13 @@
+# Dashboard Directory Configuration
+DirectoryIndex router.php
+
+# Security: Prevent direct access to sensitive files
+<Files "*.sql">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>

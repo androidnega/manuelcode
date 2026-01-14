@@ -1,0 +1,49 @@
+# Error logs
+*.log
+error_log
+**/error_log
+
+# Database exports
+*.sql
+database/*.sql
+
+# Configuration files with sensitive data
+config/payment_config.php
+config/sms_config.php
+includes/db.php
+
+# Environment files
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+
+# Uploads (if you don't want to track user uploads)
+# uploads/*
+# Uncomment the line above if you want to exclude uploads
+
+# Vendor directories (if using Composer)
+vendor/
+
+# Node modules (if using npm)
+node_modules/
+
+# Build files
+dist/
+build/
+

@@ -1,0 +1,50 @@
+# Enhanced Robots.txt for ManuelCode
+# Optimized for search engine crawling
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow sensitive directories
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /database/
+Disallow: /config/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /analyst/
+Disallow: /payment/
+Disallow: /uploads/
+Disallow: /assets/docs/
+Disallow: /help/
+
+# Disallow specific file types
+Disallow: /*.sql$
+Disallow: /*.log$
+Disallow: /*.txt$
+Disallow: /*.md$
+
+# Disallow query parameters that don't add value
+Disallow: /*?*utm_*
+Disallow: /*?*ref=*
+Disallow: /*?*source=*
+
+# Allow important pages
+Allow: /index.php
+Allow: /about.php
+Allow: /services.php
+Allow: /projects.php
+Allow: /store.php
+Allow: /contact.php
+Allow: /privacy.php
+Allow: /terms.php
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://manuelcode.info/sitemap.xml
+
+# Additional sitemaps (if you have them)
+# Sitemap: https://manuelcode.info/sitemap-images.xml
+# Sitemap: https://manuelcode.info/sitemap-news.xml
