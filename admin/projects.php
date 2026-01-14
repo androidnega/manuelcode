@@ -518,7 +518,7 @@ try {
                       <div class="flex items-center justify-between">
                         <span class="text-xs text-gray-500"><?php echo date('M j, Y', strtotime($project['created_at'])); ?></span>
                         <div class="flex space-x-2">
-                          <a href="edit_project.php?id=<?php echo $project['id']; ?>" 
+                          <a href="../dashboard/edit-project?id=<?php echo $project['id']; ?>" 
                              class="text-[#F5A623] hover:text-[#d88c1b] text-sm font-medium">
                             <i class="fas fa-edit mr-1"></i>Edit
                           </a>
