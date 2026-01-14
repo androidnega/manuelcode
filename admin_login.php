@@ -21,7 +21,9 @@ $login_method = '';
 
 // If already logged in, redirect to unified dashboard
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-    header('Location: dashboard/');
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+    header('Location: ' . $protocol . '://' . $host . '/dashboard/');
     exit;
 }
 
@@ -128,7 +130,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     unset($_SESSION['pending_is_superadmin']);
                     
                     // Redirect to unified dashboard
-                    header('Location: dashboard/');
+                    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+                    $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+                    header('Location: ' . $protocol . '://' . $host . '/dashboard/');
                     exit;
                 } else {
                     $error_message = 'Admin account not found. Please check your credentials.';
@@ -179,7 +183,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     unset($_SESSION['pending_is_superadmin']);
                     
                     // Redirect to unified dashboard
-                    header('Location: dashboard/');
+                    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+                    $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+                    header('Location: ' . $protocol . '://' . $host . '/dashboard/');
                     exit;
                 } else {
                     $error_message = 'Invalid email or password. Please try again.';

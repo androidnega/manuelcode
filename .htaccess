@@ -8,27 +8,26 @@ RewriteBase /
     Deny from all
 </FilesMatch>
 
-# Allow direct access to existing files and directories (except /admin itself)
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteCond %{REQUEST_URI} !^/admin/?$
-RewriteRule ^ - [L]
-
-# Route /admin to admin login
+# Route /admin to admin login (must be before file/directory check)
 RewriteCond %{REQUEST_URI} ^/admin/?$
 RewriteRule ^admin/?$ admin_login.php [L]
 
-# Route /login to user login (otp_login.php)
+# Route /login to user login
 RewriteCond %{REQUEST_URI} ^/login/?$
 RewriteRule ^login/?$ auth/otp_login.php [L]
-
-# Route /dashboard/* requests to dashboard router (only if not a real file)
-RewriteCond %{REQUEST_URI} ^/dashboard/(.+)$
-RewriteRule ^dashboard/(.+)$ dashboard/router.php?route=$1 [L,QSA]
 
 # Route /dashboard to dashboard router (empty route)
 RewriteCond %{REQUEST_URI} ^/dashboard/?$
 RewriteRule ^dashboard/?$ dashboard/router.php?route= [L,QSA]
+
+# Route /dashboard/* requests to dashboard router
+RewriteCond %{REQUEST_URI} ^/dashboard/(.+)$
+RewriteRule ^dashboard/(.+)$ dashboard/router.php?route=$1 [L,QSA]
+
+# Allow direct access to existing files and directories (after routing rules)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
 
 # Standard directory index
 DirectoryIndex index.php index.html
