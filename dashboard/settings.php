@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pdo->commit();
                 
                 // Redirect to logout
-                header('Location: ../auth/logout.php?deleted=1');
+                header('Location: /auth/logout.php?deleted=1');
                 exit;
                 
             } catch (Exception $e) {

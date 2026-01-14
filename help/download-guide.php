@@ -134,7 +134,7 @@ $user_unique_id = $stmt->fetch(PDO::FETCH_ASSOC)['user_id'] ?? 'N/A';
                 </div>
                 <div class="flex items-center space-x-4">
                     <span class="text-sm text-gray-600">Welcome, <?php echo htmlspecialchars($user_name); ?></span>
-                    <a href="../auth/logout.php" class="text-red-600 hover:text-red-800">
+                    <a href="/auth/logout.php" class="text-red-600 hover:text-red-800">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
                 </div>

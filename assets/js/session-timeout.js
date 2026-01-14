@@ -199,13 +199,11 @@ class SessionTimeoutManager {
             this.hideWarning();
         }
         
-        // Determine logout URL based on current page
-        let logoutUrl = 'logout.php';
+        // Determine logout URL based on current page - use absolute paths
+        let logoutUrl = '/auth/logout.php';
         
         if (window.location.pathname.includes('/admin/')) {
-            logoutUrl = 'auth/logout.php';
-        } else if (window.location.pathname.includes('/dashboard/')) {
-            logoutUrl = '../auth/logout.php';
+            logoutUrl = '/admin/auth/logout.php';
         }
         
         // Redirect to logout
