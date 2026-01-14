@@ -498,7 +498,7 @@ $regular_admins = count(array_filter($all_accounts, function($account) { return 
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                     <div class="flex space-x-2">
-                                                        <a href="edit_admin.php?id=<?php echo $admin['id']; ?>&type=<?php echo $admin['role']; ?>" 
+                                                        <a href="../dashboard/edit-admin?id=<?php echo $admin['id']; ?>&type=<?php echo $admin['role']; ?>" 
                                                            class="text-blue-600 hover:text-blue-900">
                                                             <i class="fas fa-edit mr-1"></i>Edit
                                                         </a>
