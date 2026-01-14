@@ -411,20 +411,35 @@ function verify_otp($phone, $email, $otp_code, $purpose = 'login') {
             error_log("OTP Record - ID: {$otp_record['id']}, Code: {$otp_record['otp_code']}, Email: '{$otp_record['email']}', Used: {$otp_record['used']}, Expires: {$otp_record['expires_at']}");
         }
         
-        // Now check for the specific OTP - match phone, otp_code, purpose, and email (or empty email)
-        // Use COALESCE to handle NULL emails as empty strings
-        $stmt = $pdo->prepare("
-            SELECT id FROM otp_codes 
-            WHERE phone = ? 
-            AND COALESCE(email, '') = ? 
-            AND otp_code = ? 
-            AND purpose = ? 
-            AND used = FALSE 
-            AND expires_at > NOW()
-            ORDER BY created_at DESC LIMIT 1
-        ");
+        // For user_login, match by phone and code only (email can vary)
+        // For other purposes, match by phone, email, and code
+        if ($purpose === 'user_login') {
+            // Match by phone and code only for user login
+            $stmt = $pdo->prepare("
+                SELECT id FROM otp_codes 
+                WHERE phone = ? 
+                AND otp_code = ? 
+                AND purpose = ? 
+                AND used = FALSE 
+                AND expires_at > NOW()
+                ORDER BY created_at DESC LIMIT 1
+            ");
+            $stmt->execute([$normalized_phone, $otp_code, $purpose]);
+        } else {
+            // For other purposes, match by phone, email, and code
+            $stmt = $pdo->prepare("
+                SELECT id FROM otp_codes 
+                WHERE phone = ? 
+                AND COALESCE(email, '') = ? 
+                AND otp_code = ? 
+                AND purpose = ? 
+                AND used = FALSE 
+                AND expires_at > NOW()
+                ORDER BY created_at DESC LIMIT 1
+            ");
+            $stmt->execute([$normalized_phone, $email, $otp_code, $purpose]);
+        }
         
-        $stmt->execute([$normalized_phone, $email, $otp_code, $purpose]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($result) {

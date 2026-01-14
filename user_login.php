@@ -104,14 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Debug logging
             error_log("User Login OTP Verify - Phone: $normalized_phone, Email: '$email', OTP: $otp_code, Purpose: user_login");
             
-            // Verify OTP - try with email first, then try with empty email if that fails
+            // Verify OTP - for user_login, email is not required for matching
             $verified = verify_otp($normalized_phone, $email, $otp_code, 'user_login');
-            
-            // If verification failed and email exists, try with empty email (in case OTP was stored with empty email)
-            if (!$verified && !empty($email)) {
-                error_log("OTP verification failed with email, trying with empty email");
-                $verified = verify_otp($normalized_phone, '', $otp_code, 'user_login');
-            }
             
             if ($verified) {
                 // Get user details
@@ -154,13 +148,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            background: #667eea;
+            background: #f5f5f5;
             min-height: 100vh;
         }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+    <div class="bg-white rounded-2xl shadow-lg w-full max-w-sm p-6">
         <div class="text-center mb-8">
             <div class="mb-4">
                 <i class="fas fa-user-circle text-4xl text-blue-600 mb-2"></i>
@@ -228,9 +222,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         <?php endif; ?>
 
-        <div class="mt-6 text-center border-t pt-6">
-            <a href="admin" class="text-gray-600 hover:text-gray-800">Admin Login</a>
-        </div>
     </div>
 </body>
 </html>
