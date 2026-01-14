@@ -212,8 +212,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="flex items-center justify-center min-h-screen p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
         <div class="text-center mb-8">
+            <div class="mb-4">
+                <i class="fas fa-shield-alt text-4xl text-purple-600 mb-2"></i>
+            </div>
             <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Login</h1>
-            <p class="text-gray-600">Sign in to access the admin panel</p>
+            <p class="text-gray-600">Administrator & Super Admin Access</p>
         </div>
 
         <?php if ($error_message): ?>
