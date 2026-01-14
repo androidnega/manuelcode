@@ -17,9 +17,9 @@ RewriteRule ^ - [L]
 RewriteCond %{REQUEST_URI} ^/admin/?$
 RewriteRule ^admin/?$ admin_login.php [L]
 
-# Route /login to user login
+# Route /login to user login (otp_login.php)
 RewriteCond %{REQUEST_URI} ^/login/?$
-RewriteRule ^login/?$ user_login.php [L]
+RewriteRule ^login/?$ auth/otp_login.php [L]
 
 # Route /dashboard/* requests to dashboard router (only if not a real file)
 RewriteCond %{REQUEST_URI} ^/dashboard/(.+)$

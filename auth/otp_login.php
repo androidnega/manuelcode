@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                              unset($_SESSION['otp_phone'], $_SESSION['otp_purpose']);
                              
                              error_log("OTP Login: User logged in successfully, redirecting to dashboard");
-                             header('Location: ../dashboard/');
+                             header('Location: ../../dashboard/');
                              exit;
                          } else {
                              $error_message = 'User account not found or incomplete. Please contact support.';
@@ -206,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                              unset($_SESSION['otp_phone'], $_SESSION['otp_purpose']);
                              
                              error_log("OTP Login: User registration completed, redirecting to dashboard");
-                             header('Location: ../dashboard/');
+                             header('Location: ../../dashboard/');
                              exit;
                          } else {
                              $error_message = 'Failed to update account. Please try again.';
@@ -240,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                              unset($_SESSION['otp_phone'], $_SESSION['otp_purpose']);
                              
                              error_log("OTP Login: New user created successfully, redirecting to dashboard");
-                             header('Location: ../dashboard/');
+                             header('Location: ../../dashboard/');
                              exit;
                          } else {
                              $error_message = 'Failed to create account. Please try again.';
