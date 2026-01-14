@@ -526,7 +526,7 @@ $missing_guest_receipts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                             <?php echo htmlspecialchars($purchase['receipt_number']); ?>
                                                         </span>
-                                                        <a href="view_receipt.php?id=<?php echo $purchase['id']; ?>&type=user" 
+                                                        <a href="../dashboard/view-receipt?id=<?php echo $purchase['id']; ?>&type=user" 
                                                            class="text-blue-600 hover:text-blue-800 text-xs">
                                                             <i class="fas fa-eye"></i> View
                                                         </a>
@@ -604,7 +604,7 @@ $missing_guest_receipts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                             <?php echo htmlspecialchars($order['receipt_number']); ?>
                                                         </span>
-                                                        <a href="view_receipt.php?id=<?php echo $order['id']; ?>&type=guest" 
+                                                        <a href="../dashboard/view-receipt?id=<?php echo $order['id']; ?>&type=guest" 
                                                            class="text-blue-600 hover:text-blue-800 text-xs">
                                                             <i class="fas fa-eye"></i> View
                                                         </a>

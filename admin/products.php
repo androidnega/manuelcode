@@ -436,7 +436,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6">
           <div class="mb-4 lg:mb-0">
           </div>
-          <a href="add_product.php" class="mobile-button bg-[#4CAF50] text-white px-4 py-2 rounded-lg hover:bg-[#45a049] transition-colors inline-flex items-center">
+          <a href="../dashboard/add-product" class="mobile-button bg-[#4CAF50] text-white px-4 py-2 rounded-lg hover:bg-[#45a049] transition-colors inline-flex items-center">
             <i class="fas fa-plus mr-2"></i>
             Add New Product
           </a>
@@ -513,7 +513,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <i class="fas fa-box-open text-4xl <?php echo $dark_mode ? 'text-gray-500' : 'text-gray-400'; ?> mb-4"></i>
             <h3 class="text-xl font-semibold <?php echo $dark_mode ? 'text-gray-300' : 'text-gray-600'; ?> mb-2">No Products Found</h3>
             <p class="<?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> mb-4">Start by adding your first product to the store.</p>
-            <a href="add_product.php" class="bg-[#4CAF50] text-white px-6 py-2 rounded-lg hover:bg-[#45a049] transition-colors">
+            <a href="../dashboard/add-product" class="bg-[#4CAF50] text-white px-6 py-2 rounded-lg hover:bg-[#45a049] transition-colors">
               <i class="fas fa-plus mr-2"></i>Add Product
             </a>
           </div>
@@ -566,7 +566,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       </td>
                       <td class="px-3 lg:px-6 py-4 text-sm font-medium" data-label="Actions">
                         <div class="flex flex-col space-y-1">
-                          <a href="edit_product.php?id=<?php echo $product['id']; ?>" class="text-[#F5A623] hover:text-[#d88c1b] inline-flex items-center">
+                          <a href="../dashboard/edit-product?id=<?php echo $product['id']; ?>" class="text-[#F5A623] hover:text-[#d88c1b] inline-flex items-center">
                             <i class="fas fa-edit mr-1"></i>Edit
                           </a>
                           <a href="?delete=<?php echo $product['id']; ?>" onclick="return confirm('Are you sure you want to delete this product?')" class="text-red-600 hover:text-red-900 inline-flex items-center">

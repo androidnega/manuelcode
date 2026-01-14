@@ -393,7 +393,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="view_receipt.php?purchase_id=<?php echo $purchase['id']; ?>" 
+                                            <a href="../dashboard/view-receipt?purchase_id=<?php echo $purchase['id']; ?>" 
                                                class="text-blue-600 hover:text-blue-900">
                                                 <i class="fas fa-receipt mr-1"></i>View Receipt
                                             </a>

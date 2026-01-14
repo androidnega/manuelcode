@@ -375,7 +375,7 @@ try {
         <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6">
           <div class="mb-4 lg:mb-0">
           </div>
-          <a href="add_project.php" class="mobile-button bg-[#4CAF50] text-white px-4 py-2 rounded-lg hover:bg-[#45a049] transition-colors inline-flex items-center">
+          <a href="../dashboard/add-project" class="mobile-button bg-[#4CAF50] text-white px-4 py-2 rounded-lg hover:bg-[#45a049] transition-colors inline-flex items-center">
             <i class="fas fa-plus mr-2"></i>
             Add New Project
           </a>
@@ -457,7 +457,7 @@ try {
             <div class="text-center py-12">
               <i class="fas fa-project-diagram text-4xl text-gray-300 mb-4"></i>
               <p class="text-gray-500 mb-4">No projects found.</p>
-              <a href="add_project.php" class="bg-[#F5A623] text-white px-6 py-2 rounded-lg hover:bg-[#d88c1b] transition-colors">
+              <a href="../dashboard/add-project" class="bg-[#F5A623] text-white px-6 py-2 rounded-lg hover:bg-[#d88c1b] transition-colors">
                 <i class="fas fa-plus mr-2"></i>Add First Project
               </a>
             </div>
@@ -618,7 +618,7 @@ try {
                       </td>
                       <td class="px-3 lg:px-6 py-4 whitespace-nowrap text-sm font-medium actions-container">
                         <div class="flex flex-col space-y-1">
-                          <a href="edit_project.php?id=<?php echo $project['id']; ?>" class="text-[#F5A623] hover:text-[#d88c1b] inline-flex items-center">
+                          <a href="../dashboard/edit-project?id=<?php echo $project['id']; ?>" class="text-[#F5A623] hover:text-[#d88c1b] inline-flex items-center">
                             <i class="fas fa-edit mr-1"></i>Edit
                           </a>
                           
@@ -651,7 +651,7 @@ try {
             <div class="text-center py-12">
               <i class="fas fa-project-diagram text-4xl text-gray-300 mb-4"></i>
               <p class="text-gray-500 mb-4">No projects found.</p>
-              <a href="add_project.php" class="bg-[#F5A623] text-white px-6 py-2 rounded-lg hover:bg-[#d88c1b] transition-colors">
+              <a href="../dashboard/add-project" class="bg-[#F5A623] text-white px-6 py-2 rounded-lg hover:bg-[#d88c1b] transition-colors">
                 <i class="fas fa-plus mr-2"></i>Add First Project
               </a>
             </div>

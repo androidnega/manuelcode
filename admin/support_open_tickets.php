@@ -254,7 +254,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <?php echo date('M j, Y', strtotime($ticket['created_at'])); ?>
                                                 </td>
                                                 <td class="px-3 lg:px-4 py-3 text-sm">
-                                                    <a href="view_ticket.php?id=<?php echo $ticket['id']; ?>" 
+                                                    <a href="../dashboard/view-ticket?id=<?php echo $ticket['id']; ?>" 
                                                        class="text-blue-600 hover:text-blue-800 font-medium text-sm">
                                                         Reply
                                                     </a>

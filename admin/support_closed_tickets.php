@@ -228,7 +228,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 </td>
                                                 <td class="px-3 lg:px-4 py-3 text-sm">
                                                     <div class="flex space-x-2">
-                                                        <a href="view_ticket.php?id=<?php echo $ticket['id']; ?>" 
+                                                        <a href="../dashboard/view-ticket?id=<?php echo $ticket['id']; ?>" 
                                                            class="text-blue-600 hover:text-blue-800 font-medium text-sm">
                                                             View
                                                         </a>

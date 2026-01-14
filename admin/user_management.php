@@ -370,7 +370,7 @@ $recent_activity = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
-                                            <a href="view_user.php?id=<?php echo $user['id']; ?>" 
+                                            <a href="../dashboard/view-user?id=<?php echo $user['id']; ?>" 
                                                class="text-blue-600 hover:text-blue-900">
                                                 <i class="fas fa-eye"></i> View
                                             </a>

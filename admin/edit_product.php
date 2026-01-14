@@ -385,7 +385,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </button>
                 
                 <?php if ($edit_mode): ?>
-                  <a href="edit_product.php" class="bg-gray-600 text-white px-6 py-2 rounded-md hover:bg-gray-700 transition-colors">
+                  <a href="../dashboard/products" class="bg-gray-600 text-white px-6 py-2 rounded-md hover:bg-gray-700 transition-colors">
                     <i class="fas fa-plus mr-2"></i>
                     Add New Product
                   </a>
@@ -441,7 +441,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </td>
                         <td class="py-4 px-4">
                           <div class="flex space-x-2">
-                            <a href="edit_product.php?id=<?php echo $prod['id']; ?>" 
+                            <a href="../dashboard/edit-product?id=<?php echo $prod['id']; ?>" 
                                class="text-blue-600 hover:text-blue-800">
                               <i class="fas fa-edit"></i>
                             </a>
