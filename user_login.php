@@ -155,12 +155,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
     <div class="bg-white rounded-2xl shadow-lg w-full max-w-sm p-6">
-        <div class="text-center mb-8">
-            <div class="mb-4">
-                <i class="fas fa-user-circle text-4xl text-blue-600 mb-2"></i>
+        <div class="text-center mb-6">
+            <div class="mb-3">
+                <i class="fas fa-user-circle text-3xl text-blue-600"></i>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">User Login</h1>
-            <p class="text-gray-600">Sign in to your account</p>
+            <h1 class="text-2xl font-bold text-gray-800 mb-1">User Login</h1>
+            <p class="text-sm text-gray-600">Sign in to your account</p>
         </div>
 
         <?php if ($error_message): ?>
