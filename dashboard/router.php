@@ -101,7 +101,10 @@ if (!isset($routes[$route])) {
 if ($auth_type === 'admin') {
     // Check admin authentication
     if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-        header('Location: ../admin');
+        // Use absolute path to avoid redirect loops
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+        header('Location: ' . $protocol . '://' . $host . '/admin');
         exit;
     }
     
@@ -109,10 +112,16 @@ if ($auth_type === 'admin') {
     if ($required_role !== null) {
         $user_role = $_SESSION['user_role'] ?? '';
         if ($required_role === 'superadmin' && $user_role !== 'superadmin') {
-            header('Location: ../admin?error=access_denied');
+            // Use absolute path to avoid redirect loops
+            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+            $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+            header('Location: ' . $protocol . '://' . $host . '/admin?error=access_denied');
             exit;
         } elseif ($required_role === 'admin' && $user_role !== 'admin' && $user_role !== 'superadmin') {
-            header('Location: ../admin?error=access_denied');
+            // Use absolute path to avoid redirect loops
+            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+            $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+            header('Location: ' . $protocol . '://' . $host . '/admin?error=access_denied');
             exit;
         } elseif ($required_role === 'support' && $user_role !== 'support') {
             header('Location: ../admin?error=access_denied&type=support');
@@ -122,7 +131,10 @@ if ($auth_type === 'admin') {
 } elseif ($auth_type === 'user') {
     // Check user authentication
     if (!isset($_SESSION['user_id'])) {
-        header('Location: ../login');
+        // Use absolute path to avoid redirect loops
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+        header('Location: ' . $protocol . '://' . $host . '/login');
         exit;
     }
 }

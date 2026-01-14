@@ -10,18 +10,24 @@ include '../includes/session_manager.php';
 // Check if admin is logged in
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     // Not logged in, redirect to login page
-    header('Location: ../../admin');
+    // Use absolute path to avoid redirect loops
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+    header('Location: ' . $protocol . '://' . $host . '/admin');
     exit();
 }
 
 // Include admin configuration
 include 'config.php';
 
-// Check user role - ensure this is a regular admin, not super admin
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    // This is not a regular admin, redirect to appropriate login
+// Check user role - allow both admin and superadmin
+if (!isset($_SESSION['user_role']) || ($_SESSION['user_role'] !== 'admin' && $_SESSION['user_role'] !== 'superadmin')) {
+    // This is not an admin or superadmin, redirect to appropriate login
     $sessionManager->destroySession();
-    header('Location: ../../admin?error=invalid_role');
+    // Use absolute path to avoid redirect loops
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+    header('Location: ' . $protocol . '://' . $host . '/admin?error=invalid_role');
     exit();
 }
 
