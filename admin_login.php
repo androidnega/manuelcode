@@ -19,16 +19,10 @@ $email = '';
 $phone = '';
 $login_method = '';
 
-// If already logged in, redirect to appropriate dashboard
+// If already logged in, redirect to unified dashboard
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-    $user_role = $_SESSION['user_role'] ?? 'admin';
-    if ($user_role === 'superadmin') {
-        header('Location: dashboard/superadmin');
-        exit;
-    } else {
-        header('Location: dashboard/admin-dashboard');
-        exit;
-    }
+    header('Location: dashboard/');
+    exit;
 }
 
 // Handle timeout message
@@ -133,12 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     unset($_SESSION['pending_admin_phone']);
                     unset($_SESSION['pending_is_superadmin']);
                     
-                    // Redirect based on role
-                    if ($is_superadmin) {
-                        header('Location: dashboard/superadmin');
-                    } else {
-                        header('Location: dashboard/admin-dashboard');
-                    }
+                    // Redirect to unified dashboard
+                    header('Location: dashboard/');
                     exit;
                 } else {
                     $error_message = 'Admin account not found. Please check your credentials.';
@@ -188,12 +178,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     unset($_SESSION['pending_admin_email']);
                     unset($_SESSION['pending_is_superadmin']);
                     
-                    // Redirect based on role
-                    if ($is_superadmin) {
-                        header('Location: dashboard/superadmin');
-                    } else {
-                        header('Location: dashboard/admin-dashboard');
-                    }
+                    // Redirect to unified dashboard
+                    header('Location: dashboard/');
                     exit;
                 } else {
                     $error_message = 'Invalid email or password. Please try again.';

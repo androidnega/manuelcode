@@ -1,5 +1,5 @@
 <?php
-header('Location: ../dashboard/admin-dashboard');
+header('Location: ../dashboard/');
 exit;
 ?>
 

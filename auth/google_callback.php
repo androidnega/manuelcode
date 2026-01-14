@@ -71,7 +71,7 @@ if (isset($_GET['code'])) {
         
         // Redirect based on user role
         if ($user['role'] === 'admin') {
-            header("Location: ../dashboard/admin-dashboard");
+            header("Location: ../dashboard/");
         } else {
             header("Location: ../dashboard/");
         }

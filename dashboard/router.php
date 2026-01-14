@@ -78,11 +78,17 @@ $routes = [
     'support-dashboard-old' => ['admin/support_dashboard.php', 'support', 'support'], // Legacy route
 ];
 
-// Handle empty route (dashboard root)
+// Handle empty route (dashboard root) - Unified dashboard
 if (empty($route)) {
-    // Check if user is admin or regular user and redirect accordingly
+    // Check if user is admin/superadmin or regular user and show appropriate dashboard
     if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-        $route = 'admin-dashboard';
+        $user_role = $_SESSION['user_role'] ?? 'admin';
+        // Show superadmin dashboard if superadmin, otherwise admin dashboard
+        if ($user_role === 'superadmin') {
+            $route = 'superadmin';
+        } else {
+            $route = 'admin-dashboard';
+        }
     } else {
         $route = 'index';
     }
