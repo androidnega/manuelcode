@@ -10,7 +10,7 @@ include '../includes/session_manager.php';
 // Check if admin is logged in
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     // Not logged in, redirect to login page
-    header('Location: auth/login.php');
+    header('Location: ../../admin');
     exit();
 }
 
@@ -21,7 +21,7 @@ include 'config.php';
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     // This is not a regular admin, redirect to appropriate login
     $sessionManager->destroySession();
-    header('Location: auth/login.php?error=invalid_role');
+    header('Location: ../../admin?error=invalid_role');
     exit();
 }
 

@@ -35,7 +35,7 @@ function getCurrentUser() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        header("Location: ../auth/otp_login.php");
+        header("Location: ../login");
         exit;
     }
 }

@@ -334,13 +334,13 @@ if (!$sessionManager->initSession()) {
     $current_page = basename($_SERVER['PHP_SELF']);
     
     if (strpos($current_page, 'admin') !== false) {
-        header('Location: auth/login.php?expired=1');
+        header('Location: ../admin?expired=1');
         exit;
     } elseif (strpos($current_page, 'support') !== false) {
-        header('Location: auth/support_login.php?expired=1');
+        header('Location: ../admin?expired=1&type=support');
         exit;
     } elseif (strpos($current_page, 'dashboard') !== false) {
-        header('Location: ../auth/login.php?expired=1');
+        header('Location: ../login?expired=1');
         exit;
     } else {
         // For regular pages, just continue without session

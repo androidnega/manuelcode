@@ -13,6 +13,14 @@ RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
+# Route /admin to admin login
+RewriteCond %{REQUEST_URI} ^/admin/?$
+RewriteRule ^admin/?$ admin_login.php [L]
+
+# Route /login to user login
+RewriteCond %{REQUEST_URI} ^/login/?$
+RewriteRule ^login/?$ user_login.php [L]
+
 # Route /dashboard/* requests to dashboard router (only if not a real file)
 RewriteCond %{REQUEST_URI} ^/dashboard/(.+)$
 RewriteRule ^dashboard/(.+)$ dashboard/router.php?route=$1 [L,QSA]

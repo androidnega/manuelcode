@@ -353,7 +353,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600">Already have an account?</p>
-                    <a href="auth/login.php" class="text-[#F5A623] hover:underline font-medium" id="sign-in-link">Sign in to purchase</a>
+                    <a href="login" class="text-[#F5A623] hover:underline font-medium" id="sign-in-link">Sign in to purchase</a>
                 </div>
             </div>
         </div>

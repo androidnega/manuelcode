@@ -5,6 +5,6 @@ exit;
 
 <?php
 // Redirect to admin login page
-header('Location: auth/login.php');
+header('Location: ../admin');
 exit();
 ?>

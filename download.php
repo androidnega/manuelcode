@@ -10,7 +10,7 @@ $downloadTracker = new DownloadTracker($pdo);
 
 // Check if user is logged in or has valid guest download
 if (!isset($_SESSION['user_id']) && (!isset($_GET['type']) || $_GET['type'] !== 'guest') && !isset($_GET['t'])) {
-    header('Location: auth/login.php');
+    header('Location: login');
     exit;
 }
 

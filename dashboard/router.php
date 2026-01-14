@@ -101,7 +101,7 @@ if (!isset($routes[$route])) {
 if ($auth_type === 'admin') {
     // Check admin authentication
     if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-        header('Location: ../admin/auth/login.php');
+        header('Location: ../admin');
         exit;
     }
     
@@ -109,20 +109,20 @@ if ($auth_type === 'admin') {
     if ($required_role !== null) {
         $user_role = $_SESSION['user_role'] ?? '';
         if ($required_role === 'superadmin' && $user_role !== 'superadmin') {
-            header('Location: ../admin/auth/superadmin_login.php?error=access_denied');
+            header('Location: ../admin?error=access_denied');
             exit;
         } elseif ($required_role === 'admin' && $user_role !== 'admin' && $user_role !== 'superadmin') {
-            header('Location: ../admin/auth/login.php?error=access_denied');
+            header('Location: ../admin?error=access_denied');
             exit;
         } elseif ($required_role === 'support' && $user_role !== 'support') {
-            header('Location: ../admin/auth/support_login.php?error=access_denied');
+            header('Location: ../admin?error=access_denied&type=support');
             exit;
         }
     }
 } elseif ($auth_type === 'user') {
     // Check user authentication
     if (!isset($_SESSION['user_id'])) {
-        header('Location: ../auth/otp_login.php');
+        header('Location: ../login');
         exit;
     }
 }

@@ -373,10 +373,10 @@ include 'includes/header.php';
            <!-- Free Product for Guests - Require Login -->
            <div class="mt-4 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
              <i class="fas fa-info-circle mr-2"></i>
-             This is a free product! Please <a href="auth/login.php" class="underline font-semibold">login</a> to download it.
+             This is a free product! Please <a href="login" class="underline font-semibold">login</a> to download it.
            </div>
            <div class="mt-4 space-y-3">
-             <a href="auth/login.php" class="block w-full bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors text-center">
+             <a href="login" class="block w-full bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors text-center">
                <i class="fas fa-sign-in-alt mr-2"></i>Login to Download
              </a>
              <div class="text-center">
@@ -391,7 +391,7 @@ include 'includes/header.php';
            <div class="mt-4 space-y-3">
              <div class="p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded">
                <i class="fas fa-info-circle mr-2"></i>
-               Please <a href="auth/login.php" class="underline">login</a> to purchase this product.
+               Please <a href="login" class="underline">login</a> to purchase this product.
              </div>
              <div class="text-center">
                <span class="text-gray-500 text-sm">or</span>

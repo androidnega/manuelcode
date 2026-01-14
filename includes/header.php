@@ -1568,7 +1568,7 @@ window.addEventListener('beforeunload', function() {
               Logout
             </a>
           <?php else: ?>
-            <a href="auth/login.php" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center font-medium">
+            <a href="login" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center font-medium">
               <i class="fas fa-sign-in-alt mr-2"></i>
               Login
             </a>
