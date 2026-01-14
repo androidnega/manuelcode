@@ -90,18 +90,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Normalize phone number
             $normalized_phone = normalize_phone_number($phone);
             
-            // Get user email for OTP verification
+            // Get user email for OTP verification (use same email that was used when storing OTP)
             try {
                 $stmt = $pdo->prepare("SELECT email FROM users WHERE phone = ?");
                 $stmt->execute([$normalized_phone]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                // Use email from database, or empty string if not set (must match what was stored)
                 $email = $user['email'] ?? '';
             } catch (Exception $e) {
                 $email = '';
             }
             
-            // Verify OTP
+            // Debug logging
+            error_log("User Login OTP Verify - Phone: $normalized_phone, Email: '$email', OTP: $otp_code, Purpose: user_login");
+            
+            // Verify OTP - try with email first, then try with empty email if that fails
             $verified = verify_otp($normalized_phone, $email, $otp_code, 'user_login');
+            
+            // If verification failed and email exists, try with empty email (in case OTP was stored with empty email)
+            if (!$verified && !empty($email)) {
+                error_log("OTP verification failed with email, trying with empty email");
+                $verified = verify_otp($normalized_phone, '', $otp_code, 'user_login');
+            }
             
             if ($verified) {
                 // Get user details
@@ -138,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login - ManuelCode</title>
+    <title>User Login - ManuelCode | Sign In to Your Account</title>
     <link rel="icon" type="image/svg+xml" href="assets/favi/login-favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

@@ -393,26 +393,34 @@ function verify_otp($phone, $email, $otp_code, $purpose = 'login') {
         // Debug: Log verification parameters
         error_log("OTP Verify - Phone: $normalized_phone, Email: $email, OTP: $otp_code, Purpose: $purpose");
         
+        // Normalize email to empty string if null (for consistent matching)
+        $email = $email ?? '';
+        
         // First, let's check what OTPs exist for this phone/email
         $stmt = $pdo->prepare("
-            SELECT id, otp_code, used, expires_at, created_at 
+            SELECT id, otp_code, used, expires_at, created_at, email
             FROM otp_codes 
-            WHERE phone = ? AND email = ? AND purpose = ?
+            WHERE phone = ? AND purpose = ?
             ORDER BY created_at DESC
         ");
-        $stmt->execute([$normalized_phone, $email, $purpose]);
+        $stmt->execute([$normalized_phone, $purpose]);
         $all_otps = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        error_log("OTP Debug - Found " . count($all_otps) . " OTP records for this phone/email");
+        error_log("OTP Debug - Found " . count($all_otps) . " OTP records for this phone");
         foreach ($all_otps as $otp_record) {
-            error_log("OTP Record - ID: {$otp_record['id']}, Code: {$otp_record['otp_code']}, Used: {$otp_record['used']}, Expires: {$otp_record['expires_at']}");
+            error_log("OTP Record - ID: {$otp_record['id']}, Code: {$otp_record['otp_code']}, Email: '{$otp_record['email']}', Used: {$otp_record['used']}, Expires: {$otp_record['expires_at']}");
         }
         
-        // Now check for the specific OTP
+        // Now check for the specific OTP - match phone, otp_code, purpose, and email (or empty email)
+        // Use COALESCE to handle NULL emails as empty strings
         $stmt = $pdo->prepare("
             SELECT id FROM otp_codes 
-            WHERE phone = ? AND email = ? AND otp_code = ? AND purpose = ? 
-            AND used = FALSE AND expires_at > NOW()
+            WHERE phone = ? 
+            AND COALESCE(email, '') = ? 
+            AND otp_code = ? 
+            AND purpose = ? 
+            AND used = FALSE 
+            AND expires_at > NOW()
             ORDER BY created_at DESC LIMIT 1
         ");
         
@@ -428,11 +436,14 @@ function verify_otp($phone, $email, $otp_code, $purpose = 'login') {
             return true;
         }
         
-        // If not found, let's check why
+        // If not found, let's check why - try with COALESCE for email matching
         $stmt = $pdo->prepare("
-            SELECT id, used, expires_at 
+            SELECT id, used, expires_at, COALESCE(email, '') as email
             FROM otp_codes 
-            WHERE phone = ? AND email = ? AND otp_code = ? AND purpose = ?
+            WHERE phone = ? 
+            AND COALESCE(email, '') = ? 
+            AND otp_code = ? 
+            AND purpose = ?
             ORDER BY created_at DESC LIMIT 1
         ");
         $stmt->execute([$normalized_phone, $email, $otp_code, $purpose]);
