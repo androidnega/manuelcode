@@ -31,7 +31,7 @@ $routes = [
     
     // Admin Dashboard Routes
     'admin' => ['admin/dashboard.php', 'admin', 'admin'],
-    // admin-dashboard route removed - use unified /dashboard instead
+    'admin-dashboard' => ['admin/dashboard.php', 'admin', 'admin'], // Legacy alias for backward compatibility
     'purchase-management' => ['admin/purchase_management.php', 'admin', 'admin'],
     'products' => ['admin/products.php', 'admin', 'admin'],
     'add-product' => ['admin/add_product.php', 'admin', 'admin'],
