@@ -309,40 +309,40 @@ try {
       
           <div class="flex-1 overflow-y-auto scrollbar-hide">
       <nav class="mt-4 px-2 pb-4">
-        <a href="dashboard.php" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
           <span class="flex-1">Dashboard</span>
         </a>
-        <a href="products.php" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/products" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-box mr-3 w-5 text-center"></i>
           <span class="flex-1">Products</span>
         </a>
-        <a href="projects.php" class="flex items-center py-3 px-4 bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/projects" class="flex items-center py-3 px-4 bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-project-diagram mr-3 w-5 text-center"></i>
           <span class="flex-1">Projects</span>
         </a>
-        <a href="orders.php" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/orders" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-shopping-cart mr-3 w-5 text-center"></i>
           <span class="flex-1">Orders</span>
         </a>
-        <a href="purchase_management.php" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/purchase-management" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-credit-card mr-3 w-5 text-center"></i>
           <span class="flex-1">Purchase Management</span>
         </a>
-        <a href="users.php" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/users" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-users mr-3 w-5 text-center"></i>
           <span class="flex-1">Users</span>
         </a>
-        <a href="reports.php" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/reports" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-chart-bar mr-3 w-5 text-center"></i>
           <span class="flex-1">Reports</span>
         </a>
-        <a href="change_password.php" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/change-password" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-key mr-3 w-5 text-center"></i>
           <span class="flex-1">Change Password</span>
         </a>
         <?php if (($_SESSION['user_role'] ?? 'user') === 'superadmin'): ?>
-        <a href="superadmin.php" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/superadmin" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-toolbox mr-3 w-5 text-center"></i>
           <span class="flex-1">Super Admin</span>
         </a>

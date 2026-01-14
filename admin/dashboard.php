@@ -62,52 +62,52 @@ $admin_stats = getAdminDashboardStats($pdo);
       
       <div class="flex-1 overflow-y-auto">
         <nav class="mt-4 px-2 pb-4 space-y-1">
-          <a href="dashboard.php" class="flex items-center py-3 px-4 bg-slate-600 rounded-lg transition-colors w-full text-white">
+          <a href="../dashboard/" class="flex items-center py-3 px-4 bg-slate-600 rounded-lg transition-colors w-full text-white">
             <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
             <span class="flex-1">Dashboard</span>
           </a>
-          <a href="products.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/products" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-box mr-3 w-5 text-center"></i>
             <span class="flex-1">Products</span>
           </a>
-          <a href="projects.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/projects" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-project-diagram mr-3 w-5 text-center"></i>
             <span class="flex-1">Projects</span>
           </a>
-          <a href="orders.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/orders" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-shopping-cart mr-3 w-5 text-center"></i>
             <span class="flex-1">Orders</span>
           </a>
-          <a href="purchase_management.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/purchase-management" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-credit-card mr-3 w-5 text-center"></i>
             <span class="flex-1">Purchase Management</span>
           </a>
-          <a href="users.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/users" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-users mr-3 w-5 text-center"></i>
             <span class="flex-1">Users</span>
           </a>
-          <a href="reports.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/reports" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-chart-bar mr-3 w-5 text-center"></i>
             <span class="flex-1">Reports</span>
           </a>
-          <a href="refunds.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/refunds-admin" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-undo mr-3 w-5 text-center"></i>
             <span class="flex-1">Refunds</span>
           </a>
-          <a href="change_password.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/change-password" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-key mr-3 w-5 text-center"></i>
             <span class="flex-1">Change Password</span>
           </a>
-          <a href="support_management.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/support-management" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-headset mr-3 w-5 text-center"></i>
             <span class="flex-1">Support Management</span>
           </a>
-          <a href="generate_receipts.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/generate-receipts" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-receipt mr-3 w-5 text-center"></i>
             <span class="flex-1">Generate Receipts</span>
           </a>
           <?php if (($_SESSION['user_role'] ?? 'user') === 'superadmin'): ?>
-          <a href="superadmin.php" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
+          <a href="../dashboard/superadmin" class="flex items-center py-3 px-4 hover:bg-slate-600 rounded-lg transition-colors w-full text-slate-200 hover:text-white">
             <i class="fas fa-toolbox mr-3 w-5 text-center"></i>
             <span class="flex-1">Super Admin</span>
           </a>
@@ -274,7 +274,7 @@ $admin_stats = getAdminDashboardStats($pdo);
               <h3 class="text-base font-semibold text-emerald-800 ml-3">Products</h3>
             </div>
             <p class="mb-4 text-emerald-700 text-xs lg:text-sm">Manage your digital products and software solutions.</p>
-            <a href="add_product.php" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white px-3 py-2 rounded-lg hover:from-emerald-600 hover:to-green-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
+            <a href="../dashboard/add-product" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white px-3 py-2 rounded-lg hover:from-emerald-600 hover:to-green-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
               <i class="fas fa-plus mr-2"></i>
               Add Product
             </a>
@@ -289,7 +289,7 @@ $admin_stats = getAdminDashboardStats($pdo);
               <h3 class="text-base font-semibold text-sky-800 ml-3">Orders</h3>
             </div>
             <p class="mb-4 text-sky-700 text-xs lg:text-sm">View and process customer orders and payments.</p>
-            <a href="orders.php" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white px-3 py-2 rounded-lg hover:from-sky-600 hover:to-blue-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
+            <a href="../dashboard/orders" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white px-3 py-2 rounded-lg hover:from-sky-600 hover:to-blue-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
               <i class="fas fa-eye mr-2"></i>
               View Orders
             </a>
@@ -304,7 +304,7 @@ $admin_stats = getAdminDashboardStats($pdo);
               <h3 class="text-base font-semibold text-amber-800 ml-3">Projects</h3>
             </div>
             <p class="mb-4 text-amber-700 text-xs lg:text-sm">Manage your development projects and custom solutions.</p>
-            <a href="add_project.php" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-2 rounded-lg hover:from-amber-600 hover:to-orange-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
+            <a href="../dashboard/add-project" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-2 rounded-lg hover:from-amber-600 hover:to-orange-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
               <i class="fas fa-plus mr-2"></i>
               Add Project
             </a>
@@ -349,7 +349,7 @@ $admin_stats = getAdminDashboardStats($pdo);
               <h3 class="text-base font-semibold text-purple-800 ml-3">Coupons</h3>
             </div>
             <p class="mb-4 text-purple-700 text-xs lg:text-sm">Manage discount coupons and promotional codes.</p>
-            <a href="coupons.php" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-2 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
+            <a href="../dashboard/coupons" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-2 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
               <i class="fas fa-cog mr-2"></i>
               Manage Coupons
             </a>
@@ -364,7 +364,7 @@ $admin_stats = getAdminDashboardStats($pdo);
               <h3 class="text-base font-semibold text-teal-800 ml-3">Quote Management</h3>
             </div>
             <p class="mb-4 text-teal-700 text-xs lg:text-sm">Manage customer quote requests and responses.</p>
-            <a href="quotes_enhanced.php" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white px-3 py-2 rounded-lg hover:from-teal-600 hover:to-cyan-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
+            <a href="../dashboard/quotes-enhanced" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white px-3 py-2 rounded-lg hover:from-teal-600 hover:to-cyan-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
               <i class="fas fa-cogs mr-2"></i>
               Quote Management
             </a>

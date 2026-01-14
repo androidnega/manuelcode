@@ -330,7 +330,7 @@ $missing_guest_receipts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
                             <a href="digital_signature.php" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors">
                                 <i class="fas fa-signature mr-2"></i>Digital Signature
                             </a>
-                            <a href="dashboard.php" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                            <a href="../dashboard/" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
                                 <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
                             </a>
                         </div>
@@ -442,7 +442,7 @@ $missing_guest_receipts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
                             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
                                 <i class="fas fa-search mr-2"></i>Search
                             </button>
-                            <a href="generate_receipts.php" class="ml-2 bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">
+                            <a href="../dashboard/generate-receipts" class="ml-2 bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">
                                 <i class="fas fa-times mr-2"></i>Clear
                             </a>
                         </div>
