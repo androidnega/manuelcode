@@ -270,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="text-xs text-gray-500">ID: <?php echo htmlspecialchars($user['user_id'] ?? 'N/A'); ?></p>
                     </div>
                 </div>
-                <a href="../auth/logout.php" class="flex items-center py-2 px-4 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                <a href="/auth/logout.php" class="flex items-center py-2 px-4 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                     <i class="fas fa-sign-out-alt mr-3"></i>
                     <span>Logout</span>
                 </a>
@@ -522,7 +522,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Confirm logout
         function confirmLogout() {
             if (confirm('Are you sure you want to logout?')) {
-                window.location.href = '../auth/logout.php';
+                window.location.href = '/auth/logout.php';
             }
         }
 

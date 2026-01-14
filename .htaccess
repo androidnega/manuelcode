@@ -20,8 +20,9 @@ RewriteRule ^login/?$ auth/otp_login.php [L]
 RewriteCond %{REQUEST_URI} ^/dashboard/?$
 RewriteRule ^dashboard/?$ dashboard/router.php?route= [L,QSA]
 
-# Route /dashboard/* requests to dashboard router
+# Route /dashboard/* requests to dashboard router (exclude auth directory)
 RewriteCond %{REQUEST_URI} ^/dashboard/(.+)$
+RewriteCond %{REQUEST_URI} !^/dashboard/auth/
 RewriteRule ^dashboard/(.+)$ dashboard/router.php?route=$1 [L,QSA]
 
 # Allow direct access to existing files and directories (after routing rules)

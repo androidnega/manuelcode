@@ -254,7 +254,7 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
              <p class="text-xs <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?>">ID: <?php echo htmlspecialchars($user_unique_id); ?></p>
            </div>
          </div>
-         <a href="../auth/logout.php" class="flex items-center py-2 px-4 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+         <a href="/auth/logout.php" class="flex items-center py-2 px-4 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
            <i class="fas fa-sign-out-alt mr-3"></i>
            <span>Logout</span>
          </a>
