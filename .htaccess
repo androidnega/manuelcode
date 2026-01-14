@@ -8,9 +8,10 @@ RewriteBase /
     Deny from all
 </FilesMatch>
 
-# Allow direct access to existing files and directories
+# Allow direct access to existing files and directories (except /admin itself)
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !^/admin/?$
 RewriteRule ^ - [L]
 
 # Route /admin to admin login

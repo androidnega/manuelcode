@@ -4,7 +4,7 @@ $route = $_SESSION['current_route'] ?? $_GLOBALS['current_route'] ?? '';
 if (!empty($route)) {
     // Map route to page name for highlighting
     $route_to_page = [
-        'admin-dashboard' => 'dashboard',
+        'admin' => 'dashboard',
         'purchase-management' => 'purchase_management',
         'refunds-admin' => 'refunds',
         'change-password' => 'change_password',
