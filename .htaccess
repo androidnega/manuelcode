@@ -20,6 +20,10 @@ RewriteRule ^login/?$ auth/otp_login.php [L]
 RewriteCond %{REQUEST_URI} ^/dashboard/?$
 RewriteRule ^dashboard/?$ dashboard/router.php?route= [L,QSA]
 
+# Redirect /dashboard/auth/logout.php to /auth/logout.php (backward compatibility)
+RewriteCond %{REQUEST_URI} ^/dashboard/auth/logout\.php
+RewriteRule ^dashboard/auth/logout\.php$ /auth/logout.php [R=301,L]
+
 # Route /dashboard/* requests to dashboard router (exclude auth directory)
 RewriteCond %{REQUEST_URI} ^/dashboard/(.+)$
 RewriteCond %{REQUEST_URI} !^/dashboard/auth/
