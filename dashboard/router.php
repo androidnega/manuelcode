@@ -104,6 +104,14 @@ if (!isset($routes[$route])) {
 // Get route configuration
 [$file_path, $auth_type, $required_role] = $routes[$route];
 
+// Handle redirect routes
+if ($file_path === 'REDIRECT_TO_DASHBOARD') {
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+    header('Location: ' . $protocol . '://' . $host . '/dashboard');
+    exit;
+}
+
 // Check authentication based on route type
 if ($auth_type === 'admin') {
     // Check admin authentication
