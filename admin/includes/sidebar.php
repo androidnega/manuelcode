@@ -35,7 +35,7 @@ $dark_mode = $_SESSION['dark_mode'] ?? false;
     
     <div class="flex-1 overflow-y-auto scrollbar-hide">
       <nav class="mt-4 px-4 pb-4">
-        <a href="../dashboard/admin-dashboard" class="flex items-center py-3 px-4 <?php echo $current_page === 'dashboard' ? ($dark_mode ? 'bg-blue-900 text-blue-300' : 'bg-blue-600 text-white') : ($dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-200 hover:bg-gray-600'); ?> rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/" class="flex items-center py-3 px-4 <?php echo $current_page === 'dashboard' ? ($dark_mode ? 'bg-blue-900 text-blue-300' : 'bg-blue-600 text-white') : ($dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-200 hover:bg-gray-600'); ?> rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
           <span class="flex-1">Dashboard</span>
         </a>
@@ -116,7 +116,7 @@ $dark_mode = $_SESSION['dark_mode'] ?? false;
           <a href="../index.php" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
             <i class="fas fa-home mr-2"></i>Home
           </a>
-          <a href="../dashboard/admin-dashboard" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
+          <a href="../dashboard/" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
             <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
           </a>
         </div>

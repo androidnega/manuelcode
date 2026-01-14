@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_role'] = 'admin'; // Regular admin role
                     $_SESSION['admin_login_time'] = time();
                     
-                    header('Location: ../../dashboard/admin-dashboard');
+                    header('Location: ../../dashboard/');
                     exit;
                 } else {
                     $error_message = 'Admin account not found. Please check your credentials.';
@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_role'] = 'admin';
                     $_SESSION['admin_login_time'] = time();
                     
-                    header('Location: ../../dashboard/admin-dashboard');
+                    header('Location: ../../dashboard/');
                     exit;
                 } else {
                     $error_message = 'Invalid email or password. Please try again.';

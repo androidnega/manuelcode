@@ -31,7 +31,8 @@ $routes = [
     
     // Admin Dashboard Routes
     'admin' => ['admin/dashboard.php', 'admin', 'admin'],
-    'admin-dashboard' => ['admin/dashboard.php', 'admin', 'admin'],
+    // Redirect admin-dashboard to unified dashboard
+    'admin-dashboard' => ['REDIRECT_TO_DASHBOARD', 'admin', 'admin'],
     'purchase-management' => ['admin/purchase_management.php', 'admin', 'admin'],
     'products' => ['admin/products.php', 'admin', 'admin'],
     'add-product' => ['admin/add_product.php', 'admin', 'admin'],
@@ -87,7 +88,7 @@ if (empty($route)) {
         if ($user_role === 'superadmin') {
             $route = 'superadmin';
         } else {
-            $route = 'admin-dashboard';
+            $route = 'admin';
         }
     } else {
         $route = 'index';
