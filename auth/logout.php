@@ -10,10 +10,13 @@ $timeout = isset($_GET['timeout']) && $_GET['timeout'] == '1';
 session_destroy();
 
 // Redirect with timeout message if applicable
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+
 if ($timeout) {
-    header("Location: login.php?message=timeout");
+    header("Location: " . $protocol . "://" . $host . "/login?message=timeout");
 } else {
-    header("Location: login.php");
+    header("Location: " . $protocol . "://" . $host . "/login");
 }
 exit;
 ?>

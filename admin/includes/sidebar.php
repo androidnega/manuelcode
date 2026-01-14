@@ -92,7 +92,7 @@ $dark_mode = $_SESSION['dark_mode'] ?? false;
           <p class="text-xs <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-300'; ?>">Admin</p>
         </div>
       </div>
-      <a href="auth/logout.php" class="flex items-center py-2 px-4 <?php echo $dark_mode ? 'text-red-400 hover:bg-red-900' : 'text-red-300 hover:bg-red-800'; ?> rounded-lg transition-colors">
+      <a href="../../admin/auth/logout.php" class="flex items-center py-2 px-4 <?php echo $dark_mode ? 'text-red-400 hover:bg-red-900' : 'text-red-300 hover:bg-red-800'; ?> rounded-lg transition-colors">
         <i class="fas fa-sign-out-alt mr-3"></i>
         <span>Logout</span>
       </a>

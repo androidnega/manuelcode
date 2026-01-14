@@ -24,19 +24,22 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 // Redirect based on user role with timeout message if applicable
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+
 if ($is_superadmin) {
     // Super admin should go to super admin login page
     if ($timeout) {
-        header('Location: superadmin_login.php?message=timeout');
+        header('Location: ' . $protocol . '://' . $host . '/admin/auth/superadmin_login.php?message=timeout');
     } else {
-        header('Location: superadmin_login.php');
+        header('Location: ' . $protocol . '://' . $host . '/admin/auth/superadmin_login.php');
     }
 } else {
-    // Regular admin should go to regular admin login page
+    // Regular admin should go to admin login page
     if ($timeout) {
-        header('Location: login.php?message=timeout');
+        header('Location: ' . $protocol . '://' . $host . '/admin?message=timeout');
     } else {
-        header('Location: login.php');
+        header('Location: ' . $protocol . '://' . $host . '/admin');
     }
 }
 exit();
