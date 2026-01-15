@@ -109,7 +109,14 @@ if (empty($route)) {
 // Check if route exists
 if (!isset($routes[$route])) {
     http_response_code(404);
-    die('Page not found');
+    header('Content-Type: text/html; charset=utf-8');
+    echo '<!DOCTYPE html><html><head><title>404 - Page Not Found</title></head><body>';
+    echo '<h1>404 - Page Not Found</h1>';
+    echo '<p>The requested page "' . htmlspecialchars($route) . '" was not found.</p>';
+    echo '<p><a href="/dashboard">Go to Dashboard</a></p>';
+    echo '<p>Available routes: ' . implode(', ', array_keys($routes)) . '</p>';
+    echo '</body></html>';
+    exit;
 }
 
 // Get route configuration
