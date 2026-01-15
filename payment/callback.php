@@ -325,9 +325,14 @@ try {
     // Begin transaction for normal payment processing
     $pdo->beginTransaction();
     
-    // FIXED: Update purchase status to 'paid' only after successful verification
-    $stmt = $pdo->prepare("UPDATE purchases SET status = 'paid', updated_at = NOW() WHERE payment_ref = ?");
-    $stmt->execute([$reference]);
+    // FIXED: Update purchase status to 'paid' immediately after successful verification
+    // This ensures orders are marked as paid, not pending, in admin dashboard
+    $stmt = $pdo->prepare("UPDATE purchases SET status = 'paid', updated_at = NOW() WHERE payment_ref = ? OR reference = ?");
+    $stmt->execute([$reference, $reference]);
+    
+    // Also update any pending orders with the same reference to ensure consistency
+    $stmt = $pdo->prepare("UPDATE purchases SET status = 'paid', updated_at = NOW() WHERE (payment_ref = ? OR reference = ?) AND status = 'pending'");
+    $stmt->execute([$reference, $reference]);
     
     // FIXED: Log payment verification properly
     try {

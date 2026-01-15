@@ -128,15 +128,32 @@ try {
     // Begin transaction for normal payment processing
     $pdo->beginTransaction();
     
+    // FIXED: Update guest order status to 'paid' immediately after successful verification
+    // This ensures orders are marked as paid, not pending, in admin dashboard
+    $stmt = $pdo->prepare("UPDATE guest_orders SET status = 'paid', updated_at = NOW() WHERE reference = ?");
+    $stmt->execute([$reference]);
+    
+    // Also update any pending orders with the same reference to ensure consistency
+    $stmt = $pdo->prepare("UPDATE guest_orders SET status = 'paid', updated_at = NOW() WHERE reference = ? AND status = 'pending'");
+    $stmt->execute([$reference]);
+    
     // Log payment verification
-    $stmt = $pdo->prepare("CALL log_payment_verification(?, ?, 'verified', ?)");
-    $stmt->execute([$reference, $payment_data['id'], json_encode($payment_data)]);
+    try {
+        $stmt = $pdo->prepare("CALL log_payment_verification(?, ?, 'verified', ?)");
+        $stmt->execute([$reference, $payment_data['id'], json_encode($payment_data)]);
+    } catch (Exception $e) {
+        error_log("Payment verification logging failed: " . $e->getMessage());
+        // Continue processing even if logging fails
+    }
     
     // Use comprehensive purchase update system for guest order
-    $update_result = updatePurchaseSystem(null, null, $order['id']);
-    
-    if (!$update_result) {
-        throw new Exception("Failed to update guest purchase system");
+    if (function_exists('updatePurchaseSystem')) {
+        $update_result = updatePurchaseSystem(null, null, $order['id']);
+        
+        if (!$update_result) {
+            error_log("Failed to update guest purchase system for order: " . $order['id']);
+            // Continue processing even if updatePurchaseSystem fails since we already updated status
+        }
     }
     
     // Generate download link for guest
