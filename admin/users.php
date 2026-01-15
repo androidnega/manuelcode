@@ -1173,7 +1173,14 @@ $all_accounts = array_merge($users, $guests);
           }
         })
         .catch(error => {
-          content.innerHTML = '<div class="text-center py-8 text-red-600">Error loading user details.</div>';
+          console.error('Error loading user details:', error);
+          content.innerHTML = `
+            <div class="text-center py-8">
+              <i class="fas fa-exclamation-triangle text-2xl text-red-600 mb-2"></i>
+              <p class="text-gray-600">Error loading user details</p>
+              <p class="text-sm text-gray-500 mt-2">${error.message || 'Please try again or contact support'}</p>
+            </div>
+          `;
         });
     }
 
