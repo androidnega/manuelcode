@@ -21,6 +21,7 @@ $routes = [
     // User Dashboard Routes
     '' => ['dashboard/index.php', 'user', null],
     'index' => ['dashboard/index.php', 'user', null],
+    'index.php' => ['dashboard/index.php', 'user', null], // Direct file access redirect
     'my-purchases' => ['dashboard/my_purchases.php', 'user', null],
     'purchases' => ['dashboard/my_purchases.php', 'user', null], // Alias for compatibility
     'purchases.php' => ['dashboard/my_purchases.php', 'user', null], // Direct file access redirect
