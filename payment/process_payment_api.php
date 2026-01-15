@@ -15,8 +15,12 @@ if (!$input || !isset($input['product_id'])) {
 }
 
 $product_id = (int)$input['product_id'];
-$is_guest = isset($input['is_guest']) && $input['is_guest'] === 'true';
+// Fix: Accept both boolean and string 'true' for is_guest
+$is_guest = isset($input['is_guest']) && ($input['is_guest'] === true || $input['is_guest'] === 'true' || $input['is_guest'] === '1');
 $coupon_data = $input['coupon_data'] ?? null;
+
+// Debug logging
+error_log("Payment API - Product ID: {$product_id}, Is Guest: " . ($is_guest ? 'true' : 'false') . ", Has Guest Data: " . (isset($_SESSION['guest_data']) ? 'yes' : 'no'));
 
 try {
     // Get product details
@@ -32,7 +36,8 @@ try {
     if ($is_guest) {
         // Handle guest payment
         if (!isset($_SESSION['guest_data'])) {
-            echo json_encode(['success' => false, 'message' => 'Guest data not found']);
+            error_log("Payment API Error: Guest payment attempted but guest_data not found in session");
+            echo json_encode(['success' => false, 'message' => 'Guest data not found. Please fill in your details again.']);
             exit;
         }
         
@@ -117,11 +122,13 @@ try {
         $final_amount = $_SESSION['user_discounted_amount'];
         $discount_amount = $_SESSION['user_discount_amount'] ?? 0;
         error_log("Using user discounted amount from session: {$final_amount}");
-    } elseif ($coupon_data) {
+        } elseif ($coupon_data) {
         try {
             // Use CouponManager for validation
             $couponManager = new CouponManager($pdo);
-            $validation_result = $couponManager->validateCoupon($coupon_data['code'], $user_id ?? null, $product_id, $product['price']);
+            // Fix: Pass null for user_id when guest, otherwise pass user_id
+            $validation_user_id = $is_guest ? null : ($user_id ?? null);
+            $validation_result = $couponManager->validateCoupon($coupon_data['code'], $validation_user_id, $product_id, $product['price']);
             
             if ($validation_result['valid']) {
                 $coupon = $validation_result['coupon'];
