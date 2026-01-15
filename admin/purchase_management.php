@@ -54,8 +54,9 @@ if (isset($_POST['bulk_delete']) && isset($_POST['selected_purchases'])) {
     // Decode the JSON string to get array of purchase data
     $selected = json_decode($selected_json, true);
     
-    if (json_last_error() !== JSON_ERROR_NONE || !is_array($selected)) {
-        $error_message = "Invalid purchase data format";
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($selected) || empty($selected)) {
+        $error_message = "Invalid purchase data format or no purchases selected. JSON Error: " . json_last_error_msg();
+        error_log("Bulk delete error - JSON decode failed or empty. Error: " . json_last_error_msg() . " | Data length: " . strlen($selected_json));
     } else {
         try {
             $pdo->beginTransaction();
@@ -726,6 +727,17 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
                   echo $count > 0 ? "Successfully deleted {$count} purchase(s)!" : "Purchases deleted successfully!";
                   ?>
                 </p>
+              </div>
+            </div>
+          </div>
+        <?php endif; ?>
+
+        <?php if (isset($error_message)): ?>
+          <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-r-lg">
+            <div class="flex items-center">
+              <i class="fas fa-exclamation-circle text-red-400 mr-3"></i>
+              <div>
+                <p class="text-sm text-red-700"><?php echo htmlspecialchars($error_message); ?></p>
               </div>
             </div>
           </div>
