@@ -159,8 +159,8 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
               <!-- Main Content Area -->
         <main class="p-4 lg:p-6 overflow-hidden">
         <!-- Stats Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
-          <div class="bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700 rounded-xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 border border-slate-200">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
+          <div class="bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700 rounded-xl p-4 lg:p-6 border border-slate-200">
             <div class="flex items-center justify-between">
               <div class="flex items-center">
                 <div class="p-2 lg:p-3 bg-slate-300 bg-opacity-50 rounded-lg">
@@ -174,7 +174,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
             </div>
           </div>
           
-          <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 rounded-xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 border border-emerald-200">
+          <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 rounded-xl p-4 lg:p-6 border border-emerald-200">
             <div class="flex items-center justify-between">
               <div class="flex items-center">
                 <div class="p-2 lg:p-3 bg-emerald-300 bg-opacity-50 rounded-lg">
@@ -188,7 +188,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
             </div>
           </div>
           
-          <div class="bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 rounded-xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 border border-blue-200">
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 rounded-xl p-4 lg:p-6 border border-blue-200">
             <div class="flex items-center justify-between">
               <div class="flex items-center">
                 <div class="p-2 lg:p-3 bg-blue-300 bg-opacity-50 rounded-lg">
@@ -202,7 +202,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
             </div>
           </div>
           
-          <div class="bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 rounded-xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 border border-amber-200">
+          <div class="bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 rounded-xl p-4 lg:p-6 border border-amber-200">
             <div class="flex items-center justify-between">
               <div class="flex items-center">
                 <div class="p-2 lg:p-3 bg-amber-300 bg-opacity-50 rounded-lg">
@@ -230,8 +230,8 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
         </div>
 
         <!-- Quick Actions Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
-          <a href="my-purchases" class="bg-gradient-to-br from-slate-50 to-slate-100 text-slate-700 rounded-xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 border border-slate-200">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
+          <a href="my-purchases" class="bg-gradient-to-br from-slate-50 to-slate-100 text-slate-700 rounded-xl p-4 lg:p-6 border border-slate-200">
             <div class="flex items-center">
               <div class="p-2 lg:p-3 bg-slate-300 bg-opacity-50 rounded-lg">
                 <i class="fas fa-shopping-bag text-lg lg:text-xl text-slate-600"></i>
@@ -243,7 +243,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
             </div>
           </a>
           
-          <a href="downloads" class="bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 rounded-xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 border border-blue-200">
+          <a href="downloads" class="bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 rounded-xl p-4 lg:p-6 border border-blue-200">
             <div class="flex items-center">
               <div class="p-2 lg:p-3 bg-blue-300 bg-opacity-50 rounded-lg">
                 <i class="fas fa-download text-lg lg:text-xl text-blue-600"></i>
@@ -255,7 +255,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
             </div>
           </a>
           
-          <a href="receipts" class="bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 rounded-xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 border border-emerald-200">
+          <a href="receipts" class="bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 rounded-xl p-4 lg:p-6 border border-emerald-200">
             <div class="flex items-center">
               <div class="p-2 lg:p-3 bg-emerald-300 bg-opacity-50 rounded-lg">
                 <i class="fas fa-receipt text-lg lg:text-xl text-emerald-600"></i>
@@ -267,7 +267,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
             </div>
           </a>
           
-          <a href="settings" class="bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 rounded-xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 border border-amber-200">
+          <a href="settings" class="bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 rounded-xl p-4 lg:p-6 border border-amber-200">
             <div class="flex items-center">
               <div class="p-2 lg:p-3 bg-amber-300 bg-opacity-50 rounded-lg">
                 <i class="fas fa-cog text-lg lg:text-xl text-amber-600"></i>
@@ -282,7 +282,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
 
         <!-- Recent Purchases -->
         <?php if (!empty($user_stats['recent_purchases'])): ?>
-        <div class="bg-white rounded-xl shadow-lg border border-gray-100 mb-6 lg:mb-8">
+        <div class="bg-white rounded-xl border border-gray-100 mb-6 lg:mb-8">
           <div class="px-3 lg:px-6 py-3 lg:py-4 border-b border-gray-200">
             <h2 class="text-base lg:text-xl font-semibold text-gray-800">Recent Purchases</h2>
           </div>
@@ -369,16 +369,16 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
                         </span>
                       </td>
                       <td class="py-2 px-2 lg:px-4">
-                        <div class="flex flex-col sm:flex-row gap-1.5 lg:gap-2">
+                        <div class="flex flex-wrap gap-1.5 lg:gap-2">
                           <?php if (isset($purchase['doc_file']) && $purchase['doc_file'] || isset($purchase['drive_link']) && $purchase['drive_link']): ?>
-                            <a href="downloads" class="inline-flex items-center justify-center px-2 py-1 lg:px-3 lg:py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">
-                              <i class="fas fa-download mr-1 text-xs"></i><span class="hidden sm:inline">Download</span>
+                            <a href="downloads" class="inline-flex items-center justify-center px-2 py-1 lg:px-3 lg:py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                              <i class="fas fa-download mr-1 text-xs"></i><span>Download</span>
                             </a>
                           <?php else: ?>
-                            <span class="text-gray-400 text-xs hidden sm:inline">File not available</span>
+                            <span class="text-gray-400 text-xs">File not available</span>
                           <?php endif; ?>
-                          <a href="my-purchases" class="inline-flex items-center justify-center px-2 py-1 lg:px-3 lg:py-1.5 bg-gray-600 text-white text-xs font-medium rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">
-                            <i class="fas fa-eye mr-1 text-xs"></i><span class="hidden sm:inline">View</span>
+                          <a href="my-purchases" class="inline-flex items-center justify-center px-2 py-1 lg:px-3 lg:py-1.5 bg-gray-600 text-white text-xs font-medium rounded-lg hover:bg-gray-700 transition-colors">
+                            <i class="fas fa-eye mr-1 text-xs"></i><span>View</span>
                           </a>
                         </div>
                       </td>

@@ -336,13 +336,65 @@ try {
                 </div>
             </div>
         </a>
+
+        <!-- Analytics & Activity Card -->
+        <a href="user_activity.php" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">Analytics</h3>
+                    <p class="text-sm text-gray-500">User activity</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- API Testing Card -->
+        <a href="#" onclick="event.preventDefault(); document.getElementById('api-testing-section').scrollIntoView({behavior: 'smooth'});" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-flask text-green-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">API Testing</h3>
+                    <p class="text-sm text-gray-500">Test APIs</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- Data Management Card -->
+        <a href="#" onclick="event.preventDefault(); document.getElementById('data-management-section').scrollIntoView({behavior: 'smooth'});" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-database text-orange-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">Data Management</h3>
+                    <p class="text-sm text-gray-500">Manage data</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- Admin Management Card -->
+        <a href="manage_admins.php" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-users-cog text-indigo-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">Admin Management</h3>
+                    <p class="text-sm text-gray-500">Manage admins</p>
+                </div>
+            </div>
+        </a>
     </div>
 
     <!-- Right Sidebar -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-3 space-y-6">
             <!-- Analytics & Activity Section -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <div id="analytics-section" class="bg-white rounded-lg border border-gray-200 p-6">
                 <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
                     <i class="fas fa-chart-line text-blue-600 mr-3"></i>Analytics & Activity
                 </h2>
@@ -372,7 +424,7 @@ try {
             </div>
 
             <!-- API Testing Section -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <div id="api-testing-section" class="bg-white rounded-lg border border-gray-200 p-6">
                 <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
                     <i class="fas fa-flask text-green-600 mr-3"></i>API Testing
                 </h2>
@@ -423,7 +475,7 @@ try {
             </div>
 
             <!-- Data Management Section -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <div id="data-management-section" class="bg-white rounded-lg border border-gray-200 p-6">
                 <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
                     <i class="fas fa-database text-orange-600 mr-3"></i>Data Management
                 </h2>
