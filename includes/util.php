@@ -422,4 +422,69 @@ function get_image_preview_url($url) {
     
     return $url;
 }
+
+/**
+ * Check if product image file exists
+ * @param string $image_path The image filename
+ * @return bool True if file exists, false otherwise
+ */
+function product_image_exists($image_path) {
+    if (empty($image_path)) {
+        return false;
+    }
+    
+    $full_path = __DIR__ . '/../assets/images/products/' . $image_path;
+    return file_exists($full_path);
+}
+
+/**
+ * Get product image URL with fallback check
+ * @param string $image_path The image filename
+ * @param string $base_url The base URL of the site
+ * @return string The image URL or empty string if not found
+ */
+function get_product_image_url($image_path, $base_url = '') {
+    if (empty($image_path)) {
+        return '';
+    }
+    
+    if (empty($base_url)) {
+        $base_url = get_config('site_url', 'https://manuelcode.info');
+        $base_url = rtrim($base_url, '/');
+    }
+    
+    // Check if image file exists
+    if (product_image_exists($image_path)) {
+        return $base_url . '/assets/images/products/' . $image_path;
+    }
+    
+    // Return empty string if image doesn't exist (will trigger placeholder)
+    return '';
+}
+
+/**
+ * Get fallback image from gallery images if preview image fails
+ * @param array $gallery_images Array of gallery image filenames
+ * @param string $base_url The base URL of the site
+ * @return string The first available gallery image URL or empty string
+ */
+function get_fallback_gallery_image($gallery_images, $base_url = '') {
+    if (empty($gallery_images) || !is_array($gallery_images)) {
+        return '';
+    }
+    
+    if (empty($base_url)) {
+        $base_url = get_config('site_url', 'https://manuelcode.info');
+        $base_url = rtrim($base_url, '/');
+    }
+    
+    // Try to find first existing gallery image
+    foreach ($gallery_images as $gallery_img) {
+        if (product_image_exists($gallery_img)) {
+            return $base_url . '/assets/images/products/' . $gallery_img;
+        }
+    }
+    
+    return '';
+}
 ?>

@@ -225,11 +225,27 @@ if (isset($_SESSION['user_id'])) {
           ?>
           <div class="product-card group <?php echo ($is_purchased && isset($_SESSION['user_id'])) ? 'bg-green-50 border-2 border-green-200' : 'bg-white'; ?> rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden" data-product-id="<?php echo $product['id']; ?>">
             <div class="relative overflow-hidden">
-              <?php if ($product['preview_image']): ?>
-                <img src="<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
+              <?php 
+              // Get gallery images for fallback
+              $product_gallery = [];
+              if (!empty($product['gallery_images'])) {
+                  $product_gallery = json_decode($product['gallery_images'], true) ?: [];
+              }
+              
+              // Get preview image URL or fallback to first gallery image
+              $preview_image_url = get_product_image_url($product['preview_image'], $base_url);
+              if (empty($preview_image_url) && !empty($product_gallery)) {
+                  $preview_image_url = get_fallback_gallery_image($product_gallery, $base_url);
+              }
+              ?>
+              <?php if ($preview_image_url): ?>
+                <img src="<?php echo htmlspecialchars($preview_image_url); ?>" 
                      alt="<?php echo htmlspecialchars($product['title']); ?>" 
                      class="w-full h-32 sm:h-40 object-cover group-hover:scale-105 transition-transform duration-300"
-                     onerror="this.src='<?php echo $base_url; ?>/assets/favi/favicon.png'; this.onerror=null;">
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="h-32 sm:h-40 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center" style="display: none;">
+                  <i class="fas fa-box text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
+                </div>
               <?php else: ?>
                 <div class="h-32 sm:h-40 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                   <i class="fas fa-box text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>

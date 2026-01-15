@@ -185,12 +185,28 @@ include 'includes/header.php';
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Product Image -->
                 <div class="p-6">
-                    <?php if ($product['preview_image']): ?>
-                        <img src="<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
+                    <?php 
+                    // Get gallery images for fallback
+                    $gallery_images = [];
+                    if (!empty($product['gallery_images'])) {
+                        $gallery_images = json_decode($product['gallery_images'], true) ?: [];
+                    }
+                    
+                    // Get preview image URL or fallback to first gallery image
+                    $preview_image_url = get_product_image_url($product['preview_image'], $base_url);
+                    if (empty($preview_image_url) && !empty($gallery_images)) {
+                        $preview_image_url = get_fallback_gallery_image($gallery_images, $base_url);
+                    }
+                    ?>
+                    <?php if ($preview_image_url): ?>
+                        <img src="<?php echo htmlspecialchars($preview_image_url); ?>" 
                              alt="<?php echo htmlspecialchars($product['title']); ?>" 
                              class="w-full h-96 object-cover rounded-lg cursor-pointer hover:scale-105 transition-transform duration-300"
-                             onclick="openImageModal('<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>')"
-                             onerror="this.src='<?php echo $base_url; ?>/assets/favi/favicon.png'; this.onerror=null;">
+                             onclick="openImageModal('<?php echo htmlspecialchars($preview_image_url); ?>')"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-full h-96 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center" style="display: none;">
+                            <i class="fas fa-box text-white text-6xl"></i>
+                        </div>
                     <?php else: ?>
                         <div class="w-full h-96 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                             <i class="fas fa-box text-white text-6xl"></i>

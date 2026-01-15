@@ -187,29 +187,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Product Details -->
             <div class="bg-white rounded-lg shadow-sm p-6">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Product Details</h2>
-                <img src="<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
-                     alt="<?php echo htmlspecialchars($product['title']); ?>" 
-                     class="w-full h-48 object-cover rounded-lg mb-4"
-                     onerror="this.src='<?php echo $base_url; ?>/assets/favi/favicon.png'; this.onerror=null;">
-                <h3 class="text-xl font-semibold text-gray-800 mb-2"><?php echo htmlspecialchars($product['title']); ?></h3>
-                <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($product['short_desc']); ?></p>
-                
-                <!-- Gallery Images -->
                 <?php 
+                // Get gallery images for fallback
                 $gallery_images = [];
                 if (!empty($product['gallery_images'])) {
                     $gallery_images = json_decode($product['gallery_images'], true) ?: [];
                 }
-                if (!empty($gallery_images)): ?>
+                
+                // Get preview image URL or fallback to first gallery image
+                $preview_image_url = get_product_image_url($product['preview_image'], $base_url);
+                if (empty($preview_image_url) && !empty($gallery_images)) {
+                    $preview_image_url = get_fallback_gallery_image($gallery_images, $base_url);
+                }
+                ?>
+                <?php if ($preview_image_url): ?>
+                    <img src="<?php echo htmlspecialchars($preview_image_url); ?>" 
+                         alt="<?php echo htmlspecialchars($product['title']); ?>" 
+                         class="w-full h-48 object-cover rounded-lg mb-4"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-48 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg mb-4 flex items-center justify-center" style="display: none;">
+                        <i class="fas fa-box text-white text-6xl"></i>
+                    </div>
+                <?php else: ?>
+                    <div class="w-full h-48 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg mb-4 flex items-center justify-center">
+                        <i class="fas fa-box text-white text-6xl"></i>
+                    </div>
+                <?php endif; ?>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2"><?php echo htmlspecialchars($product['title']); ?></h3>
+                <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($product['short_desc']); ?></p>
+                
+                <!-- Gallery Images -->
+                <?php if (!empty($gallery_images)): ?>
                   <div class="mb-4">
                     <h4 class="text-lg font-semibold text-gray-800 mb-2">Product Gallery</h4>
                     <div class="grid grid-cols-3 gap-2">
-                      <?php foreach ($gallery_images as $gallery_img): ?>
-                        <img src="<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($gallery_img); ?>" 
-                             alt="Product screenshot" 
-                             class="w-full h-20 object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
-                             onclick="openImageModal('<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($gallery_img); ?>')"
-                             onerror="this.src='<?php echo $base_url; ?>/assets/favi/favicon.png'; this.onerror=null;">
+                      <?php foreach ($gallery_images as $gallery_img): 
+                          $gallery_url = get_product_image_url($gallery_img, $base_url);
+                      ?>
+                        <?php if ($gallery_url): ?>
+                          <img src="<?php echo htmlspecialchars($gallery_url); ?>" 
+                               alt="Product screenshot" 
+                               class="w-full h-20 object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
+                               onclick="openImageModal('<?php echo htmlspecialchars($gallery_url); ?>')"
+                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                          <div class="w-full h-20 bg-gray-200 rounded border flex items-center justify-center" style="display: none;">
+                            <i class="fas fa-image text-gray-400"></i>
+                          </div>
+                        <?php else: ?>
+                          <div class="w-full h-20 bg-gray-200 rounded border flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400"></i>
+                          </div>
+                        <?php endif; ?>
                       <?php endforeach; ?>
                     </div>
                   </div>
