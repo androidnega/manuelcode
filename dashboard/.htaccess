@@ -1,5 +1,5 @@
 # Dashboard Directory Configuration
-DirectoryIndex index.php router.php
+DirectoryIndex router.php
 
 # Enable Rewrite Engine
 RewriteEngine On
