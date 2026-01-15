@@ -214,47 +214,47 @@ try {
         
         <!-- New Purchase Notification -->
         <?php if (!empty($recent_purchases)): ?>
-        <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 sm:p-6 mb-6 lg:mb-8">
-          <div class="flex items-start">
-            <div class="flex-shrink-0">
-              <i class="fas fa-shopping-bag text-green-600 text-2xl sm:text-3xl"></i>
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6 lg:mb-8">
+          <div class="flex flex-col sm:flex-row items-start">
+            <div class="flex-shrink-0 mb-3 sm:mb-0 sm:mr-3 lg:mr-4">
+              <i class="fas fa-shopping-bag text-green-600 text-xl sm:text-2xl lg:text-3xl"></i>
             </div>
-            <div class="ml-3 sm:ml-4 flex-1">
-              <h3 class="text-base sm:text-lg font-semibold text-green-900 mb-2">
+            <div class="flex-1 w-full sm:w-auto">
+              <h3 class="text-sm sm:text-base lg:text-lg font-semibold text-green-900 mb-1 sm:mb-2">
                 New Purchase Available for Download!
               </h3>
-              <p class="text-sm sm:text-base text-green-800 mb-4">
+              <p class="text-xs sm:text-sm lg:text-base text-green-800 mb-3 sm:mb-4">
                 You have <?php echo count($recent_purchases); ?> new purchase<?php echo count($recent_purchases) > 1 ? 's' : ''; ?> ready to download.
               </p>
-              <div class="space-y-3">
+              <div class="space-y-2 sm:space-y-3">
                 <?php foreach (array_slice($recent_purchases, 0, 3) as $purchase): ?>
-                  <div class="flex items-center justify-between bg-white rounded-lg p-3 border border-green-200">
+                  <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-white rounded-lg p-2 sm:p-3 border border-green-200 gap-2 sm:gap-3">
                     <div class="flex items-center flex-1 min-w-0">
                       <?php if (!empty($purchase['preview_image'])): ?>
                         <img src="<?php echo htmlspecialchars($purchase['preview_image']); ?>" 
                              alt="<?php echo htmlspecialchars($purchase['title']); ?>" 
-                             class="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0">
+                             class="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 object-cover rounded-lg flex-shrink-0">
                       <?php else: ?>
-                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <i class="fas fa-image text-gray-400"></i>
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <i class="fas fa-image text-gray-400 text-xs sm:text-sm"></i>
                         </div>
                       <?php endif; ?>
-                      <div class="ml-3 sm:ml-4 flex-1 min-w-0">
-                        <p class="text-sm sm:text-base font-medium text-gray-900 truncate">
+                      <div class="ml-2 sm:ml-3 lg:ml-4 flex-1 min-w-0">
+                        <p class="text-xs sm:text-sm lg:text-base font-medium text-gray-900 truncate">
                           <?php echo htmlspecialchars($purchase['title']); ?>
                         </p>
-                        <p class="text-xs sm:text-sm text-gray-600">
+                        <p class="text-xs text-gray-600">
                           Purchased <?php echo date('M j, Y', strtotime($purchase['created_at'])); ?>
                         </p>
                       </div>
                     </div>
-                    <a href="downloads" class="ml-3 sm:ml-4 bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 rounded-lg font-semibold text-sm sm:text-base transition-colors flex-shrink-0 whitespace-nowrap">
-                      <i class="fas fa-download mr-2"></i>Download
+                    <a href="downloads" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-3 sm:px-4 lg:px-6 py-2 rounded-lg font-semibold text-xs sm:text-sm lg:text-base transition-colors flex-shrink-0 whitespace-nowrap text-center sm:text-left justify-center sm:justify-start flex items-center">
+                      <i class="fas fa-download mr-1 sm:mr-2"></i>Download
                     </a>
                   </div>
                 <?php endforeach; ?>
                 <?php if (count($recent_purchases) > 3): ?>
-                  <a href="downloads" class="block text-center text-green-700 hover:text-green-800 font-semibold text-sm sm:text-base">
+                  <a href="downloads" class="block text-center text-green-700 hover:text-green-800 font-semibold text-xs sm:text-sm lg:text-base">
                     View all <?php echo count($recent_purchases); ?> new purchases →
                   </a>
                 <?php endif; ?>

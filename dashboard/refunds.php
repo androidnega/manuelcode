@@ -301,60 +301,89 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
        </header>
 
       <!-- Main Content Area -->
-      <main class="main-content p-6">
+      <main class="main-content p-3 sm:p-4 lg:p-6">
         <!-- Success/Error Messages -->
         <div id="message-container"></div>
 
                  <!-- Refund Policy -->
-         <div class="dashboard-card mb-6">
-           <div class="px-6 py-4 border-b <?php echo $dark_mode ? 'border-gray-600' : 'border-gray-200'; ?>">
-             <h2 class="text-lg font-semibold <?php echo $dark_mode ? 'text-white' : 'text-gray-800'; ?>">Refund Policy</h2>
+         <div class="dashboard-card mb-4 sm:mb-6">
+           <div class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b <?php echo $dark_mode ? 'border-gray-600' : 'border-gray-200'; ?>">
+             <h2 class="text-base sm:text-lg font-semibold <?php echo $dark_mode ? 'text-white' : 'text-gray-800'; ?>">Refund Policy</h2>
            </div>
-          <div class="p-6">
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-              <h3 class="text-sm font-semibold text-blue-800 mb-2">Our Refund Policy</h3>
-              <ul class="text-sm text-blue-700 space-y-1">
+          <div class="p-3 sm:p-4 lg:p-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
+              <h3 class="text-xs sm:text-sm font-semibold text-blue-800 mb-2">Our Refund Policy</h3>
+              <ul class="text-xs sm:text-sm text-blue-700 space-y-1">
                 <li>• Refunds are available within 7 days of purchase</li>
                 <li>• Digital products are non-refundable after download</li>
                 <li>• Technical issues will be resolved before refund consideration</li>
                 <li>• Refund requests are reviewed within 24-48 hours</li>
               </ul>
             </div>
-                         <p class="text-sm <?php echo $dark_mode ? 'text-gray-300' : 'text-gray-600'; ?>">If you're experiencing issues with a product, please contact our support team first. We'll do our best to resolve any problems before processing a refund.</p>
+            <p class="text-xs sm:text-sm <?php echo $dark_mode ? 'text-gray-300' : 'text-gray-600'; ?>">If you're experiencing issues with a product, please contact our support team first. We'll do our best to resolve any problems before processing a refund.</p>
           </div>
         </div>
 
                  <!-- My Refund Requests -->
          <?php if (!empty($refunds)): ?>
-         <div class="dashboard-card mb-6">
-           <div class="px-6 py-4 border-b <?php echo $dark_mode ? 'border-gray-600' : 'border-gray-200'; ?>">
-             <h2 class="text-lg font-semibold <?php echo $dark_mode ? 'text-white' : 'text-gray-800'; ?>">My Refund Requests</h2>
+         <div class="dashboard-card mb-4 sm:mb-6">
+           <div class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b <?php echo $dark_mode ? 'border-gray-600' : 'border-gray-200'; ?>">
+             <h2 class="text-base sm:text-lg font-semibold <?php echo $dark_mode ? 'text-white' : 'text-gray-800'; ?>">My Refund Requests</h2>
            </div>
-          <div class="p-6">
-            <div class="table-container">
+          <div class="p-3 sm:p-4 lg:p-6">
+            <!-- Mobile Card View -->
+            <div class="block sm:hidden space-y-3">
+              <?php foreach ($refunds as $refund): ?>
+                <?php
+                $status_colors = [
+                    'pending' => 'bg-yellow-100 text-yellow-800',
+                    'approved' => 'bg-green-100 text-green-800',
+                    'rejected' => 'bg-red-100 text-red-800',
+                    'completed' => 'bg-blue-100 text-blue-800'
+                ];
+                $status_color = $status_colors[$refund['status']] ?? 'bg-gray-100 text-gray-800';
+                ?>
+                <div class="bg-white border border-gray-200 rounded-lg p-3">
+                  <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($refund['product_title']); ?></h3>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <?php echo $status_color; ?>">
+                      <?php echo ucfirst($refund['status']); ?>
+                    </span>
+                  </div>
+                  <p class="text-xs text-gray-600 mb-2"><?php echo htmlspecialchars($refund['reason']); ?></p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm font-semibold text-green-600">GHS <?php echo number_format($refund['amount'], 2); ?></span>
+                    <span class="text-xs text-gray-500"><?php echo date('M j, Y', strtotime($refund['created_at'])); ?></span>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+            
+            <!-- Desktop Table View -->
+            <div class="hidden sm:block table-container overflow-x-auto">
               <table class="table-responsive w-full refund-table">
                 <thead>
                   <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                    <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Reason</th>
+                    <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Date</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                   <?php foreach ($refunds as $refund): ?>
-                    <tr class="hover:bg-gray-50">
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($refund['product_title']); ?></div>
+                    <tr class="<?php echo $dark_mode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'; ?>">
+                      <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+                        <div class="text-xs sm:text-sm font-medium <?php echo $dark_mode ? 'text-white' : 'text-gray-900'; ?>"><?php echo htmlspecialchars($refund['product_title']); ?></div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
+                      <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-green-600 whitespace-nowrap">
                         GHS <?php echo number_format($refund['amount'], 2); ?>
                       </td>
-                      <td class="px-6 py-4 text-sm text-gray-500">
+                      <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> hidden md:table-cell">
                         <div class="max-w-xs truncate"><?php echo htmlspecialchars($refund['reason']); ?></div>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
+                      <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <?php
                         $status_colors = [
                             'pending' => 'bg-yellow-100 text-yellow-800',
@@ -368,7 +397,7 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           <?php echo ucfirst($refund['status']); ?>
                         </span>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> whitespace-nowrap hidden lg:table-cell">
                         <?php echo date('M j, Y', strtotime($refund['created_at'])); ?>
                       </td>
                     </tr>
@@ -382,30 +411,91 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                  <!-- Request New Refund -->
          <div class="dashboard-card">
-           <div class="px-6 py-4 border-b <?php echo $dark_mode ? 'border-gray-600' : 'border-gray-200'; ?>">
-             <h2 class="text-lg font-semibold <?php echo $dark_mode ? 'text-white' : 'text-gray-800'; ?>">Request New Refund</h2>
+           <div class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b <?php echo $dark_mode ? 'border-gray-600' : 'border-gray-200'; ?>">
+             <h2 class="text-base sm:text-lg font-semibold <?php echo $dark_mode ? 'text-white' : 'text-gray-800'; ?>">Request New Refund</h2>
            </div>
-          <div class="p-6">
+          <div class="p-3 sm:p-4 lg:p-6">
             <?php if (empty($purchases)): ?>
-                             <div class="text-center py-8">
-                 <i class="fas fa-undo text-4xl <?php echo $dark_mode ? 'text-gray-500' : 'text-gray-300'; ?> mb-4"></i>
-                 <p class="<?php echo $dark_mode ? 'text-gray-300' : 'text-gray-600'; ?> mb-2">No purchases available for refund</p>
-                 <p class="text-sm <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> mb-4">You need to make purchases before requesting refunds.</p>
-                <a href="/store" class="btn-primary inline-flex items-center">
+              <div class="text-center py-6 sm:py-8">
+                <i class="fas fa-undo text-3xl sm:text-4xl <?php echo $dark_mode ? 'text-gray-500' : 'text-gray-300'; ?> mb-3 sm:mb-4"></i>
+                <p class="text-sm sm:text-base <?php echo $dark_mode ? 'text-gray-300' : 'text-gray-600'; ?> mb-2">No purchases available for refund</p>
+                <p class="text-xs sm:text-sm <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> mb-3 sm:mb-4">You need to make purchases before requesting refunds.</p>
+                <a href="/store" class="btn-primary inline-flex items-center text-xs sm:text-sm px-3 sm:px-4 py-2">
                   <i class="fas fa-store mr-2"></i>
                   Browse Store
                 </a>
               </div>
             <?php else: ?>
-              <div class="table-container">
+              <!-- Mobile Card View -->
+              <div class="block sm:hidden space-y-3">
+                <?php foreach ($purchases as $purchase): ?>
+                  <?php 
+                  $purchase_date = new DateTime($purchase['created_at']);
+                  $now = new DateTime();
+                  $days_diff = $now->diff($purchase_date)->days;
+                  $is_eligible = $days_diff <= 7;
+                  
+                  $has_refund = false;
+                  foreach ($refunds as $refund) {
+                      if ($refund['purchase_id'] == $purchase['id'] && in_array($refund['status'], ['pending', 'approved'])) {
+                          $has_refund = true;
+                          break;
+                      }
+                  }
+                  ?>
+                  <div class="bg-white border border-gray-200 rounded-lg p-3">
+                    <div class="flex items-start space-x-3 mb-3">
+                      <?php if ($purchase['preview_image']): ?>
+                        <img src="../assets/images/products/<?php echo htmlspecialchars($purchase['preview_image']); ?>" alt="<?php echo htmlspecialchars($purchase['product_title']); ?>" class="w-12 h-12 rounded object-cover flex-shrink-0">
+                      <?php else: ?>
+                        <div class="w-12 h-12 <?php echo $dark_mode ? 'bg-gray-600' : 'bg-gray-200'; ?> rounded flex items-center justify-center flex-shrink-0">
+                          <i class="fas fa-file <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-400'; ?>"></i>
+                        </div>
+                      <?php endif; ?>
+                      <div class="flex-1 min-w-0">
+                        <h3 class="text-sm font-medium <?php echo $dark_mode ? 'text-white' : 'text-gray-900'; ?> truncate"><?php echo htmlspecialchars($purchase['product_title']); ?></h3>
+                        <p class="text-xs <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?>">Digital Product</p>
+                        <p class="text-xs <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> mt-1"><?php echo date('M j, Y', strtotime($purchase['created_at'])); ?></p>
+                        <p class="text-sm font-semibold text-green-600 mt-1">GHS <?php echo number_format($purchase['price'], 2); ?></p>
+                        <div class="mt-2">
+                          <?php if ($has_refund): ?>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Refund Requested</span>
+                          <?php elseif ($is_eligible): ?>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Eligible</span>
+                          <?php else: ?>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Not Eligible</span>
+                          <?php endif; ?>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                      <?php if ($is_eligible && !$has_refund): ?>
+                        <button onclick="showRefundModal(<?php echo $purchase['id']; ?>, '<?php echo htmlspecialchars($purchase['product_title']); ?>')" class="btn-danger text-xs py-2 text-center">
+                          <i class="fas fa-undo mr-1"></i>Request Refund
+                        </button>
+                      <?php elseif ($has_refund): ?>
+                        <span class="text-xs text-gray-400 text-center py-2">Refund requested</span>
+                      <?php else: ?>
+                        <span class="text-xs <?php echo $dark_mode ? 'text-gray-500' : 'text-gray-400'; ?> text-center py-2">Refund period expired</span>
+                      <?php endif; ?>
+                      <a href="my-purchases" class="btn-secondary text-xs py-2 text-center">
+                        <i class="fas fa-eye mr-1"></i>View Details
+                      </a>
+                    </div>
+                  </div>
+                <?php endforeach; ?>
+              </div>
+              
+              <!-- Desktop Table View -->
+              <div class="hidden sm:block table-container overflow-x-auto">
                 <table class="table-responsive w-full refund-table">
                   <thead>
                     <tr>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purchase Date</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                      <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                      <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                      <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Purchase Date</th>
+                      <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200">
@@ -416,7 +506,6 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       $days_diff = $now->diff($purchase_date)->days;
                       $is_eligible = $days_diff <= 7;
                       
-                      // Check if refund already exists
                       $has_refund = false;
                       foreach ($refunds as $refund) {
                           if ($refund['purchase_id'] == $purchase['id'] && in_array($refund['status'], ['pending', 'approved'])) {
@@ -425,56 +514,50 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           }
                       }
                       ?>
-                                             <tr class="<?php echo $dark_mode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'; ?>">
-                         <td class="px-6 py-4 whitespace-nowrap">
-                           <div class="flex items-center">
-                             <?php if ($purchase['preview_image']): ?>
-                               <img src="../assets/images/products/<?php echo htmlspecialchars($purchase['preview_image']); ?>" alt="<?php echo htmlspecialchars($purchase['product_title']); ?>" class="w-10 h-10 rounded object-cover mr-3">
-                             <?php else: ?>
-                               <div class="w-10 h-10 <?php echo $dark_mode ? 'bg-gray-600' : 'bg-gray-200'; ?> rounded flex items-center justify-center mr-3">
-                                 <i class="fas fa-file <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-400'; ?>"></i>
-                               </div>
-                             <?php endif; ?>
-                             <div>
-                               <div class="text-sm font-medium <?php echo $dark_mode ? 'text-white' : 'text-gray-900'; ?>"><?php echo htmlspecialchars($purchase['product_title']); ?></div>
-                               <div class="text-sm <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?>">Digital Product</div>
-                             </div>
-                           </div>
-                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
+                      <tr class="<?php echo $dark_mode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'; ?>">
+                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+                          <div class="flex items-center">
+                            <?php if ($purchase['preview_image']): ?>
+                              <img src="../assets/images/products/<?php echo htmlspecialchars($purchase['preview_image']); ?>" alt="<?php echo htmlspecialchars($purchase['product_title']); ?>" class="w-8 h-8 sm:w-10 sm:h-10 rounded object-cover mr-2 sm:mr-3 flex-shrink-0">
+                            <?php else: ?>
+                              <div class="w-8 h-8 sm:w-10 sm:h-10 <?php echo $dark_mode ? 'bg-gray-600' : 'bg-gray-200'; ?> rounded flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                                <i class="fas fa-file <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-400'; ?> text-xs"></i>
+                              </div>
+                            <?php endif; ?>
+                            <div class="min-w-0">
+                              <div class="text-xs sm:text-sm font-medium <?php echo $dark_mode ? 'text-white' : 'text-gray-900'; ?> truncate"><?php echo htmlspecialchars($purchase['product_title']); ?></div>
+                              <div class="text-xs <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> hidden sm:block">Digital Product</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-green-600 whitespace-nowrap">
                           GHS <?php echo number_format($purchase['price'], 2); ?>
                         </td>
-                                                 <td class="px-6 py-4 whitespace-nowrap text-sm <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?>">
-                           <?php echo date('M j, Y', strtotime($purchase['created_at'])); ?>
-                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> whitespace-nowrap hidden md:table-cell">
+                          <?php echo date('M j, Y', strtotime($purchase['created_at'])); ?>
+                        </td>
+                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 whitespace-nowrap">
                           <?php if ($has_refund): ?>
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                              Refund Requested
-                            </span>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Refund Requested</span>
                           <?php elseif ($is_eligible): ?>
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                              Eligible for Refund
-                            </span>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Eligible</span>
                           <?php else: ?>
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                              Not Eligible
-                            </span>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Not Eligible</span>
                           <?php endif; ?>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div class="refund-actions flex space-x-2">
+                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium">
+                          <div class="refund-actions flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2">
                             <?php if ($is_eligible && !$has_refund): ?>
-                              <button onclick="showRefundModal(<?php echo $purchase['id']; ?>, '<?php echo htmlspecialchars($purchase['product_title']); ?>')" class="btn-danger text-sm">
-                                <i class="fas fa-undo mr-1"></i>Request Refund
+                              <button onclick="showRefundModal(<?php echo $purchase['id']; ?>, '<?php echo htmlspecialchars($purchase['product_title']); ?>')" class="btn-danger text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
+                                <i class="fas fa-undo mr-1"></i>Request
                               </button>
                             <?php elseif ($has_refund): ?>
-                              <span class="text-gray-400 text-sm">Refund requested</span>
-                                                         <?php else: ?>
-                               <span class="<?php echo $dark_mode ? 'text-gray-500' : 'text-gray-400'; ?> text-sm">Refund period expired</span>
-                             <?php endif; ?>
-                            <a href="my-purchases" class="btn-secondary text-sm">
-                              <i class="fas fa-eye mr-1"></i>View Details
+                              <span class="text-xs sm:text-sm text-gray-400">Refund requested</span>
+                            <?php else: ?>
+                              <span class="text-xs sm:text-sm <?php echo $dark_mode ? 'text-gray-500' : 'text-gray-400'; ?>">Expired</span>
+                            <?php endif; ?>
+                            <a href="my-purchases" class="btn-secondary text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
+                              <i class="fas fa-eye mr-1"></i>View
                             </a>
                           </div>
                         </td>

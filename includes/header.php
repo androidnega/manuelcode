@@ -1479,8 +1479,8 @@ window.addEventListener('beforeunload', function() {
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex justify-between items-center py-4 lg:py-6">
         <!-- Logo -->
-        <a href="index.php" class="flex items-center group flex-shrink-0">
-          <img src="assets/favi/favicon.png" alt="ManuelCode Logo" class="h-10 lg:h-12 w-auto transition-transform duration-300 group-hover:scale-105">
+        <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../index.php' : 'index.php'; ?>" class="flex items-center group flex-shrink-0">
+          <img src="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../assets/favi/favicon.png' : 'assets/favi/favicon.png'; ?>" alt="ManuelCode Logo" class="h-10 lg:h-12 w-auto transition-transform duration-300 group-hover:scale-105">
           <span class="ml-2 lg:ml-3 text-xl lg:text-2xl font-bold text-gray-800 group-hover:text-[#536895] transition-colors duration-300 whitespace-nowrap" style="font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">ManuelCode</span>
         </a>
         
@@ -1585,8 +1585,8 @@ window.addEventListener('beforeunload', function() {
     <div class="max-w-6xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <!-- Logo -->
-        <a href="index.php" class="flex items-center group">
-          <img src="assets/favi/favicon.png" alt="ManuelCode Logo" class="h-10 sm:h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105">
+        <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../index.php' : 'index.php'; ?>" class="flex items-center group">
+          <img src="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../assets/favi/favicon.png' : 'assets/favi/favicon.png'; ?>" alt="ManuelCode Logo" class="h-10 sm:h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105">
           <span class="ml-2 sm:ml-3 text-lg sm:text-xl font-bold text-gray-800 group-hover:text-[#536895] transition-colors duration-300" style="font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">ManuelCode</span>
         </a>
         

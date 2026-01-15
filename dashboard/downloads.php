@@ -247,98 +247,138 @@ $downloads = $unique_downloads;
       </header>
 
       <!-- Main Content Area -->
-      <main class="main-content p-6">
+      <main class="main-content p-3 sm:p-4 lg:p-6">
         <!-- Downloads Section -->
         <div class="dashboard-card">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-800">Your Downloads</h2>
+          <div class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b border-gray-200">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-800">Your Downloads</h2>
           </div>
-          <div class="p-6">
+          <div class="p-3 sm:p-4 lg:p-6">
             <?php if (empty($downloads)): ?>
-              <div class="text-center py-8">
-                <i class="fas fa-download text-4xl text-gray-300 mb-4"></i>
-                <p class="text-gray-600 mb-2">No downloads available</p>
-                <p class="text-sm text-gray-500 mb-4">Purchase products to access downloads.</p>
-                <a href="/store" class="btn-primary inline-flex items-center">
+              <div class="text-center py-6 sm:py-8">
+                <i class="fas fa-download text-3xl sm:text-4xl text-gray-300 mb-3 sm:mb-4"></i>
+                <p class="text-sm sm:text-base text-gray-600 mb-2">No downloads available</p>
+                <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">Purchase products to access downloads.</p>
+                <a href="/store" class="btn-primary inline-flex items-center text-xs sm:text-sm px-3 sm:px-4 py-2">
                   <i class="fas fa-store mr-2"></i>
                   Browse Store
                 </a>
               </div>
             <?php else: ?>
-              <div class="table-container">
+              <!-- Mobile Card View -->
+              <div class="block sm:hidden space-y-3">
+                <?php foreach ($downloads as $download): ?>
+                  <?php 
+                  $download_link = null;
+                  $stmt = $pdo->prepare("SELECT pr.drive_link, pr.doc_file, pr.title FROM products pr WHERE pr.id = ?");
+                  $stmt->execute([$download['product_id']]);
+                  $product_details = $stmt->fetch(PDO::FETCH_ASSOC);
+                  
+                  if ($product_details && $product_details['drive_link']) {
+                      $download_link = convert_google_drive_to_download($product_details['drive_link']);
+                  } elseif ($product_details && $product_details['doc_file']) {
+                      if (isset($download['purchase_type']) && $download['purchase_type'] === 'guest') {
+                          $download_link = getGuestDownloadLink($_SESSION['user_email'], $download['product_id']);
+                      } else {
+                          $download_link = getProductDownloadLink($_SESSION['user_id'], $download['product_id']);
+                      }
+                  }
+                  ?>
+                  <div class="bg-white border border-gray-200 rounded-lg p-3">
+                    <div class="flex items-start space-x-3 mb-3">
+                      <?php if ($download['preview_image']): ?>
+                        <img src="../assets/images/products/<?php echo htmlspecialchars($download['preview_image']); ?>" alt="<?php echo htmlspecialchars($download['product_title']); ?>" class="w-12 h-12 rounded object-cover flex-shrink-0">
+                      <?php else: ?>
+                        <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
+                          <i class="fas fa-file text-gray-400"></i>
+                        </div>
+                      <?php endif; ?>
+                      <div class="flex-1 min-w-0">
+                        <h3 class="text-sm font-medium text-gray-900 truncate"><?php echo htmlspecialchars($download['product_title']); ?></h3>
+                        <p class="text-xs text-gray-500">Digital Product</p>
+                        <p class="text-xs text-gray-500 mt-1"><?php echo date('M j, Y', strtotime($download['created_at'])); ?></p>
+                        <p class="text-sm font-semibold text-green-600 mt-1">GHS <?php echo number_format($download['price'], 2); ?></p>
+                      </div>
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                      <?php if ($download_link): ?>
+                        <a href="<?php echo htmlspecialchars($download_link); ?>" class="btn-primary text-xs py-2 text-center">
+                          <i class="fas fa-download mr-1"></i>Download
+                        </a>
+                      <?php else: ?>
+                        <span class="text-xs text-gray-400 text-center py-2">File not available</span>
+                      <?php endif; ?>
+                      <a href="/product?id=<?php echo $download['product_id']; ?>" class="btn-secondary text-xs py-2 text-center">
+                        <i class="fas fa-eye mr-1"></i>View Details
+                      </a>
+                    </div>
+                  </div>
+                <?php endforeach; ?>
+              </div>
+              
+              <!-- Desktop Table View -->
+              <div class="hidden sm:block table-container overflow-x-auto">
                 <table class="table-responsive w-full download-table">
                   <thead>
                     <tr>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purchase Date</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                      <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                      <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                      <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Purchase Date</th>
+                      <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200">
                     <?php foreach ($downloads as $download): ?>
                       <tr class="hover:bg-gray-50">
-                                                 <td class="px-6 py-4 whitespace-nowrap">
-                           <div class="flex items-center">
-                             <?php if ($download['preview_image']): ?>
-                               <img src="../assets/images/products/<?php echo htmlspecialchars($download['preview_image']); ?>" alt="<?php echo htmlspecialchars($download['product_title']); ?>" class="w-10 h-10 rounded object-cover mr-3">
-                             <?php else: ?>
-                               <div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center mr-3">
-                                 <i class="fas fa-file text-gray-400"></i>
-                               </div>
-                             <?php endif; ?>
-                            <div>
-                              <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($download['product_title']); ?></div>
-                              <div class="text-sm text-gray-500">Digital Product</div>
+                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+                          <div class="flex items-center">
+                            <?php if ($download['preview_image']): ?>
+                              <img src="../assets/images/products/<?php echo htmlspecialchars($download['preview_image']); ?>" alt="<?php echo htmlspecialchars($download['product_title']); ?>" class="w-8 h-8 sm:w-10 sm:h-10 rounded object-cover mr-2 sm:mr-3 flex-shrink-0">
+                            <?php else: ?>
+                              <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 rounded flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                                <i class="fas fa-file text-gray-400 text-xs"></i>
+                              </div>
+                            <?php endif; ?>
+                            <div class="min-w-0">
+                              <div class="text-xs sm:text-sm font-medium text-gray-900 truncate"><?php echo htmlspecialchars($download['product_title']); ?></div>
+                              <div class="text-xs text-gray-500 hidden sm:block">Digital Product</div>
                             </div>
                           </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
+                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-green-600 whitespace-nowrap">
                           GHS <?php echo number_format($download['price'], 2); ?>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500 whitespace-nowrap hidden md:table-cell">
                           <?php echo date('M j, Y', strtotime($download['created_at'])); ?>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div class="download-actions flex space-x-2">
+                        <td class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium">
+                          <div class="download-actions flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2">
                             <?php 
-                            // FIXED: Always check the actual Google Drive link from the database
                             $download_link = null;
-                            
-                            // Get the actual product details including Google Drive link
-                            $stmt = $pdo->prepare("
-                                SELECT pr.drive_link, pr.doc_file, pr.title
-                                FROM products pr 
-                                WHERE pr.id = ?
-                            ");
+                            $stmt = $pdo->prepare("SELECT pr.drive_link, pr.doc_file, pr.title FROM products pr WHERE pr.id = ?");
                             $stmt->execute([$download['product_id']]);
                             $product_details = $stmt->fetch(PDO::FETCH_ASSOC);
                             
                             if ($product_details && $product_details['drive_link']) {
-                                // If Google Drive link exists, convert to direct download format
                                 $download_link = convert_google_drive_to_download($product_details['drive_link']);
-                                $download_type = 'drive';
                             } elseif ($product_details && $product_details['doc_file']) {
-                                // If local file exists, use the secure download system
                                 if (isset($download['purchase_type']) && $download['purchase_type'] === 'guest') {
                                     $download_link = getGuestDownloadLink($_SESSION['user_email'], $download['product_id']);
                                 } else {
                                     $download_link = getProductDownloadLink($_SESSION['user_id'], $download['product_id']);
                                 }
-                                $download_type = 'local';
                             }
                             
                             if ($download_link): ?>
-                              <!-- Unified Download Button - Direct download for all file types -->
                               <a href="<?php echo htmlspecialchars($download_link); ?>" 
-                                 class="btn-primary text-sm">
+                                 class="btn-primary text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
                                 <i class="fas fa-download mr-1"></i>Download
                               </a>
                             <?php else: ?>
-                              <span class="text-gray-400 text-sm">File not available</span>
+                              <span class="text-gray-400 text-xs sm:text-sm">File not available</span>
                             <?php endif; ?>
-                            <a href="/product?id=<?php echo $download['product_id']; ?>" class="btn-secondary text-sm">
-                              <i class="fas fa-eye mr-1"></i>View Details
+                            <a href="/product?id=<?php echo $download['product_id']; ?>" class="btn-secondary text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
+                              <i class="fas fa-eye mr-1"></i>View
                             </a>
                           </div>
                         </td>
