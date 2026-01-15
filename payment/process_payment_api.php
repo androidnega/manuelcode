@@ -9,33 +9,62 @@ session_start();
 // Get the directory of this file for reliable path resolution
 $base_dir = dirname(__DIR__);
 
-// Include required files with error handling using absolute paths
+// Include required files with error handling - try multiple path options
 $db_file = $base_dir . '/includes/db.php';
 $coupon_file = $base_dir . '/includes/coupon_helper.php';
 $payment_config_file = $base_dir . '/config/payment_config.php';
 
+// Try alternative paths if primary path doesn't exist
 if (!file_exists($db_file)) {
-    error_log("DB file not found at: " . $db_file);
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Database configuration file not found']);
-    exit;
+    // Try relative path
+    $db_file = '../includes/db.php';
+    if (!file_exists($db_file)) {
+        error_log("DB file not found. Tried: " . $base_dir . '/includes/db.php' . " and ../includes/db.php");
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Database configuration file not found']);
+        exit;
+    }
 }
 include $db_file;
 
 if (!file_exists($coupon_file)) {
-    error_log("Coupon file not found at: " . $coupon_file);
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Coupon helper file not found']);
-    exit;
+    $coupon_file = '../includes/coupon_helper.php';
+    if (!file_exists($coupon_file)) {
+        error_log("Coupon file not found. Tried: " . $base_dir . '/includes/coupon_helper.php' . " and ../includes/coupon_helper.php");
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Coupon helper file not found']);
+        exit;
+    }
 }
 include $coupon_file;
 
-if (!file_exists($payment_config_file)) {
-    error_log("Payment config file not found at: " . $payment_config_file);
+// Try multiple paths for payment config (handle both local and server environments)
+$payment_config_paths = [
+    $base_dir . '/config/payment_config.php',
+    '../config/payment_config.php',
+    $base_dir . '/payment_config.php',
+    dirname($base_dir) . '/config/payment_config.php',
+    __DIR__ . '/../config/payment_config.php'
+];
+
+$payment_config_file = null;
+foreach ($payment_config_paths as $path) {
+    if (file_exists($path)) {
+        $payment_config_file = $path;
+        break;
+    }
+}
+
+if (!$payment_config_file) {
+    error_log("Payment config file not found. Tried paths:");
+    foreach ($payment_config_paths as $path) {
+        error_log("  - " . $path);
+    }
     error_log("Base dir: " . $base_dir);
     error_log("Current dir: " . __DIR__);
+    error_log("Server DOCUMENT_ROOT: " . ($_SERVER['DOCUMENT_ROOT'] ?? 'not set'));
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Payment configuration file not found at: ' . $payment_config_file]);
+    echo json_encode(['success' => false, 'message' => 'Payment configuration file not found. Please ensure config/payment_config.php exists.']);
     exit;
 }
 include $payment_config_file;
