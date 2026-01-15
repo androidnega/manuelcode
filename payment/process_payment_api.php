@@ -1,8 +1,47 @@
 <?php
+// Enable error reporting for debugging (remove in production)
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
 session_start();
+
+// Include required files with error handling
+if (!file_exists('../includes/db.php')) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Database configuration file not found']);
+    exit;
+}
 include '../includes/db.php';
+
+if (!file_exists('../includes/coupon_helper.php')) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Coupon helper file not found']);
+    exit;
+}
 include '../includes/coupon_helper.php';
+
+if (!file_exists('../config/payment_config.php')) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Payment configuration file not found']);
+    exit;
+}
 include '../config/payment_config.php';
+
+// Check if required constants are defined
+if (!defined('PAYSTACK_SECRET_KEY')) {
+    error_log("PAYSTACK_SECRET_KEY not defined");
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Payment configuration error']);
+    exit;
+}
+
+if (!defined('PAYSTACK_GUEST_CALLBACK_URL') || !defined('PAYSTACK_CALLBACK_URL')) {
+    error_log("Paystack callback URLs not defined");
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Payment callback URLs not configured']);
+    exit;
+}
 
 header('Content-Type: application/json');
 
@@ -328,11 +367,15 @@ try {
     exit;
 }
 
-function generatePaymentReference($prefix) {
-    return $prefix . '_' . time() . '_' . rand(1000, 9999);
+// Define helper functions at the top to ensure they're available
+if (!function_exists('generatePaymentReference')) {
+    function generatePaymentReference($prefix) {
+        return $prefix . '_' . time() . '_' . rand(1000, 9999);
+    }
 }
 
-function generateUniqueUserId() {
-    return 'U' . strtoupper(substr(md5(uniqid()), 0, 5));
+if (!function_exists('generateUniqueUserId')) {
+    function generateUniqueUserId() {
+        return 'U' . strtoupper(substr(md5(uniqid()), 0, 5));
+    }
 }
-?>
