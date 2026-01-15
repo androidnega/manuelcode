@@ -160,121 +160,111 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
         <main class="p-4 lg:p-6 overflow-hidden">
         <!-- Stats Grid -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
-          <div class="bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700 rounded-xl p-4 lg:p-6 border border-slate-200">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <div class="p-2 lg:p-3 bg-slate-300 bg-opacity-50 rounded-lg">
-                  <i class="fas fa-shopping-bag text-lg lg:text-xl text-slate-600"></i>
-                </div>
-                <div class="ml-3 lg:ml-4">
-                  <h2 class="text-xs lg:text-sm font-medium text-slate-600">Total Purchases</h2>
-                  <p class="text-xl lg:text-2xl font-bold text-slate-800"><span id="total-purchases"><?php echo $user_stats['total_purchases']; ?></span></p>
-                </div>
+          <div class="bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700 rounded-xl p-3 lg:p-6 border border-slate-200">
+            <div class="flex items-center">
+              <div class="p-2 lg:p-3 bg-slate-300 bg-opacity-50 rounded-lg flex-shrink-0">
+                <i class="fas fa-shopping-bag text-base lg:text-xl text-slate-600"></i>
+              </div>
+              <div class="ml-2 lg:ml-4 min-w-0 flex-1">
+                <h2 class="text-xs font-medium text-slate-600 truncate">Total Purchases</h2>
+                <p class="text-lg lg:text-2xl font-bold text-slate-800 truncate"><span id="total-purchases"><?php echo $user_stats['total_purchases']; ?></span></p>
               </div>
             </div>
           </div>
           
-          <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 rounded-xl p-4 lg:p-6 border border-emerald-200">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <div class="p-2 lg:p-3 bg-emerald-300 bg-opacity-50 rounded-lg">
-                  <i class="fas fa-dollar-sign text-lg lg:text-xl text-emerald-600"></i>
-                </div>
-                <div class="ml-3 lg:ml-4">
-                  <h2 class="text-xs lg:text-sm font-medium text-emerald-600">Total Spent</h2>
-                  <p class="text-xl lg:text-2xl font-bold text-emerald-800"><span id="total-spent">GHS <?php echo number_format($user_stats['total_spent'], 2); ?></span></p>
-                </div>
+          <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 rounded-xl p-3 lg:p-6 border border-emerald-200">
+            <div class="flex items-center">
+              <div class="p-2 lg:p-3 bg-emerald-300 bg-opacity-50 rounded-lg flex-shrink-0">
+                <i class="fas fa-dollar-sign text-base lg:text-xl text-emerald-600"></i>
+              </div>
+              <div class="ml-2 lg:ml-4 min-w-0 flex-1">
+                <h2 class="text-xs font-medium text-emerald-600 truncate">Total Spent</h2>
+                <p class="text-lg lg:text-2xl font-bold text-emerald-800 truncate"><span id="total-spent">GHS <?php echo number_format($user_stats['total_spent'], 2); ?></span></p>
               </div>
             </div>
           </div>
           
-          <div class="bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 rounded-xl p-4 lg:p-6 border border-blue-200">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <div class="p-2 lg:p-3 bg-blue-300 bg-opacity-50 rounded-lg">
-                  <i class="fas fa-download text-lg lg:text-xl text-blue-600"></i>
-                </div>
-                <div class="ml-3 lg:ml-4">
-                  <h2 class="text-xs lg:text-sm font-medium text-blue-600">Downloads</h2>
-                  <p class="text-xl lg:text-2xl font-bold text-blue-800"><span id="total-downloads"><?php echo $user_stats['total_downloads']; ?></span></p>
-                </div>
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 rounded-xl p-3 lg:p-6 border border-blue-200">
+            <div class="flex items-center">
+              <div class="p-2 lg:p-3 bg-blue-300 bg-opacity-50 rounded-lg flex-shrink-0">
+                <i class="fas fa-download text-base lg:text-xl text-blue-600"></i>
+              </div>
+              <div class="ml-2 lg:ml-4 min-w-0 flex-1">
+                <h2 class="text-xs font-medium text-blue-600 truncate">Downloads</h2>
+                <p class="text-lg lg:text-2xl font-bold text-blue-800 truncate"><span id="total-downloads"><?php echo $user_stats['total_downloads']; ?></span></p>
               </div>
             </div>
           </div>
           
-          <div class="bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 rounded-xl p-4 lg:p-6 border border-amber-200">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <div class="p-2 lg:p-3 bg-amber-300 bg-opacity-50 rounded-lg">
-                  <i class="fas fa-bell text-lg lg:text-xl text-amber-600"></i>
-                </div>
-                <div class="ml-3 lg:ml-4">
-                  <h2 class="text-xs lg:text-sm font-medium text-amber-600">Notifications</h2>
-                  <p class="text-xl lg:text-2xl font-bold text-amber-800">
-                    <span id="total-notifications"><?php echo $unread_notifications; ?></span>
-                    <?php if ($unread_notifications > 0): ?>
-                      <span class="text-xs lg:text-sm opacity-75">unread</span>
-                    <?php endif; ?>
-                  </p>
-                </div>
+          <div class="bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 rounded-xl p-3 lg:p-6 border border-amber-200">
+            <div class="flex items-center">
+              <div class="p-2 lg:p-3 bg-amber-300 bg-opacity-50 rounded-lg flex-shrink-0">
+                <i class="fas fa-bell text-base lg:text-xl text-amber-600"></i>
+              </div>
+              <div class="ml-2 lg:ml-4 min-w-0 flex-1">
+                <h2 class="text-xs font-medium text-amber-600 truncate">Notifications</h2>
+                <p class="text-lg lg:text-2xl font-bold text-amber-800 truncate">
+                  <span id="total-notifications"><?php echo $unread_notifications; ?></span>
+                  <?php if ($unread_notifications > 0): ?>
+                    <span class="text-xs opacity-75">unread</span>
+                  <?php endif; ?>
+                </p>
               </div>
               <?php if ($unread_notifications > 0): ?>
-                <a href="notifications" class="text-amber-600 hover:text-amber-700 transition-colors">
+                <a href="notifications" class="text-amber-600 hover:text-amber-700 transition-colors flex-shrink-0 ml-1">
                   <i class="fas fa-arrow-right"></i>
                 </a>
               <?php endif; ?>
             </div>
           </div>
-          
-
         </div>
 
         <!-- Quick Actions Grid -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
-          <a href="my-purchases" class="bg-gradient-to-br from-slate-50 to-slate-100 text-slate-700 rounded-xl p-4 lg:p-6 border border-slate-200">
+          <a href="my-purchases" class="bg-gradient-to-br from-slate-50 to-slate-100 text-slate-700 rounded-xl p-3 lg:p-6 border border-slate-200">
             <div class="flex items-center">
-              <div class="p-2 lg:p-3 bg-slate-300 bg-opacity-50 rounded-lg">
-                <i class="fas fa-shopping-bag text-lg lg:text-xl text-slate-600"></i>
+              <div class="p-2 lg:p-3 bg-slate-300 bg-opacity-50 rounded-lg flex-shrink-0">
+                <i class="fas fa-shopping-bag text-base lg:text-xl text-slate-600"></i>
               </div>
-              <div class="ml-3 lg:ml-4">
-                <h3 class="text-sm lg:text-base font-semibold text-slate-800">My Purchases</h3>
-                <p class="text-xs lg:text-sm text-slate-600">View all purchases</p>
+              <div class="ml-2 lg:ml-4 min-w-0 flex-1">
+                <h3 class="text-xs lg:text-base font-semibold text-slate-800 truncate">My Purchases</h3>
+                <p class="text-xs text-slate-600 truncate">View all purchases</p>
               </div>
             </div>
           </a>
           
-          <a href="downloads" class="bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 rounded-xl p-4 lg:p-6 border border-blue-200">
+          <a href="downloads" class="bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 rounded-xl p-3 lg:p-6 border border-blue-200">
             <div class="flex items-center">
-              <div class="p-2 lg:p-3 bg-blue-300 bg-opacity-50 rounded-lg">
-                <i class="fas fa-download text-lg lg:text-xl text-blue-600"></i>
+              <div class="p-2 lg:p-3 bg-blue-300 bg-opacity-50 rounded-lg flex-shrink-0">
+                <i class="fas fa-download text-base lg:text-xl text-blue-600"></i>
               </div>
-              <div class="ml-3 lg:ml-4">
-                <h3 class="text-sm lg:text-base font-semibold text-blue-800">Downloads</h3>
-                <p class="text-xs lg:text-sm text-blue-600">Access your files</p>
+              <div class="ml-2 lg:ml-4 min-w-0 flex-1">
+                <h3 class="text-xs lg:text-base font-semibold text-blue-800 truncate">Downloads</h3>
+                <p class="text-xs text-blue-600 truncate">Access your files</p>
               </div>
             </div>
           </a>
           
-          <a href="receipts" class="bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 rounded-xl p-4 lg:p-6 border border-emerald-200">
+          <a href="receipts" class="bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 rounded-xl p-3 lg:p-6 border border-emerald-200">
             <div class="flex items-center">
-              <div class="p-2 lg:p-3 bg-emerald-300 bg-opacity-50 rounded-lg">
-                <i class="fas fa-receipt text-lg lg:text-xl text-emerald-600"></i>
+              <div class="p-2 lg:p-3 bg-emerald-300 bg-opacity-50 rounded-lg flex-shrink-0">
+                <i class="fas fa-receipt text-base lg:text-xl text-emerald-600"></i>
               </div>
-              <div class="ml-3 lg:ml-4">
-                <h3 class="text-sm lg:text-base font-semibold text-emerald-800">Receipts</h3>
-                <p class="text-xs lg:text-sm text-emerald-600">View receipts</p>
+              <div class="ml-2 lg:ml-4 min-w-0 flex-1">
+                <h3 class="text-xs lg:text-base font-semibold text-emerald-800 truncate">Receipts</h3>
+                <p class="text-xs text-emerald-600 truncate">View receipts</p>
               </div>
             </div>
           </a>
           
-          <a href="settings" class="bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 rounded-xl p-4 lg:p-6 border border-amber-200">
+          <a href="settings" class="bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 rounded-xl p-3 lg:p-6 border border-amber-200">
             <div class="flex items-center">
-              <div class="p-2 lg:p-3 bg-amber-300 bg-opacity-50 rounded-lg">
-                <i class="fas fa-cog text-lg lg:text-xl text-amber-600"></i>
+              <div class="p-2 lg:p-3 bg-amber-300 bg-opacity-50 rounded-lg flex-shrink-0">
+                <i class="fas fa-cog text-base lg:text-xl text-amber-600"></i>
               </div>
-              <div class="ml-3 lg:ml-4">
-                <h3 class="text-sm lg:text-base font-semibold text-amber-800">Settings</h3>
-                <p class="text-xs lg:text-sm text-amber-600">Manage account</p>
+              <div class="ml-2 lg:ml-4 min-w-0 flex-1">
+                <h3 class="text-xs lg:text-base font-semibold text-amber-800 truncate">Settings</h3>
+                <p class="text-xs text-amber-600 truncate">Manage account</p>
               </div>
             </div>
           </a>
