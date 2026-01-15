@@ -1089,9 +1089,21 @@ $all_accounts = array_merge($users, $guests);
       // Fetch account details based on type
       const endpoint = accountType === 'guest' ? `/admin/get_guest_details.php?guest_id=${userId}` : `/admin/get_user_details.php?user_id=${userId}`;
       fetch(endpoint)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          // Check if response is JSON
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            return response.text().then(text => {
+              throw new Error('Expected JSON but got: ' + text.substring(0, 100));
+            });
+          }
+          return response.json();
+        })
         .then(data => {
-          if (data.success) {
+          if (data && data.success) {
             const user = data.user;
             const purchases = data.purchases;
             
