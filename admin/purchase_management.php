@@ -61,19 +61,14 @@ if (isset($_POST['bulk_delete']) && isset($_POST['selected_purchases'])) {
             $pdo->beginTransaction();
             
             foreach ($selected as $purchase_data) {
-                // Handle both string JSON and already decoded array
-                if (is_string($purchase_data)) {
-                    $data = json_decode($purchase_data, true);
-                } else {
-                    $data = $purchase_data;
-                }
-                
-                if (!isset($data['id'])) {
+                // Data should already be decoded as array from JSON
+                if (!is_array($purchase_data) || !isset($purchase_data['id'])) {
+                    error_log("Invalid purchase data format: " . print_r($purchase_data, true));
                     continue;
                 }
                 
-                $purchase_id = (int)$data['id'];
-                $purchase_type = $data['type'] ?? 'user';
+                $purchase_id = (int)$purchase_data['id'];
+                $purchase_type = $purchase_data['type'] ?? 'user';
                 
                 try {
                     if ($purchase_type === 'guest') {
