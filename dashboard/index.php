@@ -359,15 +359,15 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
                         </span>
                       </td>
                       <td class="py-2 px-2 lg:px-4">
-                        <div class="flex flex-wrap gap-1.5 lg:gap-2">
+                        <div class="flex flex-wrap gap-1.5 lg:gap-2 w-full sm:w-auto">
                           <?php if (isset($purchase['doc_file']) && $purchase['doc_file'] || isset($purchase['drive_link']) && $purchase['drive_link']): ?>
-                            <a href="downloads" class="inline-flex items-center justify-center px-2 py-1 lg:px-3 lg:py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                            <a href="downloads" class="inline-flex items-center justify-center px-2 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">
                               <i class="fas fa-download mr-1 text-xs"></i><span>Download</span>
                             </a>
                           <?php else: ?>
-                            <span class="text-gray-400 text-xs">File not available</span>
+                            <span class="inline-flex items-center px-2 py-1.5 text-gray-400 text-xs whitespace-nowrap">File not available</span>
                           <?php endif; ?>
-                          <a href="my-purchases" class="inline-flex items-center justify-center px-2 py-1 lg:px-3 lg:py-1.5 bg-gray-600 text-white text-xs font-medium rounded-lg hover:bg-gray-700 transition-colors">
+                          <a href="my-purchases" class="inline-flex items-center justify-center px-2 py-1.5 bg-gray-600 text-white text-xs font-medium rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">
                             <i class="fas fa-eye mr-1 text-xs"></i><span>View</span>
                           </a>
                         </div>
