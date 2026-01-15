@@ -827,5 +827,98 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
     }
+    
+    // Initialize Paystack payment for logged-in users
+    if (paystackButton && <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>) {
+        const productId = paystackButton.getAttribute('data-product-id');
+        const originalPrice = parseFloat(paystackButton.getAttribute('data-original-price') || 0);
+        const finalPrice = parseFloat(paystackButton.getAttribute('data-final-price') || originalPrice);
+        
+        // Only initialize payment if product is not free
+        if (finalPrice > 0) {
+            paystackButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.disabled = true;
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+                
+                // Prepare payment data
+                const paymentData = {
+                    product_id: parseInt(productId),
+                    is_guest: false
+                };
+                
+                // Add coupon data if available
+                const couponData = this.getAttribute('data-coupon');
+                if (couponData) {
+                    try {
+                        paymentData.coupon_data = JSON.parse(couponData);
+                    } catch (e) {
+                        console.error('Error parsing coupon data:', e);
+                    }
+                } else {
+                    // Check sessionStorage
+                    const sessionCoupon = sessionStorage.getItem('applied_coupon');
+                    if (sessionCoupon) {
+                        try {
+                            paymentData.coupon_data = JSON.parse(sessionCoupon);
+                        } catch (e) {
+                            console.error('Error parsing sessionStorage coupon:', e);
+                        }
+                    }
+                }
+                
+                // Initialize payment
+                const apiPath = 'payment/process_payment_api.php';
+                console.log('Initiating payment for product ID:', productId);
+                console.log('Payment Data:', paymentData);
+                
+                fetch(apiPath, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(paymentData)
+                })
+                .then(async response => {
+                    const responseText = await response.text();
+                    console.log('Response Status:', response.status);
+                    console.log('Response Text:', responseText);
+                    
+                    if (!response.ok) {
+                        let errorMessage = 'Network response was not ok';
+                        try {
+                            const errorData = JSON.parse(responseText);
+                            errorMessage = errorData.message || errorData.error || errorMessage;
+                        } catch (e) {
+                            errorMessage = `Server error (${response.status}): ${response.statusText}`;
+                        }
+                        throw new Error(errorMessage);
+                    }
+                    
+                    try {
+                        return JSON.parse(responseText);
+                    } catch (e) {
+                        throw new Error('Invalid response from server');
+                    }
+                })
+                .then(data => {
+                    console.log('Payment API Response:', data);
+                    if (data.success) {
+                        // Redirect to Paystack payment gateway
+                        window.location.href = data.authorization_url;
+                    } else {
+                        throw new Error(data.message || 'Payment initialization failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Payment error:', error);
+                    alert('Payment Error: ' + error.message);
+                    this.disabled = false;
+                    this.innerHTML = originalHTML;
+                });
+            });
+        }
+    }
 });
 </script>
