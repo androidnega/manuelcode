@@ -6,27 +6,39 @@ ini_set('log_errors', 1);
 
 session_start();
 
-// Include required files with error handling
-if (!file_exists('../includes/db.php')) {
+// Get the directory of this file for reliable path resolution
+$base_dir = dirname(__DIR__);
+
+// Include required files with error handling using absolute paths
+$db_file = $base_dir . '/includes/db.php';
+$coupon_file = $base_dir . '/includes/coupon_helper.php';
+$payment_config_file = $base_dir . '/config/payment_config.php';
+
+if (!file_exists($db_file)) {
+    error_log("DB file not found at: " . $db_file);
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Database configuration file not found']);
     exit;
 }
-include '../includes/db.php';
+include $db_file;
 
-if (!file_exists('../includes/coupon_helper.php')) {
+if (!file_exists($coupon_file)) {
+    error_log("Coupon file not found at: " . $coupon_file);
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Coupon helper file not found']);
     exit;
 }
-include '../includes/coupon_helper.php';
+include $coupon_file;
 
-if (!file_exists('../config/payment_config.php')) {
+if (!file_exists($payment_config_file)) {
+    error_log("Payment config file not found at: " . $payment_config_file);
+    error_log("Base dir: " . $base_dir);
+    error_log("Current dir: " . __DIR__);
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Payment configuration file not found']);
+    echo json_encode(['success' => false, 'message' => 'Payment configuration file not found at: ' . $payment_config_file]);
     exit;
 }
-include '../config/payment_config.php';
+include $payment_config_file;
 
 // Check if required constants are defined
 if (!defined('PAYSTACK_SECRET_KEY')) {
