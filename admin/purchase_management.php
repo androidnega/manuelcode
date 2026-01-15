@@ -86,7 +86,16 @@ if (isset($_POST['bulk_delete']) && isset($_POST['selected_purchases'])) {
             }
             
             $pdo->commit();
-            header("Location: ../dashboard/purchase-management?success=bulk_deleted&count=" . $deleted_count);
+            
+            // Preserve current filters in redirect
+            $redirect_params = ['success' => 'bulk_deleted', 'count' => $deleted_count];
+            if (!empty($search)) $redirect_params['search'] = $search;
+            if (!empty($status_filter)) $redirect_params['status'] = $status_filter;
+            if (!empty($date_from)) $redirect_params['date_from'] = $date_from;
+            if (!empty($date_to)) $redirect_params['date_to'] = $date_to;
+            if ($page > 1) $redirect_params['page'] = $page;
+            
+            header("Location: ../dashboard/purchase-management?" . http_build_query($redirect_params));
             exit;
         } catch (Exception $e) {
             $pdo->rollBack();
