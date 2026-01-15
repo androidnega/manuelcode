@@ -239,27 +239,27 @@ $replied_tickets = $stmt->fetch(PDO::FETCH_ASSOC)['replied'];
       
       <div class="flex-1 overflow-y-auto scrollbar-hide">
         <nav class="mt-4 px-4 pb-4">
-          <a href="index.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
+          <a href="" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
             <span class="flex-1">Overview</span>
           </a>
-          <a href="my_purchases.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
+          <a href="my-purchases" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-shopping-bag mr-3 w-5 text-center"></i>
             <span class="flex-1">My Purchases</span>
           </a>
-          <a href="downloads.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
+          <a href="downloads" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-download mr-3 w-5 text-center"></i>
             <span class="flex-1">Downloads</span>
           </a>
-          <a href="receipts.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
+          <a href="receipts" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-receipt mr-3 w-5 text-center"></i>
             <span class="flex-1">Receipts</span>
           </a>
-          <a href="support.php" class="flex items-center py-3 px-4 bg-blue-50 text-blue-700 rounded-lg mb-2 transition-colors w-full">
+          <a href="support" class="flex items-center py-3 px-4 bg-blue-50 text-blue-700 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-headset mr-3 w-5 text-center"></i>
             <span class="flex-1">Support</span>
           </a>
-          <a href="settings.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
+          <a href="settings" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-cog mr-3 w-5 text-center"></i>
             <span class="flex-1">Settings</span>
           </a>
@@ -296,10 +296,10 @@ $replied_tickets = $stmt->fetch(PDO::FETCH_ASSOC)['replied'];
             <button onclick="toggleDarkMode()" class="<?php echo $dark_mode ? 'text-yellow-400 hover:text-yellow-300' : 'text-gray-600 hover:text-gray-800'; ?> transition-colors p-2 rounded-lg <?php echo $dark_mode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'; ?>">
               <i class="fas <?php echo $dark_mode ? 'fa-sun' : 'fa-moon'; ?> text-lg"></i>
             </button>
-            <a href="index.php" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
+            <a href="" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
               <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
             </a>
-            <a href="../index.php" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
+            <a href="/" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
               <i class="fas fa-home mr-2"></i>Home
             </a>
           </div>

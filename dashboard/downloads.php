@@ -163,27 +163,27 @@ $downloads = $unique_downloads;
       
       <div class="flex-1 overflow-y-auto scrollbar-hide">
         <nav class="mt-4 px-4 pb-4">
-          <a href="index.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
             <span class="flex-1">Overview</span>
           </a>
-          <a href="my_purchases.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="my-purchases" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-shopping-bag mr-3 w-5 text-center"></i>
             <span class="flex-1">My Purchases</span>
           </a>
-          <a href="downloads.php" class="flex items-center py-3 px-4 bg-blue-50 text-blue-700 rounded-lg mb-2 transition-colors w-full">
+          <a href="downloads" class="flex items-center py-3 px-4 bg-blue-50 text-blue-700 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-download mr-3 w-5 text-center"></i>
             <span class="flex-1">Downloads</span>
           </a>
-          <a href="refunds.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="refunds" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-undo mr-3 w-5 text-center"></i>
             <span class="flex-1">Refunds</span>
           </a>
-          <a href="support.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="support" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-headset mr-3 w-5 text-center"></i>
             <span class="flex-1">Support</span>
           </a>
-          <a href="settings.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="settings" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-cog mr-3 w-5 text-center"></i>
             <span class="flex-1">Settings</span>
           </a>
@@ -217,10 +217,10 @@ $downloads = $unique_downloads;
             <p class="text-gray-600 mt-1">Access your purchased digital products</p>
           </div>
           <div class="flex items-center space-x-4">
-            <a href="../index.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+            <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors">
               <i class="fas fa-home mr-2"></i>Home
             </a>
-            <a href="../store.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+            <a href="/store" class="text-gray-600 hover:text-blue-600 transition-colors">
               <i class="fas fa-store mr-2"></i>Store
             </a>
           </div>
@@ -251,7 +251,7 @@ $downloads = $unique_downloads;
                 <i class="fas fa-download text-4xl text-gray-300 mb-4"></i>
                 <p class="text-gray-600 mb-2">No downloads available</p>
                 <p class="text-sm text-gray-500 mb-4">Purchase products to access downloads.</p>
-                <a href="../store.php" class="btn-primary inline-flex items-center">
+                <a href="/store" class="btn-primary inline-flex items-center">
                   <i class="fas fa-store mr-2"></i>
                   Browse Store
                 </a>
@@ -329,7 +329,7 @@ $downloads = $unique_downloads;
                             <?php else: ?>
                               <span class="text-gray-400 text-sm">File not available</span>
                             <?php endif; ?>
-                            <a href="../product.php?id=<?php echo $download['product_id']; ?>" class="btn-secondary text-sm">
+                            <a href="/product?id=<?php echo $download['product_id']; ?>" class="btn-secondary text-sm">
                               <i class="fas fa-eye mr-1"></i>View Details
                             </a>
                           </div>

@@ -77,27 +77,27 @@ $total_pages = ceil($total_notifications / $limit);
       
       <div class="flex-1 overflow-y-auto scrollbar-hide">
         <nav class="mt-4 px-4 pb-4">
-          <a href="index.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
             <span class="flex-1">Overview</span>
           </a>
-          <a href="my_purchases.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="my-purchases" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-shopping-bag mr-3 w-5 text-center"></i>
             <span class="flex-1">My Purchases</span>
           </a>
-          <a href="downloads.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="downloads" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-download mr-3 w-5 text-center"></i>
             <span class="flex-1">Downloads</span>
           </a>
-          <a href="receipts.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="receipts" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-receipt mr-3 w-5 text-center"></i>
             <span class="flex-1">Receipts</span>
           </a>
-          <a href="support.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="support" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-headset mr-3 w-5 text-center"></i>
             <span class="flex-1">Support</span>
           </a>
-          <a href="settings.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+          <a href="settings" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
             <i class="fas fa-cog mr-3 w-5 text-center"></i>
             <span class="flex-1">Settings</span>
           </a>
@@ -131,10 +131,10 @@ $total_pages = ceil($total_notifications / $limit);
             <p class="text-gray-600 mt-1">Stay updated with your purchase notifications</p>
           </div>
           <div class="flex items-center space-x-4">
-            <a href="index.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+            <a href="" class="text-gray-600 hover:text-blue-600 transition-colors">
               <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
             </a>
-            <a href="../index.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+            <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors">
               <i class="fas fa-home mr-2"></i>Home
             </a>
           </div>
@@ -286,13 +286,13 @@ $total_pages = ceil($total_notifications / $limit);
                                             <?php endif; ?>
                                             
                                             <div class="flex space-x-2">
-                                                <a href="../product.php?id=<?php echo $notification['product_id']; ?>" 
+                                                <a href="/product?id=<?php echo $notification['product_id']; ?>" 
                                                    class="text-sm text-blue-600 hover:text-blue-800">
                                                     <i class="fas fa-eye mr-1"></i>View Product
                                                 </a>
                                                 
                                                 <?php if ($notification['notification_type'] === 'download_ready'): ?>
-                                                    <a href="../download.php?product_id=<?php echo $notification['product_id']; ?>" 
+                                                    <a href="/download?product_id=<?php echo $notification['product_id']; ?>" 
                                                        class="text-sm text-green-600 hover:text-green-800">
                                                         <i class="fas fa-download mr-1"></i>Download Now
                                                     </a>

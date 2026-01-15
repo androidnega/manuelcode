@@ -287,10 +287,10 @@ $purchases = $unique_purchases;
             <p class="text-gray-600 mt-1">View and manage your purchased products</p>
           </div>
           <div class="flex items-center space-x-4">
-            <a href="../index.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+            <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors">
               <i class="fas fa-home mr-2"></i>Home
             </a>
-            <a href="../store.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+            <a href="/store" class="text-gray-600 hover:text-blue-600 transition-colors">
               <i class="fas fa-store mr-2"></i>Store
             </a>
           </div>
@@ -321,7 +321,7 @@ $purchases = $unique_purchases;
                 <i class="fas fa-shopping-bag text-4xl text-gray-300 mb-4"></i>
                 <p class="text-gray-600 mb-2">No purchases yet</p>
                 <p class="text-sm text-gray-500 mb-4">You haven't purchased any products yet.</p>
-                <a href="../store.php" class="btn-primary inline-flex items-center">
+                <a href="/store" class="btn-primary inline-flex items-center">
                   <i class="fas fa-store mr-2"></i>
                   Browse Store
                 </a>
@@ -479,7 +479,7 @@ $purchases = $unique_purchases;
                          </span>
                        <?php endif; ?>
                        
-                       <a href="../product.php?id=<?php echo $purchase['product_id']; ?>" 
+                       <a href="/product?id=<?php echo $purchase['product_id']; ?>" 
                           class="flex-1 btn-secondary text-center">
                          <i class="fas fa-info-circle mr-1"></i>
                          View Details

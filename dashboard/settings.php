@@ -233,27 +233,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <div class="flex-1 overflow-y-auto scrollbar-hide">
                 <nav class="mt-4 px-4 pb-4">
-                    <a href="index.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+                    <a href="" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
                         <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
                         <span class="flex-1">Overview</span>
                     </a>
-                    <a href="my_purchases.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+                    <a href="my-purchases" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
                         <i class="fas fa-shopping-bag mr-3 w-5 text-center"></i>
                         <span class="flex-1">My Purchases</span>
                     </a>
-                    <a href="downloads.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+                    <a href="downloads" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
                         <i class="fas fa-download mr-3 w-5 text-center"></i>
                         <span class="flex-1">Downloads</span>
                     </a>
-                    <a href="refunds.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+                    <a href="refunds" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
                         <i class="fas fa-undo mr-3 w-5 text-center"></i>
                         <span class="flex-1">Refunds</span>
                     </a>
-                    <a href="support.php" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+                    <a href="support" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
                         <i class="fas fa-headset mr-3 w-5 text-center"></i>
                         <span class="flex-1">Support</span>
                     </a>
-                    <a href="settings.php" class="flex items-center py-3 px-4 bg-blue-50 text-blue-700 rounded-lg mb-2 transition-colors w-full">
+                    <a href="settings" class="flex items-center py-3 px-4 bg-blue-50 text-blue-700 rounded-lg mb-2 transition-colors w-full">
                         <i class="fas fa-cog mr-3 w-5 text-center"></i>
                         <span class="flex-1">Settings</span>
                     </a>
@@ -287,10 +287,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="text-gray-600 mt-1">Manage your account preferences and profile</p>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <a href="../index.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+                        <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors">
                             <i class="fas fa-home mr-2"></i>Home
                         </a>
-                        <a href="../store.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+                        <a href="/store" class="text-gray-600 hover:text-blue-600 transition-colors">
                             <i class="fas fa-store mr-2"></i>Store
                         </a>
                     </div>
@@ -410,7 +410,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="dashboard-card p-6 settings-full-width">
                         <h2 class="text-lg font-semibold text-gray-900 mb-6">Quick Actions</h2>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <a href="../store.php" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                            <a href="/store" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
                                 <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
                                     <i class="fas fa-store text-white"></i>
                                 </div>
@@ -420,7 +420,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </a>
 
-                            <a href="../contact.php" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                            <a href="/contact" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
                                 <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-4">
                                     <i class="fas fa-headset text-white"></i>
                                 </div>

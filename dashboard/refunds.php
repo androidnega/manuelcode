@@ -221,23 +221,23 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
       <div class="flex-1 overflow-y-auto scrollbar-hide">
                  <nav class="mt-4 px-4 pb-4">
-           <a href="index.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
+           <a href="" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
              <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
              <span class="flex-1">Overview</span>
            </a>
-           <a href="my_purchases.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
+           <a href="my-purchases" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
              <i class="fas fa-shopping-bag mr-3 w-5 text-center"></i>
              <span class="flex-1">My Purchases</span>
            </a>
-           <a href="downloads.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
+           <a href="downloads" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
              <i class="fas fa-download mr-3 w-5 text-center"></i>
              <span class="flex-1">Downloads</span>
            </a>
-           <a href="refunds.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'bg-red-900 text-red-300' : 'bg-red-50 text-red-700'; ?> rounded-lg mb-2 transition-colors w-full">
+           <a href="refunds" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'bg-red-900 text-red-300' : 'bg-red-50 text-red-700'; ?> rounded-lg mb-2 transition-colors w-full">
              <i class="fas fa-undo mr-3 w-5 text-center"></i>
              <span class="flex-1">Refunds</span>
            </a>
-           <a href="settings.php" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
+           <a href="settings" class="flex items-center py-3 px-4 <?php echo $dark_mode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'; ?> rounded-lg mb-2 transition-colors w-full">
              <i class="fas fa-cog mr-3 w-5 text-center"></i>
              <span class="flex-1">Settings</span>
            </a>
@@ -271,10 +271,10 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
              <p class="<?php echo $dark_mode ? 'text-gray-300' : 'text-gray-600'; ?> mt-1">Request refunds for your purchases</p>
            </div>
            <div class="flex items-center space-x-4">
-             <a href="../index.php" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
+             <a href="/" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
                <i class="fas fa-home mr-2"></i>Home
              </a>
-             <a href="../store.php" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
+             <a href="/store" class="<?php echo $dark_mode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'; ?> transition-colors">
                <i class="fas fa-store mr-2"></i>Store
              </a>
            </div>
@@ -383,7 +383,7 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                  <i class="fas fa-undo text-4xl <?php echo $dark_mode ? 'text-gray-500' : 'text-gray-300'; ?> mb-4"></i>
                  <p class="<?php echo $dark_mode ? 'text-gray-300' : 'text-gray-600'; ?> mb-2">No purchases available for refund</p>
                  <p class="text-sm <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> mb-4">You need to make purchases before requesting refunds.</p>
-                <a href="../store.php" class="btn-primary inline-flex items-center">
+                <a href="/store" class="btn-primary inline-flex items-center">
                   <i class="fas fa-store mr-2"></i>
                   Browse Store
                 </a>
@@ -465,7 +465,7 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                          <?php else: ?>
                                <span class="<?php echo $dark_mode ? 'text-gray-500' : 'text-gray-400'; ?> text-sm">Refund period expired</span>
                              <?php endif; ?>
-                            <a href="my_purchases.php" class="btn-secondary text-sm">
+                            <a href="my-purchases" class="btn-secondary text-sm">
                               <i class="fas fa-eye mr-1"></i>View Details
                             </a>
                           </div>

@@ -135,10 +135,10 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
                 </span>
               <?php endif; ?>
             </a>
-            <a href="../index.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+            <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors">
               <i class="fas fa-home mr-2"></i>Home
             </a>
-            <a href="../store.php" class="text-gray-600 hover:text-blue-600 transition-colors">
+            <a href="/store" class="text-gray-600 hover:text-blue-600 transition-colors">
               <i class="fas fa-store mr-2"></i>Store
             </a>
           </div>

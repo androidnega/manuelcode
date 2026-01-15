@@ -19,52 +19,52 @@ $admin_username = $_SESSION['admin_name'] ?? 'Admin';
     
     <div class="flex-1 overflow-y-auto">
       <nav class="mt-4 px-2 pb-4 space-y-1">
-        <a href="dashboard.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'dashboard' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/" class="flex items-center py-3 px-4 <?php echo $current_page === 'dashboard' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
           <span class="flex-1">Dashboard</span>
         </a>
-        <a href="products.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'products' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/products" class="flex items-center py-3 px-4 <?php echo $current_page === 'products' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-box mr-3 w-5 text-center"></i>
           <span class="flex-1">Products</span>
         </a>
-        <a href="projects.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'projects' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/projects" class="flex items-center py-3 px-4 <?php echo $current_page === 'projects' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-project-diagram mr-3 w-5 text-center"></i>
           <span class="flex-1">Projects</span>
         </a>
-        <a href="orders.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'orders' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/orders" class="flex items-center py-3 px-4 <?php echo $current_page === 'orders' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-shopping-cart mr-3 w-5 text-center"></i>
           <span class="flex-1">Orders</span>
         </a>
-        <a href="purchase_management.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'purchase_management' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/purchase-management" class="flex items-center py-3 px-4 <?php echo $current_page === 'purchase_management' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-credit-card mr-3 w-5 text-center"></i>
           <span class="flex-1">Purchase Management</span>
         </a>
-        <a href="users.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'users' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/users" class="flex items-center py-3 px-4 <?php echo $current_page === 'users' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-users mr-3 w-5 text-center"></i>
           <span class="flex-1">Users</span>
         </a>
-        <a href="reports.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'reports' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/reports" class="flex items-center py-3 px-4 <?php echo $current_page === 'reports' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-chart-bar mr-3 w-5 text-center"></i>
           <span class="flex-1">Reports</span>
         </a>
-        <a href="refunds.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'refunds' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/refunds-admin" class="flex items-center py-3 px-4 <?php echo $current_page === 'refunds' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-undo mr-3 w-5 text-center"></i>
           <span class="flex-1">Refunds</span>
         </a>
-        <a href="change_password.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'change_password' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/change-password" class="flex items-center py-3 px-4 <?php echo $current_page === 'change_password' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-key mr-3 w-5 text-center"></i>
           <span class="flex-1">Change Password</span>
         </a>
-        <a href="support_management.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'support_management' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/support-management" class="flex items-center py-3 px-4 <?php echo $current_page === 'support_management' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-headset mr-3 w-5 text-center"></i>
           <span class="flex-1">Support Management</span>
         </a>
-        <a href="generate_receipts.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'generate_receipts' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/generate-receipts" class="flex items-center py-3 px-4 <?php echo $current_page === 'generate_receipts' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-receipt mr-3 w-5 text-center"></i>
           <span class="flex-1">Generate Receipts</span>
         </a>
         <?php if (($_SESSION['user_role'] ?? 'user') === 'superadmin'): ?>
-        <a href="superadmin.php" class="flex items-center py-3 px-4 <?php echo $current_page === 'superadmin' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
+        <a href="../dashboard/superadmin" class="flex items-center py-3 px-4 <?php echo $current_page === 'superadmin' ? 'bg-slate-600 text-white' : 'hover:bg-slate-600 text-slate-200 hover:text-white'; ?> rounded-lg transition-colors w-full">
           <i class="fas fa-toolbox mr-3 w-5 text-center"></i>
           <span class="flex-1">Super Admin</span>
         </a>
@@ -99,10 +99,10 @@ $admin_username = $_SESSION['admin_name'] ?? 'Admin';
           <p class="text-slate-600 mt-1">Manage your <?php echo str_replace('_', ' ', $current_page); ?> and settings</p>
         </div>
         <div class="flex items-center space-x-4">
-          <a href="../index.php" class="text-slate-600 hover:text-blue-600 transition-colors">
+          <a href="/" class="text-slate-600 hover:text-blue-600 transition-colors">
             <i class="fas fa-home mr-2"></i>Home
           </a>
-          <a href="dashboard.php" class="text-slate-600 hover:text-blue-600 transition-colors">
+          <a href="../dashboard/" class="text-slate-600 hover:text-blue-600 transition-colors">
             <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
           </a>
         </div>
