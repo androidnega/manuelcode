@@ -1,11 +1,64 @@
 <?php
 session_start();
-include '../includes/db.php';
-include '../includes/otp_helper.php';
-include '../includes/product_functions.php';
-include '../includes/receipt_helper.php';
-include '../includes/purchase_update_helper.php';
-include '../config/payment_config.php';
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+// Set error handler to catch fatal errors and show them
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== NULL && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        error_log("Fatal error in callback.php: " . $error['message'] . ' in ' . $error['file'] . ':' . $error['line']);
+        // Show error page instead of blank page
+        echo "<!DOCTYPE html><html><head><title>Payment Processing Error</title></head><body>";
+        echo "<h1>Payment Processing Error</h1>";
+        echo "<p>An error occurred while processing your payment. Please contact support with reference: " . ($_GET['reference'] ?? 'N/A') . "</p>";
+        echo "<p><a href='../dashboard/purchases.php'>Go to Purchases</a></p>";
+        echo "</body></html>";
+        exit;
+    }
+});
+
+// Include required files with error handling
+$base_dir = dirname(__DIR__);
+
+// Include database
+$db_file = $base_dir . '/includes/db.php';
+if (!file_exists($db_file)) {
+    error_log("callback.php: db.php not found at: $db_file");
+    die("Configuration error. Please contact support.");
+}
+include_once $db_file;
+
+// Include other files - use include_once to prevent redeclaration
+$includes = [
+    'otp_helper.php',
+    'product_functions.php',
+    'receipt_helper.php',
+    'purchase_update_helper.php'
+];
+
+foreach ($includes as $include_file) {
+    $file_path = $base_dir . '/includes/' . $include_file;
+    if (file_exists($file_path)) {
+        include_once $file_path;
+    } else {
+        error_log("callback.php: $include_file not found at: $file_path (continuing anyway)");
+    }
+}
+
+// Include payment config
+$payment_config = $base_dir . '/config/payment_config.php';
+if (file_exists($payment_config)) {
+    include_once $payment_config;
+} else {
+    error_log("callback.php: payment_config.php not found at: $payment_config");
+    // Define fallback redirect URLs
+    if (!defined('PAYMENT_SUCCESS_REDIRECT')) define('PAYMENT_SUCCESS_REDIRECT', '../dashboard/purchases.php');
+    if (!defined('PAYMENT_FAILURE_REDIRECT')) define('PAYMENT_FAILURE_REDIRECT', '../store.php?error=payment_failed');
+}
 
 // Handle Paystack callback for registered users
 $reference = $_GET['reference'] ?? '';
