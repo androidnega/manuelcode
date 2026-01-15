@@ -40,7 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_role'] = 'superadmin'; // Super admin role
                     $_SESSION['admin_login_time'] = time();
                     
-                    header('Location: ../superadmin.php');
+                    // Redirect to unified dashboard - router will automatically show superadmin dashboard
+                    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+                    $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+                    header('Location: ' . $protocol . '://' . $host . '/dashboard');
                     exit;
                 } else {
                     $error_message = 'Invalid password.';
