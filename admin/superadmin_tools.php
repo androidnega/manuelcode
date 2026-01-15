@@ -16,6 +16,7 @@ error_log("Superadmin tools session variables: " . print_r($_SESSION, true));
 include '../includes/db.php';
 include '../includes/util.php';
 include_once '../includes/auto_config.php';
+include '../includes/cloudinary_helper.php';
 
 // Check if user is logged in as admin (multiple possible session variables)
 $is_authenticated = false;
@@ -708,6 +709,35 @@ try {
         $stmt->execute(['ERROR', 'SUPERADMIN', "User management failed: " . $e->getMessage()]);
         
         echo json_encode(['success'=>false,'error'=>'Database error: ' . $e->getMessage()]);
+      }
+      break;
+      
+    case 'test_cloudinary_upload':
+      if (!isset($_FILES['test_image']) || $_FILES['test_image']['error'] !== UPLOAD_ERR_OK) {
+        echo json_encode(['success'=>false,'error'=>'No file uploaded']);
+        break;
+      }
+      
+      $cloudinaryHelper = new CloudinaryHelper($pdo);
+      
+      if (!$cloudinaryHelper->isEnabled()) {
+        echo json_encode(['success'=>false,'error'=>'Cloudinary is not enabled. Please configure it in System Settings.']);
+        break;
+      }
+      
+      $uploadResult = $cloudinaryHelper->uploadImage($_FILES['test_image']['tmp_name'], 'test');
+      
+      if ($uploadResult) {
+        echo json_encode([
+          'success'=>true,
+          'url'=>$uploadResult['url'],
+          'public_id'=>$uploadResult['public_id'],
+          'width'=>$uploadResult['width'] ?? 0,
+          'height'=>$uploadResult['height'] ?? 0,
+          'bytes'=>$uploadResult['bytes'] ?? 0
+        ]);
+      } else {
+        echo json_encode(['success'=>false,'error'=>'Upload failed. Check Cloudinary configuration.']);
       }
       break;
       
