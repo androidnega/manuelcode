@@ -54,9 +54,12 @@ if (isset($_POST['bulk_delete']) && isset($_POST['selected_purchases'])) {
     // Decode the JSON string to get array of purchase data
     $selected = json_decode($selected_json, true);
     
-    if (json_last_error() !== JSON_ERROR_NONE || !is_array($selected) || empty($selected)) {
-        $error_message = "Invalid purchase data format or no purchases selected. JSON Error: " . json_last_error_msg();
-        error_log("Bulk delete error - JSON decode failed or empty. Error: " . json_last_error_msg() . " | Data length: " . strlen($selected_json));
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        $error_message = "Invalid purchase data format. JSON Error: " . json_last_error_msg();
+        error_log("Bulk delete error - JSON decode failed. Error: " . json_last_error_msg() . " | Data: " . substr($selected_json, 0, 500));
+    } elseif (!is_array($selected) || empty($selected)) {
+        $error_message = "No purchases selected or invalid data format.";
+        error_log("Bulk delete error - Empty or invalid array. Data: " . substr($selected_json, 0, 500));
     } else {
         try {
             $pdo->beginTransaction();
@@ -71,6 +74,11 @@ if (isset($_POST['bulk_delete']) && isset($_POST['selected_purchases'])) {
                 $purchase_id = (int)$purchase_data['id'];
                 $purchase_type = $purchase_data['type'] ?? 'user';
                 
+                if ($purchase_id <= 0) {
+                    error_log("Invalid purchase ID: {$purchase_id}");
+                    continue;
+                }
+                
                 try {
                     if ($purchase_type === 'guest') {
                         $stmt = $pdo->prepare("DELETE FROM guest_orders WHERE id = ?");
@@ -78,7 +86,13 @@ if (isset($_POST['bulk_delete']) && isset($_POST['selected_purchases'])) {
                         $stmt = $pdo->prepare("DELETE FROM purchases WHERE id = ?");
                     }
                     $stmt->execute([$purchase_id]);
-                    $deleted_count++;
+                    
+                    // Check if row was actually deleted
+                    if ($stmt->rowCount() > 0) {
+                        $deleted_count++;
+                    } else {
+                        error_log("No rows deleted for purchase ID {$purchase_id} (type: {$purchase_type}) - purchase may not exist");
+                    }
                 } catch (Exception $e) {
                     $errors[] = "Error deleting purchase ID {$purchase_id}: " . $e->getMessage();
                     error_log("Bulk delete error for purchase {$purchase_id}: " . $e->getMessage());
