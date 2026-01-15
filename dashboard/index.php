@@ -278,7 +278,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
           </div>
           <div class="p-2 lg:p-6">
             <div class="overflow-x-auto -mx-2 lg:mx-0">
-              <table class="w-full min-w-full">
+              <table class="w-full table-auto">
                 <thead class="hidden sm:table-header-group">
                   <tr class="border-b border-gray-200">
                     <th class="text-left py-2 px-2 lg:px-4 font-medium text-gray-700 text-xs lg:text-sm">Product</th>
