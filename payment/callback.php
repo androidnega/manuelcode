@@ -15,7 +15,7 @@ register_shutdown_function(function() {
         echo "<!DOCTYPE html><html><head><title>Payment Processing Error</title></head><body>";
         echo "<h1>Payment Processing Error</h1>";
         echo "<p>An error occurred while processing your payment. Please contact support with reference: " . ($_GET['reference'] ?? 'N/A') . "</p>";
-        echo "<p><a href='../dashboard/purchases.php'>Go to Purchases</a></p>";
+        echo "<p><a href='../dashboard/my-purchases'>Go to Purchases</a></p>";
         echo "</body></html>";
         exit;
     }
@@ -56,7 +56,7 @@ if (file_exists($payment_config)) {
 } else {
     error_log("callback.php: payment_config.php not found at: $payment_config");
     // Define fallback redirect URLs
-    if (!defined('PAYMENT_SUCCESS_REDIRECT')) define('PAYMENT_SUCCESS_REDIRECT', '../dashboard/purchases.php');
+    if (!defined('PAYMENT_SUCCESS_REDIRECT')) define('PAYMENT_SUCCESS_REDIRECT', '../dashboard/my-purchases');
     if (!defined('PAYMENT_FAILURE_REDIRECT')) define('PAYMENT_FAILURE_REDIRECT', '../store.php?error=payment_failed');
 }
 
@@ -185,41 +185,53 @@ try {
     }
     
     // FIXED: Use comprehensive purchase update system to ensure admin dashboard reflection
-    $update_result = updatePurchaseSystem($order['id'], $order['user_id']);
-    
-    if (!$update_result) {
-        throw new Exception("Failed to update purchase system");
+    if (function_exists('updatePurchaseSystem')) {
+        $update_result = updatePurchaseSystem($order['id'], $order['user_id']);
+        
+        if (!$update_result) {
+            error_log("Failed to update purchase system for order: " . $order['id']);
+        }
     }
     
     // FIXED: Log purchase transaction for admin reports
-    try {
-        logPurchaseTransaction(
-            $order['user_id'], 
-            $order['product_id'], 
-            $order['id'], 
-            $user_order['product_price'], 
-            'paystack', 
-            $reference
-        );
-    } catch (Exception $e) {
+    if (function_exists('logPurchaseTransaction')) {
+        try {
+            logPurchaseTransaction(
+                $order['user_id'], 
+                $order['product_id'], 
+                $order['id'], 
+                $user_order['product_price'], 
+                'paystack', 
+                $reference
+            );
+        } catch (Exception $e) {
+            error_log("Error logging purchase transaction: " . $e->getMessage());
+        }
+    } else {
         // If function doesn't exist, create basic log
-        $stmt = $pdo->prepare("
-            INSERT INTO purchase_logs (user_id, product_id, purchase_id, amount, payment_method, reference, created_at) 
-            VALUES (?, ?, ?, ?, 'paystack', ?, NOW())
-        ");
-        $stmt->execute([$order['user_id'], $order['product_id'], $order['id'], $user_order['product_price'], $reference]);
+        try {
+            $stmt = $pdo->prepare("
+                INSERT INTO purchase_logs (user_id, product_id, purchase_id, amount, payment_method, reference, created_at) 
+                VALUES (?, ?, ?, ?, 'paystack', ?, NOW())
+            ");
+            $stmt->execute([$order['user_id'], $order['product_id'], $order['id'], $user_order['product_price'], $reference]);
+        } catch (Exception $e) {
+            error_log("Error creating purchase log: " . $e->getMessage());
+        }
     }
     
     // FIXED: Generate receipt automatically
-    try {
-        $receipt_created = create_receipt($order['id'], $order['user_id']);
-        if ($receipt_created) {
-            error_log("Receipt created successfully for purchase: " . $order['id']);
-        } else {
-            error_log("Receipt creation failed for purchase: " . $order['id']);
+    if (function_exists('create_receipt')) {
+        try {
+            $receipt_created = create_receipt($order['id'], $order['user_id']);
+            if ($receipt_created) {
+                error_log("Receipt created successfully for purchase: " . $order['id']);
+            } else {
+                error_log("Receipt creation failed for purchase: " . $order['id']);
+            }
+        } catch (Exception $e) {
+            error_log("Receipt creation error: " . $e->getMessage());
         }
-    } catch (Exception $e) {
-        error_log("Receipt creation error: " . $e->getMessage());
     }
     
     // FIXED: Log payment success for admin orders page
@@ -231,17 +243,21 @@ try {
     $stmt->execute([$order['user_id'], $order['id'], $reference, $user_order['product_price'], json_encode($payment_data)]);
     
     // FIXED: Update site statistics for admin dashboard
-    try {
-        updateGlobalStatistics();
-    } catch (Exception $e) {
-        error_log("Statistics update failed: " . $e->getMessage());
+    if (function_exists('updateGlobalStatistics')) {
+        try {
+            updateGlobalStatistics();
+        } catch (Exception $e) {
+            error_log("Statistics update failed: " . $e->getMessage());
+        }
     }
     
     // FIXED: Create admin notification for new order
-    try {
-        createAdminNotification($order['id'], 'new_purchase');
-    } catch (Exception $e) {
-        error_log("Admin notification failed: " . $e->getMessage());
+    if (function_exists('createAdminNotification')) {
+        try {
+            createAdminNotification($order['id'], 'new_purchase');
+        } catch (Exception $e) {
+            error_log("Admin notification failed: " . $e->getMessage());
+        }
     }
     
     $pdo->commit();
