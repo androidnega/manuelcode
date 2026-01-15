@@ -22,8 +22,17 @@ if (empty($route) && isset($_SERVER['REQUEST_URI'])) {
     }
 }
 
+// Also check PATH_INFO if available
+if (empty($route) && isset($_SERVER['PATH_INFO'])) {
+    $route = ltrim($_SERVER['PATH_INFO'], '/');
+    $route = preg_replace('/\.php$/', '', $route);
+}
+
 // Remove trailing slash
 $route = rtrim($route, '/');
+
+// Log for debugging (remove in production)
+error_log("Dashboard Router - Route: '$route', REQUEST_URI: " . ($_SERVER['REQUEST_URI'] ?? 'none') . ", GET: " . json_encode($_GET));
 
 // Set global variable for current page detection in included files
 $_SESSION['current_route'] = $route;
