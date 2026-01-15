@@ -80,11 +80,23 @@ if (!empty($product['drive_link'])) {
     $drive_link = $product['drive_link'];
     
     // Convert Google Drive link to direct download format
-    if (strpos($drive_link, 'drive.google.com/file/d/') !== false) {
-        // Extract file ID from Google Drive link
-        preg_match('/\/file\/d\/([a-zA-Z0-9_-]+)/', $drive_link, $matches);
-        if (isset($matches[1])) {
-            $file_id = $matches[1];
+    if (strpos($drive_link, 'drive.google.com') !== false) {
+        // Extract file ID from various Google Drive link formats
+        $patterns = [
+            '/\/file\/d\/([a-zA-Z0-9_-]+)/',  // /file/d/{file_id}/view
+            '/\/d\/([a-zA-Z0-9_-]+)/',        // /d/{file_id}
+            '/[?&]id=([a-zA-Z0-9_-]+)/',      // ?id={file_id} or &id={file_id}
+        ];
+        
+        $file_id = null;
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $drive_link, $matches)) {
+                $file_id = $matches[1];
+                break;
+            }
+        }
+        
+        if ($file_id) {
             $direct_download_link = "https://drive.google.com/uc?export=download&id=" . $file_id;
             
             // Redirect to direct download
