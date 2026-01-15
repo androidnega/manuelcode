@@ -6,6 +6,10 @@ include 'includes/util.php';
 include 'includes/product_functions.php';
 include 'includes/meta_helper.php';
 
+// Get site URL for absolute image paths
+$site_url = get_config('site_url', 'https://manuelcode.info');
+$base_url = rtrim($site_url, '/');
+
 $id = intval($_GET['id']);
 $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
 $stmt->execute([$id]);
@@ -182,10 +186,11 @@ include 'includes/header.php';
                 <!-- Product Image -->
                 <div class="p-6">
                     <?php if ($product['preview_image']): ?>
-                        <img src="assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
+                        <img src="<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
                              alt="<?php echo htmlspecialchars($product['title']); ?>" 
                              class="w-full h-96 object-cover rounded-lg cursor-pointer hover:scale-105 transition-transform duration-300"
-                             onclick="openImageModal('assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>')">
+                             onclick="openImageModal('<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>')"
+                             onerror="this.src='<?php echo $base_url; ?>/assets/favi/favicon.png'; this.onerror=null;">
                     <?php else: ?>
                         <div class="w-full h-96 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                             <i class="fas fa-box text-white text-6xl"></i>

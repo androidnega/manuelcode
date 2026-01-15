@@ -1,6 +1,11 @@
 <?php
 session_start();
 include 'includes/db.php';
+include 'includes/util.php';
+
+// Get site URL for absolute image paths
+$site_url = get_config('site_url', 'https://manuelcode.info');
+$base_url = rtrim($site_url, '/');
 
 // Get product ID from URL
 $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -182,9 +187,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Product Details -->
             <div class="bg-white rounded-lg shadow-sm p-6">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Product Details</h2>
-                <img src="assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
+                <img src="<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
                      alt="<?php echo htmlspecialchars($product['title']); ?>" 
-                     class="w-full h-48 object-cover rounded-lg mb-4">
+                     class="w-full h-48 object-cover rounded-lg mb-4"
+                     onerror="this.src='<?php echo $base_url; ?>/assets/favi/favicon.png'; this.onerror=null;">
                 <h3 class="text-xl font-semibold text-gray-800 mb-2"><?php echo htmlspecialchars($product['title']); ?></h3>
                 <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($product['short_desc']); ?></p>
                 
@@ -199,10 +205,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h4 class="text-lg font-semibold text-gray-800 mb-2">Product Gallery</h4>
                     <div class="grid grid-cols-3 gap-2">
                       <?php foreach ($gallery_images as $gallery_img): ?>
-                        <img src="assets/images/products/<?php echo htmlspecialchars($gallery_img); ?>" 
+                        <img src="<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($gallery_img); ?>" 
                              alt="Product screenshot" 
                              class="w-full h-20 object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
-                             onclick="openImageModal('assets/images/products/<?php echo htmlspecialchars($gallery_img); ?>')">
+                             onclick="openImageModal('<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($gallery_img); ?>')"
+                             onerror="this.src='<?php echo $base_url; ?>/assets/favi/favicon.png'; this.onerror=null;">
                       <?php endforeach; ?>
                     </div>
                   </div>

@@ -1,9 +1,14 @@
 <?php 
 session_start();
 include 'includes/db.php';
+include 'includes/util.php';
 include 'includes/product_functions.php';
 include 'includes/store_functions.php';
 include 'includes/meta_helper.php';
+
+// Get site URL for absolute image paths
+$site_url = get_config('site_url', 'https://manuelcode.info');
+$base_url = rtrim($site_url, '/');
 
 // Set page-specific meta data
 setQuickMeta(
@@ -221,9 +226,10 @@ if (isset($_SESSION['user_id'])) {
           <div class="product-card group <?php echo ($is_purchased && isset($_SESSION['user_id'])) ? 'bg-green-50 border-2 border-green-200' : 'bg-white'; ?> rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden" data-product-id="<?php echo $product['id']; ?>">
             <div class="relative overflow-hidden">
               <?php if ($product['preview_image']): ?>
-                <img src="assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
+                <img src="<?php echo $base_url; ?>/assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
                      alt="<?php echo htmlspecialchars($product['title']); ?>" 
-                     class="w-full h-32 sm:h-40 object-cover group-hover:scale-105 transition-transform duration-300">
+                     class="w-full h-32 sm:h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                     onerror="this.src='<?php echo $base_url; ?>/assets/favi/favicon.png'; this.onerror=null;">
               <?php else: ?>
                 <div class="h-32 sm:h-40 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                   <i class="fas fa-box text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
