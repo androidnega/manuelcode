@@ -195,7 +195,7 @@ if (isset($_SESSION['user_id'])) {
               echo "</div>";
           }
           ?>
-          <div class="product-card group <?php echo ($is_purchased && isset($_SESSION['user_id'])) ? 'bg-green-50 border-2 border-green-200' : 'bg-white'; ?> rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden" data-product-id="<?php echo $product['id']; ?>">
+          <div class="product-card <?php echo ($is_purchased && isset($_SESSION['user_id'])) ? 'bg-green-50 border border-green-200' : 'bg-white border border-gray-200'; ?> rounded-lg overflow-hidden" data-product-id="<?php echo $product['id']; ?>">
             <div class="relative overflow-hidden">
               <?php 
               // Get gallery images for fallback
@@ -213,14 +213,14 @@ if (isset($_SESSION['user_id'])) {
               <?php if ($preview_image_url): ?>
                 <img src="<?php echo htmlspecialchars($preview_image_url); ?>" 
                      alt="<?php echo htmlspecialchars($product['title']); ?>" 
-                     class="w-full h-32 sm:h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                     class="w-full h-24 sm:h-28 object-cover"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="h-32 sm:h-40 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center" style="display: none;">
-                  <i class="fas fa-box text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
+                <div class="h-24 sm:h-28 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center" style="display: none;">
+                  <i class="fas fa-box text-white text-2xl"></i>
                 </div>
               <?php else: ?>
-                <div class="h-32 sm:h-40 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                  <i class="fas fa-box text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
+                <div class="h-24 sm:h-28 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                  <i class="fas fa-box text-white text-2xl"></i>
                 </div>
               <?php endif; ?>
               
