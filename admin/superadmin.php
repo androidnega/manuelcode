@@ -338,7 +338,7 @@ try {
         </a>
 
         <!-- Analytics & Activity Card -->
-        <a href="user_activity.php" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+        <a href="../dashboard/user-activity" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-chart-line text-blue-600 text-xl"></i>
@@ -351,7 +351,7 @@ try {
         </a>
 
         <!-- API Testing Card -->
-        <a href="#" onclick="event.preventDefault(); document.getElementById('api-testing-section').scrollIntoView({behavior: 'smooth'});" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+        <a href="../dashboard/api-testing" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-flask text-green-600 text-xl"></i>
@@ -364,7 +364,7 @@ try {
         </a>
 
         <!-- Data Management Card -->
-        <a href="#" onclick="event.preventDefault(); document.getElementById('data-management-section').scrollIntoView({behavior: 'smooth'});" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+        <a href="../dashboard/data-management" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-database text-orange-600 text-xl"></i>
@@ -377,7 +377,7 @@ try {
         </a>
 
         <!-- Admin Management Card -->
-        <a href="manage_admins.php" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+        <a href="../dashboard/manage-admins" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-users-cog text-indigo-600 text-xl"></i>
@@ -390,146 +390,6 @@ try {
         </a>
     </div>
 
-    <!-- Right Sidebar -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-3 space-y-6">
-            <!-- Analytics & Activity Section -->
-            <div id="analytics-section" class="bg-white rounded-lg border border-gray-200 p-6">
-                <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
-                    <i class="fas fa-chart-line text-blue-600 mr-3"></i>Analytics & Activity
-                </h2>
-                <div class="space-y-3">
-                    <a href="user_activity.php" class="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                        <i class="fas fa-users text-blue-600 mr-3"></i>
-                        <div>
-                            <div class="font-medium text-gray-900">User Activity</div>
-                            <div class="text-sm text-gray-600">Live users and sessions</div>
-                        </div>
-                    </a>
-                    <a href="site_analytics.php" class="flex items-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                        <i class="fas fa-chart-bar text-green-600 mr-3"></i>
-                        <div>
-                            <div class="font-medium text-gray-900">Site Analytics</div>
-                            <div class="text-sm text-gray-600">Visitor statistics & trends</div>
-                        </div>
-                    </a>
-                    <a href="seo_management.php" class="flex items-center p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                        <i class="fas fa-search text-purple-600 mr-3"></i>
-                        <div>
-                            <div class="font-medium text-gray-900">SEO Management</div>
-                            <div class="text-sm text-gray-600">Search & social media</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- API Testing Section -->
-            <div id="api-testing-section" class="bg-white rounded-lg border border-gray-200 p-6">
-                <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
-                    <i class="fas fa-flask text-green-600 mr-3"></i>API Testing
-                </h2>
-                
-                <!-- Payment Test -->
-                <div class="mb-4">
-                    <h3 class="text-md font-semibold text-[#2D3E50] mb-2 flex items-center">
-                        <i class="fas fa-credit-card text-blue-600 mr-2"></i>Test Payment Verification
-                    </h3>
-                    <div class="space-y-2">
-                        <input id="test_reference" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Paystack reference">
-                        <div class="flex gap-2">
-                            <input id="test_product_id" type="number" class="w-24 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="1" value="1">
-                            <button onclick="testPayment()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">Test Payment</button>
-                        </div>
-                        <button onclick="validateKeys()" class="w-full bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">Validate Keys</button>
-                    </div>
-                    <div id="payment_result" class="text-sm mt-2"></div>
-                </div>
-
-                <!-- SMS Test -->
-                <div class="mb-4">
-                    <h3 class="text-md font-semibold text-[#2D3E50] mb-2 flex items-center">
-                        <i class="fas fa-sms text-purple-600 mr-2"></i>Test SMS
-                    </h3>
-                    <div class="space-y-2">
-                        <input id="test_sms_phone" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Phone number">
-                        <button onclick="testSMS()" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">Send SMS</button>
-                    </div>
-                    <div id="sms_result" class="text-sm mt-2"></div>
-                </div>
-
-                <!-- Token Test -->
-                <div class="mb-4">
-                    <h3 class="text-md font-semibold text-[#2D3E50] mb-2 flex items-center">
-                        <i class="fas fa-key text-indigo-600 mr-2"></i>Test Token Generation
-                    </h3>
-                    <div class="space-y-2">
-                        <div class="flex gap-2">
-                            <input id="test_user_id" type="number" class="w-20 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="User ID">
-                            <input id="test_token_product_id" type="number" class="w-24 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Product ID">
-                            <input id="test_order_id" type="number" class="w-24 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Order ID">
-                        </div>
-                        <button onclick="testToken()" class="w-full bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">Generate Token</button>
-                    </div>
-                    <div id="token_result" class="text-sm mt-2"></div>
-                </div>
-            </div>
-
-            <!-- Data Management Section -->
-            <div id="data-management-section" class="bg-white rounded-lg border border-gray-200 p-6">
-                <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
-                    <i class="fas fa-database text-orange-600 mr-3"></i>Data Management
-                </h2>
-                
-                <!-- Clear SMS Data -->
-                <div class="mb-4 p-4 bg-red-50 rounded-lg border border-red-200">
-                    <h3 class="font-medium text-red-900 mb-2 flex items-center">
-                        <i class="fas fa-trash text-red-600 mr-2"></i>Clear SMS Data
-                    </h3>
-                    <p class="text-sm text-red-700 mb-3">This will permanently delete all SMS sent records and reset SMS statistics.</p>
-                    <button onclick="clearSmsData()" class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors text-sm">
-                        <i class="fas fa-trash mr-2"></i>Clear All SMS Data
-                    </button>
-                </div>
-                
-                <!-- Clear All Logs -->
-                <div class="mb-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-                    <h3 class="font-medium text-orange-900 mb-2 flex items-center">
-                        <i class="fas fa-broom text-orange-600 mr-2"></i>Clear System Logs
-                    </h3>
-                    <p class="text-sm text-orange-700 mb-3">This will permanently delete all system logs and reset log statistics.</p>
-                    <button onclick="clearAllLogs()" class="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors text-sm">
-                        <i class="fas fa-trash mr-2"></i>Clear All Logs
-                    </button>
-                </div>
-
-                <!-- System Maintenance -->
-                <div class="space-y-2">
-                    <button onclick="cleanLogs()" class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors text-sm flex items-center justify-center">
-                        <i class="fas fa-broom mr-2"></i>Clean Old Logs
-                    </button>
-                    <button onclick="validateApis()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors text-sm flex items-center justify-center">
-                        <i class="fas fa-stethoscope mr-2"></i>Validate APIs
-                    </button>
-                </div>
-                <div id="maint_result" class="text-sm text-gray-600 mt-3"></div>
-            </div>
-
-            <!-- Admin Management Section -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
-                    <i class="fas fa-users-cog text-indigo-600 mr-3"></i>Admin Management
-                </h2>
-                <div class="space-y-3">
-                    <a href="manage_admins.php" class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center">
-                        <i class="fas fa-user-plus mr-2"></i>Manage Admins
-                    </a>
-                    <div class="text-sm text-gray-600 p-3 bg-gray-50 rounded-lg">
-                        Create and manage admin accounts for the system.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
