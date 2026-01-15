@@ -1477,15 +1477,15 @@ window.addEventListener('beforeunload', function() {
 <div class="hidden md:block relative z-[99999]">
   <nav class="bg-[#f8f9fa] backdrop-blur-sm border-b border-gray-200 shadow-sm relative z-[99999]">
     <div class="max-w-7xl mx-auto px-6">
-      <div class="flex justify-between items-center py-6">
+      <div class="flex justify-between items-center py-4 lg:py-6">
         <!-- Logo -->
-        <a href="index.php" class="flex items-center group">
-          <img src="assets/favi/favicon.png" alt="ManuelCode Logo" class="h-12 w-auto transition-transform duration-300 group-hover:scale-105">
-          <span class="ml-3 text-2xl font-bold text-gray-800 group-hover:text-[#536895] transition-colors duration-300" style="font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">ManuelCode</span>
+        <a href="index.php" class="flex items-center group flex-shrink-0">
+          <img src="assets/favi/favicon.png" alt="ManuelCode Logo" class="h-10 lg:h-12 w-auto transition-transform duration-300 group-hover:scale-105">
+          <span class="ml-2 lg:ml-3 text-xl lg:text-2xl font-bold text-gray-800 group-hover:text-[#536895] transition-colors duration-300 whitespace-nowrap" style="font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">ManuelCode</span>
         </a>
         
         <!-- Desktop Navigation Links -->
-        <div class="flex items-center space-x-6">
+        <div class="flex items-center space-x-4 lg:space-x-6 flex-1 justify-center mx-4 lg:mx-8">
           <a href="about.php" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative <?php echo isCurrentPage('about.php') ? 'active' : ''; ?>">
             About
           </a>
@@ -1550,7 +1550,7 @@ window.addEventListener('beforeunload', function() {
         </div>
         
         <!-- User Actions -->
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2 lg:space-x-4 flex-shrink-0">
           <?php if (isLoggedIn()): ?>
             <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
               <a href="dashboard/" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center shadow-sm">
