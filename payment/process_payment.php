@@ -217,16 +217,16 @@ if (isset($_SESSION['applied_coupon']) && isset($_SESSION['coupon_discount_info'
                   </div>
                 </div>
 
-                <!-- Paystack Payment Button -->
+                <!-- MoMo Payment Button -->
                 <button id="paystack-button" 
-                        class="w-full bg-[#536895] hover:bg-[#4a5a7a] text-white py-3 px-6 rounded-lg font-semibold transition-colors"
+                        class="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors"
                         data-product-id="<?php echo $product_id; ?>"
                         data-is-guest="<?php echo $is_guest ? 'true' : 'false'; ?>"
                         <?php if ($is_guest && $guest_data): ?>
                         data-guest-data='<?php echo json_encode($guest_data); ?>'
                         <?php endif; ?>>
-                    <i class="fas fa-credit-card mr-2"></i>
-                    Pay with Paystack
+                    <i class="fas fa-mobile-alt mr-2"></i>
+                    Pay with MoMo
                 </button>
 
                 <div id="payment-status" class="mt-4 hidden">

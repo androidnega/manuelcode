@@ -51,8 +51,17 @@ function initializePayment(productId, isGuest = false, guestData = null) {
             }
         }
         
-        // Initialize payment - use relative path for localhost compatibility
-        const apiPath = window.location.pathname.includes('/payment/') ? '../payment/process_payment_api.php' : 'payment/process_payment_api.php';
+        // Initialize payment - use absolute path to avoid path issues
+        let apiPath = 'payment/process_payment_api.php';
+        if (window.location.pathname.includes('/payment/')) {
+            apiPath = 'process_payment_api.php';
+        } else if (window.location.pathname.includes('/admin/') || window.location.pathname.includes('/dashboard/')) {
+            apiPath = '../payment/process_payment_api.php';
+        }
+        
+        console.log('API Path:', apiPath);
+        console.log('Payment Data:', paymentData);
+        
         fetch(apiPath, {
             method: 'POST',
             headers: {
@@ -60,15 +69,35 @@ function initializePayment(productId, isGuest = false, guestData = null) {
             },
             body: JSON.stringify(paymentData)
         })
-        .then(response => {
+        .then(async response => {
+            // Get response text first to handle both JSON and non-JSON responses
+            const responseText = await response.text();
+            console.log('Response Status:', response.status);
+            console.log('Response Text:', responseText);
+            
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                // Try to parse as JSON for error message
+                let errorMessage = 'Network response was not ok';
+                try {
+                    const errorData = JSON.parse(responseText);
+                    errorMessage = errorData.message || errorData.error || errorMessage;
+                } catch (e) {
+                    errorMessage = `Server error (${response.status}): ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
             }
-            return response.json();
+            
+            // Parse JSON response
+            try {
+                return JSON.parse(responseText);
+            } catch (e) {
+                throw new Error('Invalid response from server');
+            }
         })
         .then(data => {
+            console.log('Payment API Response:', data);
             if (data.success) {
-                // Redirect to Paystack
+                // Redirect to payment gateway
                 window.location.href = data.authorization_url;
             } else {
                 throw new Error(data.message || 'Payment initialization failed');
@@ -81,13 +110,15 @@ function initializePayment(productId, isGuest = false, guestData = null) {
             if (paymentError) {
                 paymentError.classList.remove('hidden');
                 const errorMessage = document.getElementById('error-message');
-                if (errorMessage) errorMessage.textContent = error.message;
+                if (errorMessage) {
+                    errorMessage.textContent = error.message || 'An error occurred. Please try again.';
+                }
             }
             
             // Re-enable button
             if (button) {
                 button.disabled = false;
-                button.innerHTML = '<i class="fas fa-credit-card mr-2"></i>Pay with Paystack';
+                button.innerHTML = '<i class="fas fa-mobile-alt mr-2"></i>Pay with MoMo';
             }
         });
     });

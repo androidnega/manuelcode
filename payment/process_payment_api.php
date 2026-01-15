@@ -212,12 +212,38 @@ try {
         'Authorization: Bearer ' . PAYSTACK_SECRET_KEY,
         'Content-Type: application/json'
     ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
     
     $response = curl_exec($ch);
+    $curl_error = curl_error($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
     
+    // Handle CURL errors
+    if ($curl_error) {
+        error_log("Paystack CURL Error: " . $curl_error);
+        // Delete pending record
+        if ($is_guest) {
+            $stmt = $pdo->prepare("DELETE FROM guest_orders WHERE reference = ?");
+            $stmt->execute([$reference]);
+        } else {
+            $stmt = $pdo->prepare("DELETE FROM purchases WHERE reference = ?");
+            $stmt->execute([$reference]);
+        }
+        
+        http_response_code(500);
+        echo json_encode([
+            'success' => false, 
+            'message' => 'Connection error. Please check your internet connection and try again.'
+        ]);
+        exit;
+    }
+    
     $result = json_decode($response, true);
+    
+    // Log response for debugging
+    error_log("Paystack API Response - HTTP Code: {$http_code}, Response: " . substr($response, 0, 500));
     
     if ($http_code === 200 && isset($result['status']) && $result['status'] === true) {
         echo json_encode([
@@ -236,18 +262,31 @@ try {
             $stmt->execute([$reference]);
         }
         
+        $error_message = 'Failed to initialize payment';
+        if (isset($result['message'])) {
+            $error_message = $result['message'];
+        } elseif ($http_code !== 200) {
+            $error_message = "Payment service error (HTTP {$http_code}). Please try again.";
+        }
+        
+        http_response_code($http_code !== 200 ? $http_code : 400);
         echo json_encode([
             'success' => false, 
-            'message' => 'Failed to initialize payment: ' . ($result['message'] ?? 'Unknown error')
+            'message' => $error_message
         ]);
     }
     
 } catch (Exception $e) {
     error_log("Payment initialization error: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
+    
+    // Ensure we return JSON with proper HTTP status
+    http_response_code(500);
     echo json_encode([
         'success' => false, 
         'message' => 'An error occurred while processing your payment. Please try again.'
     ]);
+    exit;
 }
 
 function generatePaymentReference($prefix) {
