@@ -1061,7 +1061,7 @@ $all_accounts = array_merge($users, $guests);
     </div>
   </div>
 
-  <script src="assets/js/live-search.js"></script>
+  <script src="/admin/assets/js/live-search.js"></script>
   <script>
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
@@ -1087,7 +1087,7 @@ $all_accounts = array_merge($users, $guests);
       modal.classList.remove('hidden');
       
       // Fetch account details based on type
-      const endpoint = accountType === 'guest' ? `get_guest_details.php?guest_id=${userId}` : `get_user_details.php?user_id=${userId}`;
+      const endpoint = accountType === 'guest' ? `/admin/get_guest_details.php?guest_id=${userId}` : `/admin/get_user_details.php?user_id=${userId}`;
       fetch(endpoint)
         .then(response => response.json())
         .then(data => {
