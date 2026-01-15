@@ -834,7 +834,7 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
                   Clear selection
                 </button>
               </div>
-              <form method="POST" id="bulkDeleteForm" onsubmit="return confirmBulkDelete()">
+              <form method="POST" id="bulkDeleteForm" action="../dashboard/purchase-management" onsubmit="return confirmBulkDelete()">
                 <input type="hidden" name="bulk_delete" value="1">
                 <input type="hidden" name="selected_purchases" id="selectedPurchasesInput">
                 <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
