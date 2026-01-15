@@ -389,22 +389,22 @@ $replied_tickets = $stmt->fetch(PDO::FETCH_ASSOC)['replied'];
             </div>
             <div class="p-6">
               <div class="space-y-4">
-                <a href="../help/download-guide.php" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <a href="/help/download-guide" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <i class="fas fa-download text-blue-600 mr-3"></i>
                   <span class="text-gray-700">How to download purchased products?</span>
                 </a>
                 
-                <a href="../help/refund-guide.php" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <a href="/help/refund-guide" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <i class="fas fa-undo-alt text-green-600 mr-3"></i>
                   <span class="text-gray-700">How to request a refund?</span>
                 </a>
                 
-                <a href="../help/payment-issues.php" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <a href="/help/payment-issues" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <i class="fas fa-credit-card text-purple-600 mr-3"></i>
                   <span class="text-gray-700">Payment issues and solutions</span>
                 </a>
                 
-                <a href="../help/account-security.php" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <a href="/help/account-security" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <i class="fas fa-shield-alt text-orange-600 mr-3"></i>
                   <span class="text-gray-700">Account security and privacy</span>
                 </a>

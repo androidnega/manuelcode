@@ -644,7 +644,7 @@ $guest_orders_count = count(array_filter($all_orders, function($order) { return 
                                          class="text-blue-600 hover:text-blue-800" title="View Order Details">
                                    <i class="fas fa-<?php echo $order['user_id'] ? 'user' : 'user-clock'; ?> text-sm"></i>
                                  </button>
-                                <a href="../product.php?id=<?php echo $order['product_id']; ?>" 
+                                <a href="/product?id=<?php echo $order['product_id']; ?>" 
                                    target="_blank"
                                    class="text-green-600 hover:text-green-800" title="View Product">
                                    <i class="fas fa-eye text-sm"></i>
@@ -713,7 +713,7 @@ $guest_orders_count = count(array_filter($all_orders, function($order) { return 
                               <h4 class="font-semibold text-slate-800 text-sm mb-1"><?php echo htmlspecialchars($order['product_title']); ?></h4>
                               <p class="text-xs text-slate-600">Product ID: <?php echo $order['product_id']; ?></p>
                             </div>
-                            <a href="../product.php?id=<?php echo $order['product_id']; ?>" 
+                            <a href="/product?id=<?php echo $order['product_id']; ?>" 
                                target="_blank"
                                class="ml-2 p-2 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-colors">
                               <i class="fas fa-eye text-sm"></i>
@@ -1027,7 +1027,7 @@ $guest_orders_count = count(array_filter($all_orders, function($order) { return 
           <!-- Actions -->
           <div class="flex space-x-3">
             ${orderData.product_id ? `
-            <a href="../product.php?id=${orderData.product_id}" target="_blank" 
+            <a href="/product?id=${orderData.product_id}" target="_blank" 
                class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center">
               <i class="fas fa-eye mr-2"></i>
               View Product

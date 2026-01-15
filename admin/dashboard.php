@@ -319,7 +319,7 @@ $admin_stats = getAdminDashboardStats($pdo);
               <h3 class="text-base font-semibold text-violet-800 ml-3">Users</h3>
             </div>
             <p class="mb-4 text-violet-700 text-xs lg:text-sm">Manage user accounts and view user activity.</p>
-            <a href="users.php" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white px-3 py-2 rounded-lg hover:from-violet-600 hover:to-purple-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
+            <a href="../dashboard/users" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white px-3 py-2 rounded-lg hover:from-violet-600 hover:to-purple-700 transition-all duration-200 text-xs lg:text-sm font-medium shadow-sm min-h-[40px]">
               <i class="fas fa-eye mr-2"></i>
               View Users
             </a>
