@@ -1211,7 +1211,16 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
         // Collect selected purchase data
         const selectedPurchases = [];
         checkboxes.forEach(cb => {
-          selectedPurchases.push(cb.getAttribute('data-purchase'));
+          const purchaseData = cb.getAttribute('data-purchase');
+          if (purchaseData) {
+            // Parse the JSON string from data attribute and add to array
+            try {
+              const parsed = JSON.parse(purchaseData);
+              selectedPurchases.push(parsed);
+            } catch (e) {
+              console.error('Error parsing purchase data:', e, purchaseData);
+            }
+          }
         });
         selectedPurchasesInput.value = JSON.stringify(selectedPurchases);
       } else {
