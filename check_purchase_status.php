@@ -1,182 +1,141 @@
 <?php
-/**
- * Purchase Status Diagnostic Script
- * This script checks the current status of purchases to help diagnose display issues
- */
-
+session_start();
 include 'includes/db.php';
 
-// Get current user ID from session or parameter
-$user_id = $_GET['user_id'] ?? null;
+// Get the product ID from URL
+$product_id = isset($_GET['id']) ? (int)$_GET['id'] : 1003;
 
-if (!$user_id) {
-    echo "Please provide a user_id parameter: ?user_id=YOUR_USER_ID\n";
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    echo "<!DOCTYPE html><html><head><title>Not Logged In</title></head><body>";
+    echo "<h1>Not Logged In</h1>";
+    echo "<p>Please <a href='login'>log in</a> to check purchase status.</p>";
+    echo "</body></html>";
     exit;
 }
 
-echo "=== PURCHASE STATUS DIAGNOSTIC ===\n";
-echo "User ID: $user_id\n\n";
+$user_id = $_SESSION['user_id'];
+$user_email = $_SESSION['user_email'] ?? 'N/A';
 
-try {
-    // 1. Check all purchases for this user
-    echo "1. ALL PURCHASES FOR USER:\n";
-    $stmt = $pdo->prepare("
-        SELECT p.*, pr.title as product_title, pr.price, pr.status as product_status
-        FROM purchases p
-        JOIN products pr ON p.product_id = pr.id
-        WHERE p.user_id = ?
-        ORDER BY p.created_at DESC
-    ");
-    $stmt->execute([$user_id]);
-    $all_purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    if (empty($all_purchases)) {
-        echo "   No purchases found for this user.\n";
-    } else {
-        foreach ($all_purchases as $purchase) {
-            echo "   - ID: {$purchase['id']}, Product: {$purchase['product_title']}, Status: {$purchase['status']}, Amount: {$purchase['amount']}, Created: {$purchase['created_at']}\n";
-        }
-    }
-    
-    echo "\n";
-    
-    // 2. Check purchase status counts
-    echo "2. PURCHASE STATUS COUNTS:\n";
-    $stmt = $pdo->prepare("
-        SELECT status, COUNT(*) as count, SUM(amount) as total_amount
-        FROM purchases 
-        WHERE user_id = ?
-        GROUP BY status
-        ORDER BY count DESC
-    ");
-    $stmt->execute([$user_id]);
-    $status_counts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    foreach ($status_counts as $status) {
-        echo "   - {$status['status']}: {$status['count']} purchases, Total: GHS {$status['total_amount']}\n";
-    }
-    
-    echo "\n";
-    
-    // 3. Check products table
-    echo "3. PRODUCTS TABLE STATUS:\n";
-    $stmt = $pdo->prepare("
-        SELECT p.id, p.title, p.status, p.price
-        FROM products p
-        JOIN purchases pur ON p.id = pur.product_id
-        WHERE pur.user_id = ?
-        GROUP BY p.id
-    ");
-    $stmt->execute([$user_id]);
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    foreach ($products as $product) {
-        echo "   - ID: {$product['id']}, Title: {$product['title']}, Status: {$product['status']}, Price: GHS {$product['price']}\n";
-    }
-    
-    echo "\n";
-    
-    // 4. Check payment logs
-    echo "4. PAYMENT LOGS:\n";
-    $stmt = $pdo->prepare("
-        SELECT pl.*, p.payment_ref, p.status as purchase_status
-        FROM payment_logs pl
-        JOIN purchases p ON pl.order_id = p.id
-        WHERE p.user_id = ?
-        ORDER BY pl.created_at DESC
-    ");
-    $stmt->execute([$user_id]);
-    $payment_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    if (empty($payment_logs)) {
-        echo "   No payment logs found.\n";
-    } else {
-        foreach ($payment_logs as $log) {
-            echo "   - Order ID: {$log['order_id']}, Status: {$log['status']}, Amount: {$log['amount']}, Reference: {$log['reference']}, Purchase Status: {$log['purchase_status']}\n";
-        }
-    }
-    
-    echo "\n";
-    
-    // 5. Check guest orders (if user has email)
-    echo "5. GUEST ORDERS CHECK:\n";
-    $stmt = $pdo->prepare("SELECT email FROM users WHERE id = ?");
-    $stmt->execute([$user_id]);
-    $user_email = $stmt->fetch(PDO::FETCH_ASSOC)['email'] ?? null;
-    
-    if ($user_email) {
-        $stmt = $pdo->prepare("
-            SELECT go.*, p.title as product_title
-            FROM guest_orders go
-            JOIN products p ON go.product_id = p.id
-            WHERE go.email = ?
-            ORDER BY go.created_at DESC
-        ");
-        $stmt->execute([$user_email]);
-        $guest_orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        if (empty($guest_orders)) {
-            echo "   No guest orders found for email: $user_email\n";
-        } else {
-            foreach ($guest_orders as $order) {
-                echo "   - ID: {$order['id']}, Product: {$order['product_title']}, Status: {$order['status']}, Amount: {$order['total_amount']}, Created: {$order['created_at']}\n";
-            }
-        }
-    } else {
-        echo "   User has no email address.\n";
-    }
-    
-    echo "\n";
-    
-    // 6. Test the getAllPurchasedProducts function
-    echo "6. TESTING getAllPurchasedProducts FUNCTION:\n";
-    include 'includes/product_functions.php';
-    
-    $purchased_products = getAllPurchasedProducts($user_id, $user_email);
-    
-    if (empty($purchased_products)) {
-        echo "   Function returned no products.\n";
-    } else {
-        echo "   Function returned " . count($purchased_products) . " products:\n";
-        foreach ($purchased_products as $product) {
-            echo "   - Product: {$product['product_title']}, Status: {$product['status']}, Type: {$product['purchase_type']}\n";
-        }
-    }
-    
-    echo "\n";
-    
-    // 7. Recommendations
-    echo "7. RECOMMENDATIONS:\n";
-    
-    $stmt = $pdo->prepare("SELECT COUNT(*) as pending_count FROM purchases WHERE user_id = ? AND status = 'pending'");
-    $stmt->execute([$user_id]);
-    $pending_count = $stmt->fetch(PDO::FETCH_ASSOC)['pending_count'];
-    
-    $stmt = $pdo->prepare("SELECT COUNT(*) as failed_count FROM purchases WHERE user_id = ? AND status = 'failed'");
-    $stmt->execute([$user_id]);
-    $failed_count = $stmt->fetch(PDO::FETCH_ASSOC)['failed_count'];
-    
-    if ($pending_count > 0) {
-        echo "   - You have $pending_count pending purchases. These need payment verification.\n";
-    }
-    
-    if ($failed_count > 0) {
-        echo "   - You have $failed_count failed purchases. These need to be retried or refunded.\n";
-    }
-    
-    $stmt = $pdo->prepare("SELECT COUNT(*) as paid_count FROM purchases WHERE user_id = ? AND status = 'paid'");
-    $stmt->execute([$user_id]);
-    $paid_count = $stmt->fetch(PDO::FETCH_ASSOC)['paid_count'];
-    
-    if ($paid_count == 0) {
-        echo "   - No paid purchases found. This explains why nothing shows in the dashboard.\n";
-        echo "   - Check if payments were completed successfully.\n";
-        echo "   - Verify Paystack callback processing.\n";
-    }
-    
-    echo "\n=== DIAGNOSTIC COMPLETE ===\n";
-    
-} catch (Exception $e) {
-    echo "Error during diagnostic: " . $e->getMessage() . "\n";
+echo "<!DOCTYPE html><html><head><title>Purchase Status Check</title>";
+echo "<style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;margin:20px 0;} th,td{border:1px solid #ddd;padding:8px;text-align:left;} th{background:#f2f2f2;} .success{color:green;} .error{color:red;}</style>";
+echo "</head><body>";
+
+echo "<h1>Purchase Status Debug</h1>";
+echo "<p><strong>User ID:</strong> {$user_id}</p>";
+echo "<p><strong>User Email:</strong> {$user_email}</p>";
+echo "<p><strong>Product ID:</strong> {$product_id}</p>";
+
+// Check product exists
+$stmt = $pdo->prepare("SELECT id, title, price FROM products WHERE id = ?");
+$stmt->execute([$product_id]);
+$product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($product) {
+    echo "<p class='success'><strong>Product Found:</strong> {$product['title']} (GHS {$product['price']})</p>";
+} else {
+    echo "<p class='error'><strong>Product NOT Found!</strong></p>";
+    exit;
 }
+
+echo "<hr>";
+
+// Check user purchases
+echo "<h2>User Purchases (purchases table)</h2>";
+$stmt = $pdo->prepare("SELECT * FROM purchases WHERE user_id = ? AND product_id = ? ORDER BY created_at DESC");
+$stmt->execute([$user_id, $product_id]);
+$user_purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($user_purchases) {
+    echo "<table>";
+    echo "<tr><th>ID</th><th>Payment Ref</th><th>Status</th><th>Amount</th><th>Created</th><th>Updated</th></tr>";
+    foreach ($user_purchases as $purchase) {
+        $status_class = $purchase['status'] === 'paid' ? 'success' : 'error';
+        echo "<tr>";
+        echo "<td>{$purchase['id']}</td>";
+        echo "<td>{$purchase['payment_ref']}</td>";
+        echo "<td class='{$status_class}'><strong>{$purchase['status']}</strong></td>";
+        echo "<td>GHS {$purchase['amount']}</td>";
+        echo "<td>{$purchase['created_at']}</td>";
+        echo "<td>" . ($purchase['updated_at'] ?? 'N/A') . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    
+    // Count paid purchases
+    $paid_count = 0;
+    foreach ($user_purchases as $purchase) {
+        if ($purchase['status'] === 'paid') {
+            $paid_count++;
+        }
+    }
+    
+    if ($paid_count > 0) {
+        echo "<p class='success'><strong>✓ Found {$paid_count} PAID purchase(s) - User SHOULD see download button!</strong></p>";
+    } else {
+        echo "<p class='error'><strong>✗ No PAID purchases found - User will see buy button</strong></p>";
+    }
+} else {
+    echo "<p>No purchases found in purchases table.</p>";
+}
+
+echo "<hr>";
+
+// Check guest purchases by email
+echo "<h2>Guest Purchases by Email (guest_orders table)</h2>";
+$stmt = $pdo->prepare("SELECT * FROM guest_orders WHERE email = ? AND product_id = ? ORDER BY created_at DESC");
+$stmt->execute([$user_email, $product_id]);
+$guest_purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($guest_purchases) {
+    echo "<table>";
+    echo "<tr><th>ID</th><th>Reference</th><th>Status</th><th>Amount</th><th>Email</th><th>Created</th></tr>";
+    foreach ($guest_purchases as $purchase) {
+        $status_class = $purchase['status'] === 'paid' ? 'success' : 'error';
+        echo "<tr>";
+        echo "<td>{$purchase['id']}</td>";
+        echo "<td>{$purchase['reference']}</td>";
+        echo "<td class='{$status_class}'><strong>{$purchase['status']}</strong></td>";
+        $amount = $purchase['total_amount'] ?? $purchase['amount'] ?? 'N/A';
+        echo "<td>GHS {$amount}</td>";
+        echo "<td>{$purchase['email']}</td>";
+        echo "<td>{$purchase['created_at']}</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else {
+    echo "<p>No guest purchases found for this email.</p>";
+}
+
+echo "<hr>";
+
+// Check all purchases for this user (any product)
+echo "<h2>All User Purchases (Any Product)</h2>";
+$stmt = $pdo->prepare("SELECT p.*, pr.title as product_title FROM purchases p LEFT JOIN products pr ON p.product_id = pr.id WHERE p.user_id = ? ORDER BY p.created_at DESC LIMIT 10");
+$stmt->execute([$user_id]);
+$all_purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($all_purchases) {
+    echo "<table>";
+    echo "<tr><th>ID</th><th>Product</th><th>Payment Ref</th><th>Status</th><th>Amount</th><th>Created</th></tr>";
+    foreach ($all_purchases as $purchase) {
+        $status_class = $purchase['status'] === 'paid' ? 'success' : 'error';
+        echo "<tr>";
+        echo "<td>{$purchase['id']}</td>";
+        echo "<td>{$purchase['product_title']}</td>";
+        echo "<td>{$purchase['payment_ref']}</td>";
+        echo "<td class='{$status_class}'><strong>{$purchase['status']}</strong></td>";
+        echo "<td>GHS {$purchase['amount']}</td>";
+        echo "<td>{$purchase['created_at']}</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else {
+    echo "<p>No purchases found for this user.</p>";
+}
+
+echo "<hr>";
+echo "<p><a href='product.php?id={$product_id}'>← Back to Product</a> | <a href='dashboard/my-purchases'>My Purchases</a></p>";
+
+echo "</body></html>";
 ?>
