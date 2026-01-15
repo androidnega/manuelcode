@@ -7,10 +7,19 @@ $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 1003;
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    echo "<!DOCTYPE html><html><head><title>Not Logged In</title></head><body>";
-    echo "<h1>Not Logged In</h1>";
-    echo "<p>Please <a href='login'>log in</a> to check purchase status.</p>";
-    echo "</body></html>";
+    // Get site URL for proper redirect
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+    $current_url = urlencode($protocol . '://' . $host . $_SERVER['REQUEST_URI']);
+    
+    echo "<!DOCTYPE html><html><head><title>Not Logged In</title>";
+    echo "<style>body{font-family:Arial;padding:40px;text-align:center;background:#f5f5f5;} .box{max-width:500px;margin:0 auto;background:white;padding:40px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);} h1{color:#f44336;} .btn{display:inline-block;margin:20px 10px;padding:12px 24px;background:#4CAF50;color:white;text-decoration:none;border-radius:4px;font-weight:bold;} .btn:hover{background:#45a049;}</style>";
+    echo "</head><body><div class='box'>";
+    echo "<h1>🔒 Not Logged In</h1>";
+    echo "<p>You need to be logged in to check your purchase status.</p>";
+    echo "<a href='login?redirect=" . $current_url . "' class='btn'>Log In Now</a>";
+    echo "<p style='margin-top:20px;'><small>Don't have an account? <a href='auth/register.php'>Sign Up</a></small></p>";
+    echo "</div></body></html>";
     exit;
 }
 
