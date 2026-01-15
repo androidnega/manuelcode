@@ -431,7 +431,7 @@ try {
           <span class="flex-1">Change Password</span>
         </a>
         <?php if (($_SESSION['user_role'] ?? 'user') === 'superadmin'): ?>
-        <a href="superadmin.php" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
+        <a href="../dashboard/superadmin" class="flex items-center py-3 px-4 hover:bg-[#243646] rounded-lg mb-2 transition-colors w-full">
           <i class="fas fa-toolbox mr-3 w-5 text-center"></i>
           <span class="flex-1">Super Admin</span>
         </a>
