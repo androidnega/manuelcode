@@ -16,6 +16,10 @@ RewriteRule ^admin/?$ admin_login.php [L]
 RewriteCond %{REQUEST_URI} ^/login/?$
 RewriteRule ^login/?$ auth/otp_login.php [L]
 
+# Route /contact to contact page
+RewriteCond %{REQUEST_URI} ^/contact/?$
+RewriteRule ^contact/?$ contact.php [L]
+
 # Route /dashboard to dashboard router (empty route)
 RewriteCond %{REQUEST_URI} ^/dashboard/?$
 RewriteRule ^dashboard/?$ dashboard/router.php?route= [L,QSA]

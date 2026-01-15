@@ -1,4 +1,12 @@
 <?php
+// If accessed directly (not via router), redirect to router
+if (!defined('ROUTER_INCLUDED') && !isset($_SERVER['HTTP_X_ROUTER'])) {
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+    header('Location: ' . $protocol . '://' . $host . '/dashboard/settings');
+    exit;
+}
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
