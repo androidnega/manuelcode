@@ -55,19 +55,76 @@ foreach ($payment_config_paths as $path) {
     }
 }
 
+// If config file doesn't exist, load settings directly from database
 if (!$payment_config_file) {
-    error_log("Payment config file not found. Tried paths:");
-    foreach ($payment_config_paths as $path) {
-        error_log("  - " . $path);
+    error_log("Payment config file not found, loading settings from database");
+    
+    // Function to get setting value from database
+    if (!function_exists('getSetting')) {
+        function getSetting($key, $default = '') {
+            global $pdo;
+            try {
+                $stmt = $pdo->prepare("SELECT value FROM settings WHERE setting_key = ?");
+                $stmt->execute([$key]);
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $result ? $result['value'] : $default;
+            } catch (Exception $e) {
+                error_log("Error getting setting $key: " . $e->getMessage());
+                return $default;
+            }
+        }
     }
-    error_log("Base dir: " . $base_dir);
-    error_log("Current dir: " . __DIR__);
-    error_log("Server DOCUMENT_ROOT: " . ($_SERVER['DOCUMENT_ROOT'] ?? 'not set'));
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Payment configuration file not found. Please ensure config/payment_config.php exists.']);
-    exit;
+    
+    // Load Paystack Configuration from database
+    $paystack_public_key = getSetting('paystack_public_key', '');
+    $paystack_secret_key = getSetting('paystack_secret_key', '');
+    
+    // Use live keys if test keys are not configured or if test keys are empty
+    if (empty($paystack_public_key) || strpos($paystack_public_key, 'pk_test_') === false) {
+        $live_public_key = getSetting('paystack_live_public_key', '');
+        $live_secret_key = getSetting('paystack_live_secret_key', '');
+        
+        if (!empty($live_public_key) && !empty($live_secret_key)) {
+            $paystack_public_key = $live_public_key;
+            $paystack_secret_key = $live_secret_key;
+        }
+    }
+    
+    // Define constants
+    if (!defined('PAYSTACK_PUBLIC_KEY')) {
+        define('PAYSTACK_PUBLIC_KEY', $paystack_public_key);
+    }
+    if (!defined('PAYSTACK_SECRET_KEY')) {
+        define('PAYSTACK_SECRET_KEY', $paystack_secret_key);
+    }
+    if (!defined('PAYSTACK_CURRENCY')) {
+        define('PAYSTACK_CURRENCY', 'GHS');
+    }
+    
+    // Determine base URL
+    $is_localhost = in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', '127.0.0.1']);
+    $base_url = $is_localhost ? 'http://localhost/manuela' : 'https://manuelcode.info';
+    
+    if (!defined('PAYSTACK_CALLBACK_URL')) {
+        define('PAYSTACK_CALLBACK_URL', $base_url . '/payment/callback.php');
+    }
+    if (!defined('PAYSTACK_GUEST_CALLBACK_URL')) {
+        define('PAYSTACK_GUEST_CALLBACK_URL', $base_url . '/payment/guest_callback.php');
+    }
+    
+    // SMS Configuration
+    if (!defined('ARKASSEL_API_URL')) {
+        define('ARKASSEL_API_URL', 'https://arkassel.com/api/send');
+    }
+    if (!defined('ARKASSEL_API_KEY')) {
+        define('ARKASSEL_API_KEY', getSetting('arkassel_api_key', ''));
+    }
+    if (!defined('ARKASSEL_SENDER_ID')) {
+        define('ARKASSEL_SENDER_ID', getSetting('sms_sender_name', 'ManuelCode'));
+    }
+} else {
+    include $payment_config_file;
 }
-include $payment_config_file;
 
 // Check if required constants are defined
 if (!defined('PAYSTACK_SECRET_KEY')) {
