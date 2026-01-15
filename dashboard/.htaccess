@@ -1,6 +1,17 @@
 # Dashboard Directory Configuration
 DirectoryIndex router.php
 
+# Rewrite direct file access to router
+RewriteEngine On
+RewriteBase /dashboard/
+
+# Redirect direct PHP file access (except API files) to router
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} \.php$
+RewriteCond %{REQUEST_URI} !^/dashboard/(get_dashboard_stats|get_notifications_count|check_session)\.php$ [NC]
+RewriteCond %{REQUEST_URI} !^/dashboard/router\.php$ [NC]
+RewriteRule ^(.*)\.php$ router.php?route=$1 [L,QSA]
+
 # Allow direct access to API/utility files
 <FilesMatch "^(get_dashboard_stats|get_notifications_count|check_session)\.php$">
     Order allow,deny
