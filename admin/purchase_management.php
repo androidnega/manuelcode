@@ -47,37 +47,56 @@ if (isset($_POST['delete_purchase'])) {
 
 // Handle bulk deletion
 if (isset($_POST['bulk_delete']) && isset($_POST['selected_purchases'])) {
-    $selected = $_POST['selected_purchases'];
+    $selected_json = $_POST['selected_purchases'];
     $deleted_count = 0;
     $errors = [];
     
-    try {
-        $pdo->beginTransaction();
-        
-        foreach ($selected as $purchase_data) {
-            $data = json_decode($purchase_data, true);
-            $purchase_id = $data['id'];
-            $purchase_type = $data['type'] ?? 'user';
+    // Decode the JSON string to get array of purchase data
+    $selected = json_decode($selected_json, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($selected)) {
+        $error_message = "Invalid purchase data format";
+    } else {
+        try {
+            $pdo->beginTransaction();
             
-            try {
-                if ($purchase_type === 'guest') {
-                    $stmt = $pdo->prepare("DELETE FROM guest_orders WHERE id = ?");
+            foreach ($selected as $purchase_data) {
+                // Handle both string JSON and already decoded array
+                if (is_string($purchase_data)) {
+                    $data = json_decode($purchase_data, true);
                 } else {
-                    $stmt = $pdo->prepare("DELETE FROM purchases WHERE id = ?");
+                    $data = $purchase_data;
                 }
-                $stmt->execute([$purchase_id]);
-                $deleted_count++;
-            } catch (Exception $e) {
-                $errors[] = "Error deleting purchase ID {$purchase_id}: " . $e->getMessage();
+                
+                if (!isset($data['id'])) {
+                    continue;
+                }
+                
+                $purchase_id = (int)$data['id'];
+                $purchase_type = $data['type'] ?? 'user';
+                
+                try {
+                    if ($purchase_type === 'guest') {
+                        $stmt = $pdo->prepare("DELETE FROM guest_orders WHERE id = ?");
+                    } else {
+                        $stmt = $pdo->prepare("DELETE FROM purchases WHERE id = ?");
+                    }
+                    $stmt->execute([$purchase_id]);
+                    $deleted_count++;
+                } catch (Exception $e) {
+                    $errors[] = "Error deleting purchase ID {$purchase_id}: " . $e->getMessage();
+                    error_log("Bulk delete error for purchase {$purchase_id}: " . $e->getMessage());
+                }
             }
+            
+            $pdo->commit();
+            header("Location: ../dashboard/purchase-management?success=bulk_deleted&count=" . $deleted_count);
+            exit;
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            $error_message = "Error during bulk deletion: " . $e->getMessage();
+            error_log("Bulk delete transaction error: " . $e->getMessage());
         }
-        
-        $pdo->commit();
-        header("Location: ../dashboard/purchase-management?success=bulk_deleted&count=" . $deleted_count);
-        exit;
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        $error_message = "Error during bulk deletion: " . $e->getMessage();
     }
 }
 
