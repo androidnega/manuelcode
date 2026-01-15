@@ -364,6 +364,49 @@ try {
                     </div>
                 </div>
 
+                <!-- Cloudinary Configuration -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-[#2D3E50] mb-3 flex items-center">
+                        <i class="fas fa-cloud text-blue-500 mr-2"></i>Cloudinary API Configuration
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                            <p class="text-sm text-blue-800">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Configure Cloudinary for image and media management. Get your credentials from <a href="https://cloudinary.com" target="_blank" class="underline font-semibold">cloudinary.com</a>
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Cloud Name</label>
+                                <input id="cloudinary_cloud_name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="your-cloud-name" value="<?php echo htmlspecialchars($current_settings['cloudinary_cloud_name'] ?? ''); ?>">
+                                <p class="text-xs text-gray-500 mt-1">Your Cloudinary cloud name</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">API Key</label>
+                                <input id="cloudinary_api_key" type="password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="123456789012345" value="<?php echo htmlspecialchars($current_settings['cloudinary_api_key'] ?? ''); ?>">
+                                <p class="text-xs text-gray-500 mt-1">Your Cloudinary API key</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">API Secret</label>
+                                <input id="cloudinary_api_secret" type="password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="••••••••••••••••" value="<?php echo htmlspecialchars($current_settings['cloudinary_api_secret'] ?? ''); ?>">
+                                <p class="text-xs text-gray-500 mt-1">Your Cloudinary API secret</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Upload Preset (Optional)</label>
+                                <input id="cloudinary_upload_preset" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="unsigned_preset_name" value="<?php echo htmlspecialchars($current_settings['cloudinary_upload_preset'] ?? ''); ?>">
+                                <p class="text-xs text-gray-500 mt-1">Upload preset for unsigned uploads</p>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="cloudinary_enabled" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" <?php echo (isset($current_settings['cloudinary_enabled']) && $current_settings['cloudinary_enabled'] === '1') ? 'checked' : ''; ?>>
+                                <span class="ml-2 text-sm text-gray-700">Enable Cloudinary for image uploads</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Site Configuration -->
                 <div class="mb-6">
                     <h3 class="text-lg font-semibold text-[#2D3E50] mb-3 flex items-center">
@@ -764,6 +807,11 @@ async function saveSettings(){
   resultDiv.innerHTML = '<div class="text-blue-600"><i class="fas fa-spinner fa-spin mr-2"></i>Saving settings...</div>';
   
   const body = {
+    cloudinary_cloud_name: document.getElementById('cloudinary_cloud_name').value,
+    cloudinary_api_key: document.getElementById('cloudinary_api_key').value,
+    cloudinary_api_secret: document.getElementById('cloudinary_api_secret').value,
+    cloudinary_upload_preset: document.getElementById('cloudinary_upload_preset').value,
+    cloudinary_enabled: document.getElementById('cloudinary_enabled').checked ? '1' : '0',
     site_url: document.getElementById('site_url').value,
     paystack_public_key: document.getElementById('paystack_public_key').value,
     paystack_secret_key: document.getElementById('paystack_secret_key').value,

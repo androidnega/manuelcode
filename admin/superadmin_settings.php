@@ -25,7 +25,12 @@ $allowed = [
   'paystack_live_secret_key',
   'arkassel_api_key',
   'sms_sender_name',
-  'download_token_secret'
+  'download_token_secret',
+  'cloudinary_cloud_name',
+  'cloudinary_api_key',
+  'cloudinary_api_secret',
+  'cloudinary_upload_preset',
+  'cloudinary_enabled'
 ];
 
 try {
