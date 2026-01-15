@@ -321,9 +321,8 @@ $downloads = $unique_downloads;
                             }
                             
                             if ($download_link): ?>
-                              <!-- Unified Download Button - No hint about storage location -->
+                              <!-- Unified Download Button - Direct download for all file types -->
                               <a href="<?php echo htmlspecialchars($download_link); ?>" 
-                                 <?php echo ($download_type === 'drive') ? 'target="_blank"' : ''; ?>
                                  class="btn-primary text-sm">
                                 <i class="fas fa-download mr-1"></i>Download
                               </a>
