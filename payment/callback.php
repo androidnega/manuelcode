@@ -70,15 +70,32 @@ if (empty($reference)) {
 
 try {
     // FIXED: Enhanced payment verification with Paystack
+    error_log("Callback started for reference: $reference");
+    
+    // Check if verifyPaystackPayment function exists
+    if (!function_exists('verifyPaystackPayment')) {
+        error_log("verifyPaystackPayment function not found!");
+        echo "<!DOCTYPE html><html><body><h1>Configuration Error</h1><p>Payment verification function not available. Reference: $reference</p></body></html>";
+        exit;
+    }
+    
     $verification_result = verifyPaystackPayment($reference);
+    error_log("Verification result: " . json_encode($verification_result));
     
     if (!$verification_result['success']) {
         // Payment verification failed - mark as failed
         $stmt = $pdo->prepare("UPDATE purchases SET status = 'failed', updated_at = NOW() WHERE payment_ref = ?");
         $stmt->execute([$reference]);
         
-        error_log("Payment verification failed for reference: $reference");
-        header('Location: ' . PAYMENT_FAILURE_REDIRECT);
+        error_log("Payment verification failed for reference: $reference - " . ($verification_result['message'] ?? 'Unknown error'));
+        
+        // Show detailed error instead of just redirecting
+        echo "<!DOCTYPE html><html><head><title>Payment Verification Failed</title></head><body>";
+        echo "<h1>Payment Verification Failed</h1>";
+        echo "<p>Reference: $reference</p>";
+        echo "<p>Error: " . ($verification_result['message'] ?? 'Unknown error') . "</p>";
+        echo "<p><a href='" . PAYMENT_FAILURE_REDIRECT . "'>Go to Store</a></p>";
+        echo "</body></html>";
         exit;
     }
     
@@ -97,19 +114,57 @@ try {
     }
     
     // Get order details
-    $stmt = $pdo->prepare("SELECT * FROM purchases WHERE payment_ref = ?");
-    $stmt->execute([$reference]);
+    $stmt = $pdo->prepare("SELECT * FROM purchases WHERE payment_ref = ? OR reference = ?");
+    $stmt->execute([$reference, $reference]);
     $order = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$order) {
         error_log("Order not found for reference: $reference");
-        header('Location: ' . PAYMENT_FAILURE_REDIRECT);
+        
+        // Show detailed error with database info
+        echo "<!DOCTYPE html><html><head><title>Order Not Found</title></head><body>";
+        echo "<h1>Order Not Found</h1>";
+        echo "<p>Reference: $reference</p>";
+        
+        // Check if any orders exist
+        $stmt = $pdo->query("SELECT COUNT(*) as count FROM purchases");
+        $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+        echo "<p>Total orders in database: $count</p>";
+        
+        // Check for similar references
+        $stmt = $pdo->prepare("SELECT payment_ref, reference, status, created_at FROM purchases WHERE payment_ref LIKE ? OR reference LIKE ? ORDER BY created_at DESC LIMIT 5");
+        $like_ref = '%' . substr($reference, 0, 10) . '%';
+        $stmt->execute([$like_ref, $like_ref]);
+        $similar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        if ($similar) {
+            echo "<h3>Similar orders found:</h3><ul>";
+            foreach ($similar as $s) {
+                echo "<li>{$s['payment_ref']} / {$s['reference']} - Status: {$s['status']} - Created: {$s['created_at']}</li>";
+            }
+            echo "</ul>";
+        }
+        
+        echo "<p><a href='" . PAYMENT_FAILURE_REDIRECT . "'>Go to Store</a></p>";
+        echo "</body></html>";
         exit;
     }
     
+    error_log("Order found: " . json_encode($order));
+    
     // Check if order is already processed
     if ($order['status'] === 'paid') {
-        header('Location: ' . PAYMENT_SUCCESS_REDIRECT);
+        error_log("Order already marked as paid, redirecting to success page");
+        
+        // Show success message with download option
+        echo "<!DOCTYPE html><html><head><title>Payment Already Processed</title>";
+        echo "<meta http-equiv='refresh' content='3;url=" . PAYMENT_SUCCESS_REDIRECT . "'>";
+        echo "</head><body style='font-family:Arial;text-align:center;padding:50px;'>";
+        echo "<h1 style='color:#4CAF50;'>✓ Payment Already Processed</h1>";
+        echo "<p>Your purchase has already been recorded.</p>";
+        echo "<p>Redirecting you to your purchases page...</p>";
+        echo "<p><a href='" . PAYMENT_SUCCESS_REDIRECT . "'>Click here if not redirected</a></p>";
+        echo "</body></html>";
         exit;
     }
     
@@ -262,8 +317,19 @@ try {
     
     $pdo->commit();
     
-    // Redirect to success page
-    header('Location: ' . PAYMENT_SUCCESS_REDIRECT);
+    error_log("Payment processed successfully for reference: $reference, User ID: {$order['user_id']}, Product ID: {$order['product_id']}");
+    
+    // Show success page with auto-redirect
+    echo "<!DOCTYPE html><html><head><title>Payment Successful</title>";
+    echo "<meta http-equiv='refresh' content='3;url=" . PAYMENT_SUCCESS_REDIRECT . "'>";
+    echo "<style>body{font-family:Arial;text-align:center;padding:50px;background:#f5f5f5;} .box{max-width:500px;margin:0 auto;background:white;padding:40px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);} h1{color:#4CAF50;} .btn{display:inline-block;margin:20px 10px;padding:12px 24px;background:#4CAF50;color:white;text-decoration:none;border-radius:4px;font-weight:bold;} .btn:hover{background:#45a049;}</style>";
+    echo "</head><body><div class='box'>";
+    echo "<h1>✓ Payment Successful!</h1>";
+    echo "<p>Your purchase has been processed successfully.</p>";
+    echo "<p><strong>Reference:</strong> $reference</p>";
+    echo "<p>Redirecting you to your downloads...</p>";
+    echo "<a href='" . PAYMENT_SUCCESS_REDIRECT . "' class='btn'>View My Purchases</a>";
+    echo "</div></body></html>";
     exit;
     
 } catch (Exception $e) {
