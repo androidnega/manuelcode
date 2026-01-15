@@ -49,16 +49,51 @@ foreach ($includes as $include_file) {
     }
 }
 
-// Include payment config
+// Include payment config - CRITICAL: This file contains verifyPaystackPayment function
 $payment_config = $base_dir . '/config/payment_config.php';
 if (file_exists($payment_config)) {
     include_once $payment_config;
+    error_log("callback.php: payment_config.php loaded from: $payment_config");
 } else {
-    error_log("callback.php: payment_config.php not found at: $payment_config");
-    // Define fallback redirect URLs
-    if (!defined('PAYMENT_SUCCESS_REDIRECT')) define('PAYMENT_SUCCESS_REDIRECT', '../dashboard/my-purchases');
-    if (!defined('PAYMENT_FAILURE_REDIRECT')) define('PAYMENT_FAILURE_REDIRECT', '../store.php?error=payment_failed');
+    // Try alternative path
+    $payment_config = dirname(__DIR__) . '/config/payment_config.php';
+    if (file_exists($payment_config)) {
+        include_once $payment_config;
+        error_log("callback.php: payment_config.php loaded from alternative path: $payment_config");
+    } else {
+        error_log("callback.php: payment_config.php not found at: $payment_config");
+        
+        // Show error to user
+        echo "<!DOCTYPE html><html><head><title>Configuration Error</title></head><body>";
+        echo "<h1>Configuration Error</h1>";
+        echo "<p>Payment configuration file not found.</p>";
+        echo "<p>Searched locations:</p><ul>";
+        echo "<li>" . $base_dir . '/config/payment_config.php' . "</li>";
+        echo "<li>" . dirname(__DIR__) . '/config/payment_config.php' . "</li>";
+        echo "</ul>";
+        echo "<p>Please contact support with reference: " . htmlspecialchars($_GET['reference'] ?? 'N/A') . "</p>";
+        echo "</body></html>";
+        exit;
+    }
 }
+
+// Verify the function is loaded
+if (!function_exists('verifyPaystackPayment')) {
+    error_log("callback.php: verifyPaystackPayment function not found after including payment_config.php");
+    error_log("callback.php: Loaded functions: " . implode(', ', get_defined_functions()['user']));
+    
+    echo "<!DOCTYPE html><html><head><title>Configuration Error</title></head><body>";
+    echo "<h1>Configuration Error</h1>";
+    echo "<p>Payment verification function not found after loading config file.</p>";
+    echo "<p>Config file loaded from: $payment_config</p>";
+    echo "<p>Please contact support with reference: " . htmlspecialchars($_GET['reference'] ?? 'N/A') . "</p>";
+    echo "</body></html>";
+    exit;
+}
+
+// Define fallback redirect URLs if not already defined
+if (!defined('PAYMENT_SUCCESS_REDIRECT')) define('PAYMENT_SUCCESS_REDIRECT', '../dashboard/my-purchases');
+if (!defined('PAYMENT_FAILURE_REDIRECT')) define('PAYMENT_FAILURE_REDIRECT', '../store.php?error=payment_failed');
 
 // Handle Paystack callback for registered users
 $reference = $_GET['reference'] ?? '';
@@ -71,13 +106,6 @@ if (empty($reference)) {
 try {
     // FIXED: Enhanced payment verification with Paystack
     error_log("Callback started for reference: $reference");
-    
-    // Check if verifyPaystackPayment function exists
-    if (!function_exists('verifyPaystackPayment')) {
-        error_log("verifyPaystackPayment function not found!");
-        echo "<!DOCTYPE html><html><body><h1>Configuration Error</h1><p>Payment verification function not available. Reference: $reference</p></body></html>";
-        exit;
-    }
     
     $verification_result = verifyPaystackPayment($reference);
     error_log("Verification result: " . json_encode($verification_result));
