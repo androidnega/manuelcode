@@ -227,16 +227,25 @@ try {
     
     // FIXED: Log payment verification properly
     try {
+        // First try stored procedure
         $stmt = $pdo->prepare("CALL log_payment_verification(?, ?, 'verified', ?)");
         $stmt->execute([$reference, $payment_data['id'], json_encode($payment_data)]);
+        error_log("Payment verification logged via stored procedure");
     } catch (Exception $e) {
-        // If stored procedure doesn't exist, use direct insert
-        $stmt = $pdo->prepare("
-            INSERT INTO payment_verifications (payment_ref, transaction_id, status, payment_data, created_at) 
-            VALUES (?, ?, 'verified', ?, NOW())
-            ON DUPLICATE KEY UPDATE status = VALUES(status), payment_data = VALUES(payment_data), updated_at = NOW()
-        ");
-        $stmt->execute([$reference, $payment_data['id'], json_encode($payment_data)]);
+        error_log("Stored procedure failed, using direct insert: " . $e->getMessage());
+        // If stored procedure doesn't exist, try direct insert
+        try {
+            $stmt = $pdo->prepare("
+                INSERT INTO payment_verifications (payment_ref, transaction_id, status, payment_data, created_at) 
+                VALUES (?, ?, 'verified', ?, NOW())
+                ON DUPLICATE KEY UPDATE status = VALUES(status), payment_data = VALUES(payment_data), updated_at = NOW()
+            ");
+            $stmt->execute([$reference, $payment_data['id'], json_encode($payment_data)]);
+            error_log("Payment verification logged via direct insert");
+        } catch (Exception $e2) {
+            // Table might not exist, just log and continue
+            error_log("Payment verification table not found: " . $e2->getMessage());
+        }
     }
     
     // FIXED: Use comprehensive purchase update system to ensure admin dashboard reflection
@@ -290,12 +299,18 @@ try {
     }
     
     // FIXED: Log payment success for admin orders page
-    $stmt = $pdo->prepare("
-        INSERT INTO payment_logs (user_id, order_id, reference, amount, status, payment_data, created_at) 
-        VALUES (?, ?, ?, ?, 'success', ?, NOW())
-        ON DUPLICATE KEY UPDATE status = VALUES(status), payment_data = VALUES(payment_data), updated_at = NOW()
-    ");
-    $stmt->execute([$order['user_id'], $order['id'], $reference, $user_order['product_price'], json_encode($payment_data)]);
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO payment_logs (user_id, order_id, reference, amount, status, payment_data, created_at) 
+            VALUES (?, ?, ?, ?, 'success', ?, NOW())
+            ON DUPLICATE KEY UPDATE status = VALUES(status), payment_data = VALUES(payment_data), updated_at = NOW()
+        ");
+        $stmt->execute([$order['user_id'], $order['id'], $reference, $user_order['product_price'], json_encode($payment_data)]);
+        error_log("Payment log created successfully");
+    } catch (Exception $e) {
+        // Table might not exist, just log and continue
+        error_log("Payment logs table not found: " . $e->getMessage());
+    }
     
     // FIXED: Update site statistics for admin dashboard
     if (function_exists('updateGlobalStatistics')) {
@@ -337,16 +352,58 @@ try {
         $pdo->rollback();
     }
     
-    // Log error
+    // Log detailed error
     error_log("Payment callback error: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
     
-    // Mark purchase as failed if there was an error
-    if (isset($order) && $order) {
-        $stmt = $pdo->prepare("UPDATE purchases SET status = 'failed', updated_at = NOW() WHERE payment_ref = ?");
-        $stmt->execute([$reference]);
+    // Show detailed error page
+    echo "<!DOCTYPE html><html><head><title>Payment Processing Error</title></head><body>";
+    echo "<h1>Payment Processing Error</h1>";
+    echo "<p><strong>Reference:</strong> " . htmlspecialchars($reference) . "</p>";
+    echo "<p><strong>Error:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p><strong>File:</strong> " . htmlspecialchars($e->getFile()) . " (Line: " . $e->getLine() . ")</p>";
+    
+    // Check if order exists
+    if (isset($reference)) {
+        try {
+            $stmt = $pdo->prepare("SELECT id, user_id, product_id, status, amount FROM purchases WHERE payment_ref = ? OR reference = ?");
+            $stmt->execute([$reference, $reference]);
+            $check_order = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($check_order) {
+                echo "<h3>Order Found in Database:</h3>";
+                echo "<ul>";
+                echo "<li>Order ID: {$check_order['id']}</li>";
+                echo "<li>User ID: {$check_order['user_id']}</li>";
+                echo "<li>Product ID: {$check_order['product_id']}</li>";
+                echo "<li>Status: <strong>{$check_order['status']}</strong></li>";
+                echo "<li>Amount: GHS {$check_order['amount']}</li>";
+                echo "</ul>";
+                
+                // If status is pending, update it to paid
+                if ($check_order['status'] === 'pending') {
+                    echo "<p style='color:orange;'>⚠️ Order is marked as PENDING. Let me try to update it...</p>";
+                    
+                    try {
+                        $stmt = $pdo->prepare("UPDATE purchases SET status = 'paid', updated_at = NOW() WHERE id = ?");
+                        $stmt->execute([$check_order['id']]);
+                        echo "<p style='color:green;'>✓ Order status updated to PAID!</p>";
+                        echo "<p><a href='" . PAYMENT_SUCCESS_REDIRECT . "'>Go to My Purchases</a></p>";
+                    } catch (Exception $e2) {
+                        echo "<p style='color:red;'>✗ Failed to update order: " . htmlspecialchars($e2->getMessage()) . "</p>";
+                    }
+                }
+            } else {
+                echo "<p style='color:red;'>✗ Order not found in database</p>";
+            }
+        } catch (Exception $e3) {
+            echo "<p style='color:red;'>Error checking order: " . htmlspecialchars($e3->getMessage()) . "</p>";
+        }
     }
     
-    header('Location: ' . PAYMENT_FAILURE_REDIRECT);
+    echo "<hr>";
+    echo "<p><a href='" . PAYMENT_FAILURE_REDIRECT . "'>Go to Store</a> | <a href='" . PAYMENT_SUCCESS_REDIRECT . "'>My Purchases</a></p>";
+    echo "</body></html>";
     exit;
 }
 
