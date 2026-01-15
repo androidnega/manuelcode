@@ -139,9 +139,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $params[] = $docName;
                 }
                 
-                if (!empty($gallery_images)) {
+                // Handle deleted images
+                $deleted_preview = isset($_POST['delete_preview_image']) && $_POST['delete_preview_image'] === '1';
+                $deleted_gallery = isset($_POST['deleted_gallery_images']) ? json_decode($_POST['deleted_gallery_images'], true) : [];
+                
+                if ($deleted_preview) {
+                    // Delete preview image file
+                    if (!empty($current_product['preview_image'])) {
+                        $oldPreviewPath = '../assets/images/products/' . $current_product['preview_image'];
+                        if (file_exists($oldPreviewPath) && !filter_var($current_product['preview_image'], FILTER_VALIDATE_URL)) {
+                            @unlink($oldPreviewPath);
+                        }
+                    }
+                    $updateFields .= ", preview_image = NULL";
+                }
+                
+                // Handle gallery images - merge new with existing (excluding deleted)
+                if (!empty($deleted_gallery) || !empty($gallery_images)) {
+                    $existing_gallery = [];
+                    if (!empty($current_product['gallery_images'])) {
+                        $existing_gallery = json_decode($current_product['gallery_images'], true) ?: [];
+                    }
+                    
+                    // Remove deleted images from existing gallery
+                    foreach ($deleted_gallery as $deleted_img) {
+                        // Delete file if it's local
+                        $oldGalleryPath = '../assets/images/products/' . $deleted_img;
+                        if (file_exists($oldGalleryPath) && !filter_var($deleted_img, FILTER_VALIDATE_URL)) {
+                            @unlink($oldGalleryPath);
+                        }
+                        // Remove from array
+                        $existing_gallery = array_filter($existing_gallery, function($img) use ($deleted_img) {
+                            return $img !== $deleted_img;
+                        });
+                    }
+                    
+                    // Merge existing (non-deleted) with new images
+                    $final_gallery = array_values(array_merge($existing_gallery, $gallery_images));
                     $updateFields .= ", gallery_images = ?";
-                    $params[] = json_encode($gallery_images);
+                    $params[] = json_encode($final_gallery);
                 }
                 
                 $params[] = $product_id;
@@ -357,10 +393,16 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <div>
                 <label for="preview_image" class="block text-sm font-medium text-gray-700 mb-2">Preview Image</label>
                 <?php if (!empty($product['preview_image'])): ?>
-                  <div class="mb-2">
-                    <img src="../assets/images/products/<?php echo htmlspecialchars($product['preview_image']); ?>" 
+                  <div class="mb-2 relative inline-block">
+                    <img src="<?php echo (filter_var($product['preview_image'], FILTER_VALIDATE_URL)) ? htmlspecialchars($product['preview_image']) : '../assets/images/products/' . htmlspecialchars($product['preview_image']); ?>" 
                          alt="Current preview" class="w-32 h-32 object-cover rounded border">
+                    <button type="button" onclick="deletePreviewImage()" 
+                            class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                            title="Delete image">
+                      <i class="fas fa-times text-xs"></i>
+                    </button>
                     <p class="text-xs text-gray-500 mt-1">Current image: <?php echo htmlspecialchars($product['preview_image']); ?></p>
+                    <input type="hidden" name="delete_preview_image" id="delete_preview_image" value="0">
                   </div>
                 <?php endif; ?>
                 <input type="file" id="preview_image" name="preview_image" accept="image/png,image/jpeg,image/webp"
@@ -378,12 +420,21 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 if (!empty($current_gallery)): ?>
                   <div class="mb-2">
                     <p class="text-xs text-gray-500 mb-2">Current gallery images:</p>
-                    <div class="flex flex-wrap gap-2">
-                      <?php foreach ($current_gallery as $gallery_img): ?>
-                        <img src="../assets/images/products/<?php echo htmlspecialchars($gallery_img); ?>" 
-                             alt="Gallery image" class="w-16 h-16 object-cover rounded border">
+                    <div class="flex flex-wrap gap-2" id="gallery-images-container">
+                      <?php foreach ($current_gallery as $index => $gallery_img): ?>
+                        <div class="relative inline-block">
+                          <img src="<?php echo (filter_var($gallery_img, FILTER_VALIDATE_URL)) ? htmlspecialchars($gallery_img) : '../assets/images/products/' . htmlspecialchars($gallery_img); ?>" 
+                               alt="Gallery image" class="w-16 h-16 object-cover rounded border gallery-image-item"
+                               data-image="<?php echo htmlspecialchars($gallery_img); ?>">
+                          <button type="button" onclick="deleteGalleryImage('<?php echo htmlspecialchars($gallery_img); ?>', this)" 
+                                  class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600 transition-colors"
+                                  title="Delete image">
+                            <i class="fas fa-times text-xs"></i>
+                          </button>
+                        </div>
                       <?php endforeach; ?>
                     </div>
+                    <input type="hidden" name="deleted_gallery_images" id="deleted_gallery_images" value="[]">
                   </div>
                 <?php endif; ?>
                 <input type="file" id="gallery_images" name="gallery_images[]" accept="image/png,image/jpeg,image/webp" multiple
@@ -507,30 +558,60 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
           }
         }
 
+        // Delete preview image
+        function deletePreviewImage() {
+          if (confirm('Are you sure you want to delete this preview image?')) {
+            document.getElementById('delete_preview_image').value = '1';
+            const previewContainer = document.querySelector('label[for="preview_image"]').nextElementSibling;
+            if (previewContainer) {
+              previewContainer.style.opacity = '0.5';
+              previewContainer.style.pointerEvents = 'none';
+            }
+          }
+        }
+
+        // Delete gallery image
+        const deletedGalleryImages = [];
+        function deleteGalleryImage(imageName, buttonElement) {
+          if (confirm('Are you sure you want to delete this gallery image?')) {
+            deletedGalleryImages.push(imageName);
+            document.getElementById('deleted_gallery_images').value = JSON.stringify(deletedGalleryImages);
+            
+            // Hide the image
+            const imageContainer = buttonElement.closest('div');
+            imageContainer.style.opacity = '0.5';
+            imageContainer.style.pointerEvents = 'none';
+            imageContainer.querySelector('img').style.opacity = '0.3';
+            buttonElement.style.display = 'none';
+          }
+        }
+
         // Handle product pricing radio buttons
         document.addEventListener('DOMContentLoaded', function() {
           const paidRadio = document.getElementById('paid_product');
           const freeRadio = document.getElementById('free_product');
           const priceField = document.getElementById('price_field');
-          const priceInput = priceField.querySelector('input[name="price"]');
+          const priceInput = priceField ? priceField.querySelector('input[name="price"]') : null;
 
-          function togglePriceField() {
-            if (freeRadio.checked) {
-              priceField.style.display = 'none';
-              priceInput.value = '0.00';
-              priceInput.required = false;
-            } else {
-              priceField.style.display = 'block';
-              priceInput.required = true;
+          if (paidRadio && freeRadio && priceField && priceInput) {
+            function togglePriceField() {
+              if (freeRadio.checked) {
+                priceField.style.display = 'none';
+                priceInput.value = '0.00';
+                priceInput.required = false;
+              } else {
+                priceField.style.display = 'block';
+                priceInput.required = true;
+              }
             }
+
+            // Initial state
+            togglePriceField();
+
+            // Add event listeners
+            paidRadio.addEventListener('change', togglePriceField);
+            freeRadio.addEventListener('change', togglePriceField);
           }
-
-          // Initial state
-          togglePriceField();
-
-          // Add event listeners
-          paidRadio.addEventListener('change', togglePriceField);
-          freeRadio.addEventListener('change', togglePriceField);
         });
       </script>
       
