@@ -393,6 +393,35 @@ function convert_google_drive_url($url) {
 }
 
 /**
+ * Convert Google Drive link to direct download format
+ * @param string $url The Google Drive URL
+ * @return string The direct download URL
+ */
+function convert_google_drive_to_download($url) {
+    if (empty($url) || strpos($url, 'drive.google.com') === false) {
+        return $url;
+    }
+    
+    // Extract file ID from various Google Drive link formats
+    $patterns = [
+        '/\/file\/d\/([a-zA-Z0-9_-]+)/',  // /file/d/{file_id}/view
+        '/\/d\/([a-zA-Z0-9_-]+)/',        // /d/{file_id}
+        '/[?&]id=([a-zA-Z0-9_-]+)/',      // ?id={file_id} or &id={file_id}
+    ];
+    
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $url, $matches)) {
+            $file_id = $matches[1];
+            // Convert to direct download URL
+            return "https://drive.google.com/uc?export=download&id=" . $file_id;
+        }
+    }
+    
+    // If we can't parse it, return original
+    return $url;
+}
+
+/**
  * Check if URL is an image and return appropriate preview URL
  * @param string $url The URL to check
  * @return string The preview URL

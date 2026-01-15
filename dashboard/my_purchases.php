@@ -3,6 +3,7 @@ session_start();
 include '../includes/db.php';
 include '../includes/auth_only.php';
 include '../includes/product_functions.php';
+include '../includes/util.php';
 
 $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'] ?? 'User';
@@ -446,8 +447,8 @@ $purchases = $unique_purchases;
                        $product_details = $stmt->fetch(PDO::FETCH_ASSOC);
                        
                        if ($product_details && $product_details['drive_link']) {
-                           // If Google Drive link exists, use it directly
-                           $download_link = $product_details['drive_link'];
+                           // If Google Drive link exists, convert to direct download format
+                           $download_link = convert_google_drive_to_download($product_details['drive_link']);
                            $download_type = 'drive';
                        } elseif ($product_details && $product_details['doc_file']) {
                            // If local file exists, use the secure download system
