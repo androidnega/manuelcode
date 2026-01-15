@@ -29,6 +29,51 @@ $user_stats = getUserDashboardStats($pdo, $user_id);
 
 // Get unread notification count
 $unread_notifications = $notificationHelper->getUnreadCount($user_id);
+
+// Get user email for guest purchase check
+$stmt = $pdo->prepare("SELECT email FROM users WHERE id = ?");
+$stmt->execute([$user_id]);
+$user_email = $stmt->fetchColumn();
+
+// Get recent purchases (last 24 hours) that haven't been downloaded yet
+$recent_purchases = [];
+try {
+    // Get user purchases from last 24 hours
+    $stmt = $pdo->prepare("
+        SELECT p.*, pr.title, pr.preview_image, pr.id as product_id
+        FROM purchases p
+        JOIN products pr ON p.product_id = pr.id
+        WHERE p.user_id = ? AND p.status = 'paid' 
+        AND p.created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+        AND NOT EXISTS (
+            SELECT 1 FROM purchase_logs pl 
+            WHERE pl.purchase_id = p.id AND pl.user_id = ?
+        )
+        ORDER BY p.created_at DESC
+        LIMIT 5
+    ");
+    $stmt->execute([$user_id, $user_id]);
+    $recent_purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Also check guest orders if user has email
+    if ($user_email && empty($recent_purchases)) {
+        $stmt = $pdo->prepare("
+            SELECT go.*, pr.title, pr.preview_image, pr.id as product_id
+            FROM guest_orders go
+            JOIN products pr ON go.product_id = pr.id
+            WHERE go.email = ? AND go.status = 'paid'
+            AND go.created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+            ORDER BY go.created_at DESC
+            LIMIT 5
+        ");
+        $stmt->execute([$user_email]);
+        $guest_purchases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $recent_purchases = array_merge($recent_purchases, $guest_purchases);
+    }
+} catch (Exception $e) {
+    error_log("Error getting recent purchases: " . $e->getMessage());
+    $recent_purchases = [];
+}
 ?>
 
 <!DOCTYPE html>
@@ -77,7 +122,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
       
               <div class="flex-1 overflow-y-auto">
         <nav class="mt-4 px-2 lg:px-4 pb-4 space-y-1">
-          <a href="" class="flex items-center py-3 px-3 lg:px-4 bg-blue-50 text-blue-700 rounded-lg transition-colors w-full">
+          <a href="/dashboard" class="flex items-center py-3 px-3 lg:px-4 bg-blue-50 text-blue-700 rounded-lg transition-colors w-full">
             <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
             <span class="flex-1">Overview</span>
           </a>
@@ -166,6 +211,59 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
 
               <!-- Main Content Area -->
         <main class="p-4 lg:p-6 overflow-hidden">
+        
+        <!-- New Purchase Notification -->
+        <?php if (!empty($recent_purchases)): ?>
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 sm:p-6 mb-6 lg:mb-8">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <i class="fas fa-shopping-bag text-green-600 text-2xl sm:text-3xl"></i>
+            </div>
+            <div class="ml-3 sm:ml-4 flex-1">
+              <h3 class="text-base sm:text-lg font-semibold text-green-900 mb-2">
+                New Purchase Available for Download!
+              </h3>
+              <p class="text-sm sm:text-base text-green-800 mb-4">
+                You have <?php echo count($recent_purchases); ?> new purchase<?php echo count($recent_purchases) > 1 ? 's' : ''; ?> ready to download.
+              </p>
+              <div class="space-y-3">
+                <?php foreach (array_slice($recent_purchases, 0, 3) as $purchase): ?>
+                  <div class="flex items-center justify-between bg-white rounded-lg p-3 border border-green-200">
+                    <div class="flex items-center flex-1 min-w-0">
+                      <?php if (!empty($purchase['preview_image'])): ?>
+                        <img src="<?php echo htmlspecialchars($purchase['preview_image']); ?>" 
+                             alt="<?php echo htmlspecialchars($purchase['title']); ?>" 
+                             class="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0">
+                      <?php else: ?>
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <i class="fas fa-image text-gray-400"></i>
+                        </div>
+                      <?php endif; ?>
+                      <div class="ml-3 sm:ml-4 flex-1 min-w-0">
+                        <p class="text-sm sm:text-base font-medium text-gray-900 truncate">
+                          <?php echo htmlspecialchars($purchase['title']); ?>
+                        </p>
+                        <p class="text-xs sm:text-sm text-gray-600">
+                          Purchased <?php echo date('M j, Y', strtotime($purchase['created_at'])); ?>
+                        </p>
+                      </div>
+                    </div>
+                    <a href="downloads" class="ml-3 sm:ml-4 bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 rounded-lg font-semibold text-sm sm:text-base transition-colors flex-shrink-0 whitespace-nowrap">
+                      <i class="fas fa-download mr-2"></i>Download
+                    </a>
+                  </div>
+                <?php endforeach; ?>
+                <?php if (count($recent_purchases) > 3): ?>
+                  <a href="downloads" class="block text-center text-green-700 hover:text-green-800 font-semibold text-sm sm:text-base">
+                    View all <?php echo count($recent_purchases); ?> new purchases →
+                  </a>
+                <?php endif; ?>
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php endif; ?>
+        
         <!-- Stats Grid -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
           <div class="bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700 rounded-xl p-3 lg:p-6 border border-slate-200">

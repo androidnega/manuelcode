@@ -234,7 +234,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'pdf' && isset($_GET['id'])) {
             
             <div class="flex-1 overflow-y-auto scrollbar-hide">
                 <nav class="mt-4 px-4 pb-4">
-                    <a href="" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
+                    <a href="/dashboard" class="flex items-center py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg mb-2 transition-colors w-full">
                         <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
                         <span class="flex-1">Overview</span>
                     </a>
