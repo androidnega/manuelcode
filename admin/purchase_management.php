@@ -124,6 +124,136 @@ $search = $_GET['search'] ?? '';
 $status_filter = $_GET['status'] ?? '';
 $date_from = $_GET['date_from'] ?? '';
 $date_to = $_GET['date_to'] ?? '';
+$period_filter = $_GET['period'] ?? ''; // week, month, or custom date range
+
+// Handle period filter shortcuts
+if ($period_filter === 'today') {
+    $date_from = date('Y-m-d');
+    $date_to = date('Y-m-d');
+} elseif ($period_filter === 'week') {
+    $date_from = date('Y-m-d', strtotime('monday this week'));
+    $date_to = date('Y-m-d');
+} elseif ($period_filter === 'month') {
+    $date_from = date('Y-m-01');
+    $date_to = date('Y-m-d');
+}
+
+// Calculate revenue statistics
+$revenue_where_conditions = ["p.status = 'paid'"];
+$revenue_params = [];
+
+if (!empty($date_from)) {
+    $revenue_where_conditions[] = "DATE(p.created_at) >= ?";
+    $revenue_params[] = $date_from;
+}
+
+if (!empty($date_to)) {
+    $revenue_where_conditions[] = "DATE(p.created_at) <= ?";
+    $revenue_params[] = $date_to;
+}
+
+$revenue_where_clause = 'WHERE ' . implode(' AND ', $revenue_where_conditions);
+
+// Calculate total revenue (user purchases)
+$revenue_query = "
+    SELECT COALESCE(SUM(p.amount), 0) as total_revenue, COUNT(*) as total_orders
+    FROM purchases p 
+    $revenue_where_clause
+";
+$stmt = $pdo->prepare($revenue_query);
+$stmt->execute($revenue_params);
+$user_revenue = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Calculate guest revenue
+$guest_revenue_where_conditions = ["go.status = 'paid'"];
+$guest_revenue_params = [];
+
+if (!empty($date_from)) {
+    $guest_revenue_where_conditions[] = "DATE(go.created_at) >= ?";
+    $guest_revenue_params[] = $date_from;
+}
+
+if (!empty($date_to)) {
+    $guest_revenue_where_conditions[] = "DATE(go.created_at) <= ?";
+    $guest_revenue_params[] = $date_to;
+}
+
+$guest_revenue_where_clause = 'WHERE ' . implode(' AND ', $guest_revenue_where_conditions);
+
+$guest_revenue_query = "
+    SELECT COALESCE(SUM(COALESCE(go.total_amount, go.amount, 0)), 0) as total_revenue, COUNT(*) as total_orders
+    FROM guest_orders go 
+    $guest_revenue_where_clause
+";
+$stmt = $pdo->prepare($guest_revenue_query);
+$stmt->execute($guest_revenue_params);
+$guest_revenue = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$total_revenue = floatval($user_revenue['total_revenue']) + floatval($guest_revenue['total_revenue']);
+$total_orders = intval($user_revenue['total_orders']) + intval($guest_revenue['total_orders']);
+
+// Calculate today's revenue
+$today = date('Y-m-d');
+$today_revenue_query = "
+    SELECT COALESCE(SUM(p.amount), 0) as revenue
+    FROM purchases p 
+    WHERE p.status = 'paid' AND DATE(p.created_at) = ?
+";
+$stmt = $pdo->prepare($today_revenue_query);
+$stmt->execute([$today]);
+$today_user_revenue = floatval($stmt->fetchColumn());
+
+$today_guest_revenue_query = "
+    SELECT COALESCE(SUM(COALESCE(go.total_amount, go.amount, 0)), 0) as revenue
+    FROM guest_orders go 
+    WHERE go.status = 'paid' AND DATE(go.created_at) = ?
+";
+$stmt = $pdo->prepare($today_guest_revenue_query);
+$stmt->execute([$today]);
+$today_guest_revenue = floatval($stmt->fetchColumn());
+$today_revenue = $today_user_revenue + $today_guest_revenue;
+
+// Calculate this week's revenue
+$week_start = date('Y-m-d', strtotime('monday this week'));
+$week_revenue_query = "
+    SELECT COALESCE(SUM(p.amount), 0) as revenue
+    FROM purchases p 
+    WHERE p.status = 'paid' AND DATE(p.created_at) >= ?
+";
+$stmt = $pdo->prepare($week_revenue_query);
+$stmt->execute([$week_start]);
+$week_user_revenue = floatval($stmt->fetchColumn());
+
+$week_guest_revenue_query = "
+    SELECT COALESCE(SUM(COALESCE(go.total_amount, go.amount, 0)), 0) as revenue
+    FROM guest_orders go 
+    WHERE go.status = 'paid' AND DATE(go.created_at) >= ?
+";
+$stmt = $pdo->prepare($week_guest_revenue_query);
+$stmt->execute([$week_start]);
+$week_guest_revenue = floatval($stmt->fetchColumn());
+$week_revenue = $week_user_revenue + $week_guest_revenue;
+
+// Calculate this month's revenue
+$month_start = date('Y-m-01');
+$month_revenue_query = "
+    SELECT COALESCE(SUM(p.amount), 0) as revenue
+    FROM purchases p 
+    WHERE p.status = 'paid' AND DATE(p.created_at) >= ?
+";
+$stmt = $pdo->prepare($month_revenue_query);
+$stmt->execute([$month_start]);
+$month_user_revenue = floatval($stmt->fetchColumn());
+
+$month_guest_revenue_query = "
+    SELECT COALESCE(SUM(COALESCE(go.total_amount, go.amount, 0)), 0) as revenue
+    FROM guest_orders go 
+    WHERE go.status = 'paid' AND DATE(go.created_at) >= ?
+";
+$stmt = $pdo->prepare($month_guest_revenue_query);
+$stmt->execute([$month_start]);
+$month_guest_revenue = floatval($stmt->fetchColumn());
+$month_revenue = $month_user_revenue + $month_guest_revenue;
 
 // Validate and sanitize sort parameters
 $allowed_sort_fields = ['id', 'product_title', 'user_name', 'price', 'status', 'created_at'];
@@ -765,6 +895,87 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
             </div>
           </div>
         <?php endif; ?>
+
+        <!-- Revenue Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <!-- Total Revenue (Filtered) -->
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600 mb-1">Total Revenue</p>
+                <p class="text-2xl font-bold text-gray-900">GHS <?php echo number_format($total_revenue, 2); ?></p>
+                <p class="text-xs text-gray-500 mt-1"><?php echo $total_orders; ?> orders</p>
+              </div>
+              <div class="bg-green-100 rounded-full p-3">
+                <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Today's Revenue -->
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600 mb-1">Today</p>
+                <p class="text-2xl font-bold text-gray-900">GHS <?php echo number_format($today_revenue, 2); ?></p>
+                <p class="text-xs text-gray-500 mt-1"><?php echo date('M j, Y'); ?></p>
+              </div>
+              <div class="bg-blue-100 rounded-full p-3">
+                <i class="fas fa-calendar-day text-blue-600 text-xl"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- This Week's Revenue -->
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600 mb-1">This Week</p>
+                <p class="text-2xl font-bold text-gray-900">GHS <?php echo number_format($week_revenue, 2); ?></p>
+                <p class="text-xs text-gray-500 mt-1">Since <?php echo date('M j', strtotime($week_start)); ?></p>
+              </div>
+              <div class="bg-purple-100 rounded-full p-3">
+                <i class="fas fa-calendar-week text-purple-600 text-xl"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- This Month's Revenue -->
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600 mb-1">This Month</p>
+                <p class="text-2xl font-bold text-gray-900">GHS <?php echo number_format($month_revenue, 2); ?></p>
+                <p class="text-xs text-gray-500 mt-1"><?php echo date('F Y'); ?></p>
+              </div>
+              <div class="bg-orange-100 rounded-full p-3">
+                <i class="fas fa-calendar-alt text-orange-600 text-xl"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Period Filters -->
+        <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+          <div class="flex flex-wrap gap-2">
+            <a href="?period=today<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?><?php echo !empty($status_filter) ? '&status=' . urlencode($status_filter) : ''; ?>" 
+               class="px-4 py-2 text-sm font-medium rounded-lg border <?php echo $period_filter === 'today' ? 'bg-blue-50 border-blue-500 text-blue-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'; ?>">
+              Today
+            </a>
+            <a href="?period=week<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?><?php echo !empty($status_filter) ? '&status=' . urlencode($status_filter) : ''; ?>" 
+               class="px-4 py-2 text-sm font-medium rounded-lg border <?php echo $period_filter === 'week' ? 'bg-blue-50 border-blue-500 text-blue-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'; ?>">
+              This Week
+            </a>
+            <a href="?period=month<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?><?php echo !empty($status_filter) ? '&status=' . urlencode($status_filter) : ''; ?>" 
+               class="px-4 py-2 text-sm font-medium rounded-lg border <?php echo $period_filter === 'month' ? 'bg-blue-50 border-blue-500 text-blue-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'; ?>">
+              This Month
+            </a>
+            <a href="?<?php echo !empty($search) ? 'search=' . urlencode($search) . '&' : ''; ?><?php echo !empty($status_filter) ? 'status=' . urlencode($status_filter) : ''; ?>" 
+               class="px-4 py-2 text-sm font-medium rounded-lg border bg-white border-gray-300 text-gray-700 hover:bg-gray-50">
+              All Time
+            </a>
+          </div>
+        </div>
 
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
