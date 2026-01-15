@@ -75,6 +75,7 @@ $routes = [
     
     // Admin Dashboard Routes
     'admin' => ['admin/dashboard.php', 'admin', 'admin'],
+    'sales-monitor' => ['admin/sales_monitor_dashboard.php', 'admin', 'sales_monitor'],
     'purchase-management' => ['admin/purchase_management.php', 'admin', 'admin'],
     'products' => ['admin/products.php', 'admin', 'admin'],
     'add-product' => ['admin/add_product.php', 'admin', 'admin'],
@@ -149,9 +150,11 @@ if (empty($route)) {
         $route = 'analyst';
     } elseif (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
         $user_role = $_SESSION['user_role'] ?? 'admin';
-        // Show superadmin dashboard if superadmin, otherwise admin dashboard
+        // Show appropriate dashboard based on role
         if ($user_role === 'superadmin') {
             $route = 'superadmin';
+        } elseif ($user_role === 'sales_monitor') {
+            $route = 'sales-monitor';
         } else {
             $route = 'admin';
         }
@@ -196,7 +199,13 @@ if ($auth_type === 'admin') {
             $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
             header('Location: ' . $protocol . '://' . $host . '/admin?error=access_denied');
             exit;
-        } elseif ($required_role === 'admin' && $user_role !== 'admin' && $user_role !== 'superadmin') {
+        } elseif ($required_role === 'admin' && $user_role !== 'admin' && $user_role !== 'superadmin' && $user_role !== 'sales_monitor') {
+            // Use absolute path to avoid redirect loops
+            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+            $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+            header('Location: ' . $protocol . '://' . $host . '/admin?error=access_denied');
+            exit;
+        } elseif ($required_role === 'sales_monitor' && $user_role !== 'sales_monitor') {
             // Use absolute path to avoid redirect loops
             $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
             $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
@@ -239,6 +248,9 @@ if (!file_exists($full_path)) {
 // Set a flag to indicate this file is being included via router
 define('ROUTER_INCLUDED', true);
 $_SERVER['HTTP_X_ROUTER'] = 'true';
+
+// Preserve query string for pages that need it (like view_submission, download_submission, etc.)
+// The $_GET superglobal will already contain the query parameters from the original request
 
 // Include the requested file
 include $full_path;

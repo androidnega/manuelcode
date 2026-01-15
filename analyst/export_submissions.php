@@ -31,7 +31,7 @@ if (!class_exists('ZipArchive')) {
         
             if (empty($submissions)) {
         // Redirect back to dashboard with message
-        header('Location: dashboard.php?message=no_submissions');
+        header('Location: /dashboard?message=no_submissions');
         exit;
     }
         
@@ -96,7 +96,7 @@ try {
     
     if (empty($submissions)) {
         // Redirect back to dashboard with message
-        header('Location: dashboard.php?message=no_submissions');
+        header('Location: /dashboard?message=no_submissions');
         exit;
     }
     

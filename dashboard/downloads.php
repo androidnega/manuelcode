@@ -160,6 +160,16 @@ $downloads = $unique_downloads;
         .whitespace-nowrap {
           white-space: normal;
         }
+        .main-content {
+          padding: 0.75rem;
+        }
+        .dashboard-card {
+          margin: 0;
+          border-radius: 0;
+        }
+        .dashboard-card > div:first-child {
+          padding: 0.75rem;
+        }
       }
       .download-table th,
       .download-table td {
@@ -240,7 +250,7 @@ $downloads = $unique_downloads;
     </aside>
 
     <!-- Main Content -->
-    <div class="flex-1 lg:ml-0 min-h-screen">
+    <div class="flex-1 lg:ml-0 min-h-screen w-0 min-w-0">
       <!-- Desktop Header -->
       <header class="hidden lg:block bg-white border-b border-gray-200 px-6 py-4">
         <div class="flex items-center justify-between">
@@ -271,7 +281,7 @@ $downloads = $unique_downloads;
       </header>
 
       <!-- Main Content Area -->
-      <main class="main-content p-3 sm:p-4 lg:p-6">
+      <main class="main-content p-3 sm:p-4 lg:p-6 w-full max-w-full overflow-x-hidden">
         <!-- Downloads Section -->
         <div class="dashboard-card">
           <div class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b border-gray-200">
@@ -290,7 +300,7 @@ $downloads = $unique_downloads;
               </div>
             <?php else: ?>
               <!-- Mobile Card View -->
-              <div class="block sm:hidden space-y-3">
+              <div class="block sm:hidden space-y-3 w-full max-w-full">
                 <?php foreach ($downloads as $download): ?>
                   <?php 
                   $download_link = null;
@@ -308,8 +318,8 @@ $downloads = $unique_downloads;
                       }
                   }
                   ?>
-                  <div class="bg-white border border-gray-200 rounded-lg p-3">
-                    <div class="flex items-start space-x-3 mb-3">
+                  <div class="bg-white border border-gray-200 rounded-lg p-3 w-full max-w-full overflow-hidden">
+                    <div class="flex items-start gap-3 mb-3 w-full">
                       <?php if ($download['preview_image']): ?>
                         <img src="../assets/images/products/<?php echo htmlspecialchars($download['preview_image']); ?>" alt="<?php echo htmlspecialchars($download['product_title']); ?>" class="w-12 h-12 rounded object-cover flex-shrink-0">
                       <?php else: ?>
@@ -317,22 +327,22 @@ $downloads = $unique_downloads;
                           <i class="fas fa-file text-gray-400"></i>
                         </div>
                       <?php endif; ?>
-                      <div class="flex-1 min-w-0">
+                      <div class="flex-1 min-w-0 overflow-hidden">
                         <h3 class="text-sm font-medium text-gray-900 truncate"><?php echo htmlspecialchars($download['product_title']); ?></h3>
-                        <p class="text-xs text-gray-500">Digital Product</p>
+                        <p class="text-xs text-gray-500 truncate">Digital Product</p>
                         <p class="text-xs text-gray-500 mt-1"><?php echo date('M j, Y', strtotime($download['created_at'])); ?></p>
                         <p class="text-sm font-semibold text-green-600 mt-1">GHS <?php echo number_format($download['price'], 2); ?></p>
                       </div>
                     </div>
-                    <div class="flex flex-col space-y-2">
+                    <div class="flex flex-col space-y-2 w-full">
                       <?php if ($download_link): ?>
-                        <a href="<?php echo htmlspecialchars($download_link); ?>" class="btn-primary text-xs py-2 text-center">
+                        <a href="<?php echo htmlspecialchars($download_link); ?>" class="btn-primary text-xs py-2 text-center w-full">
                           <i class="fas fa-download mr-1"></i>Download
                         </a>
                       <?php else: ?>
                         <span class="text-xs text-gray-400 text-center py-2">File not available</span>
                       <?php endif; ?>
-                      <a href="/product?id=<?php echo $download['product_id']; ?>" class="btn-secondary text-xs py-2 text-center">
+                      <a href="/product?id=<?php echo $download['product_id']; ?>" class="btn-secondary text-xs py-2 text-center w-full">
                         <i class="fas fa-eye mr-1"></i>View Details
                       </a>
                     </div>

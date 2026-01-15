@@ -19,7 +19,7 @@ if (!class_exists('ZipArchive')) {
         $submissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         if (empty($submissions)) {
-            header('Location: dashboard.php?message=no_submissions');
+            header('Location: /dashboard?message=no_submissions');
             exit;
         }
         
@@ -47,7 +47,7 @@ if (!class_exists('ZipArchive')) {
                         <button onclick="downloadAll()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                             <i class="fas fa-download mr-2"></i>Download All Files (Auto)
                         </button>
-                        <a href="dashboard.php" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 ml-2">
+                        <a href="/dashboard" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 ml-2">
                             <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
                         </a>
                     </div>
@@ -98,7 +98,7 @@ if (!class_exists('ZipArchive')) {
         exit;
     } catch (Exception $e) {
         error_log("Error creating download page: " . $e->getMessage());
-        header('Location: dashboard.php?message=error');
+        header('Location: /dashboard?message=error');
         exit;
     }
 }
@@ -110,7 +110,7 @@ try {
     $submissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     if (empty($submissions)) {
-        header('Location: dashboard.php?message=no_submissions');
+        header('Location: /dashboard?message=no_submissions');
         exit;
     }
     

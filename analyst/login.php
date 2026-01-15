@@ -7,7 +7,7 @@ $success_message = '';
 
 // Check if already logged in
 if (isset($_SESSION['analyst_logged_in']) && $_SESSION['analyst_logged_in'] === true) {
-    header('Location: dashboard.php');
+    header('Location: /dashboard');
     exit;
 }
 
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmt->execute([$analyst['id'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']]);
                         
                         // Redirect to dashboard
-                        header('Location: dashboard.php');
+                        header('Location: /dashboard');
                         exit;
                     } else {
                         $error_message = 'Invalid phone number digits. Please check the last 4 digits of your registered phone number.';

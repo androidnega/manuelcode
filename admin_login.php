@@ -43,13 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Check if admin exists with this email (both regular and super admin)
             try {
-                $stmt = $pdo->prepare("SELECT id, name, email, phone, password FROM admins WHERE email = ?");
+                $stmt = $pdo->prepare("SELECT id, name, email, phone, password, role FROM admins WHERE email = ?");
                 $stmt->execute([$email]);
                 $admin = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 if ($admin) {
-                    // Determine if superadmin or regular admin
-                    $is_superadmin = (stripos($admin['name'], 'Super Admin') !== false || stripos($admin['name'], 'superadmin') !== false);
+                    // Get role from database
+                    $admin_role = $admin['role'] ?? 'admin';
+                    $is_superadmin = ($admin_role === 'superadmin');
                     
                     if ($login_method === 'otp') {
                         $phone = $admin['phone'];
@@ -68,9 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 if ($sms_result['success']) {
                                     $success_message = 'OTP sent to your phone number!';
                                     $show_otp_form = true;
-                                    $_SESSION['pending_admin_email'] = $email;
-                                    $_SESSION['pending_admin_phone'] = $normalized_phone;
-                                    $_SESSION['pending_is_superadmin'] = $is_superadmin;
+                    $_SESSION['pending_admin_email'] = $email;
+                    $_SESSION['pending_admin_phone'] = $normalized_phone;
+                    $_SESSION['pending_is_superadmin'] = $is_superadmin;
+                    $_SESSION['pending_admin_role'] = $admin_role;
                                 } else {
                                     $error_message = 'Failed to send OTP: ' . $sms_result['error'];
                                 }
@@ -82,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $show_password_form = true;
                         $_SESSION['pending_admin_email'] = $email;
                         $_SESSION['pending_is_superadmin'] = $is_superadmin;
+                        $_SESSION['pending_admin_role'] = $admin_role;
                     }
                 } else {
                     $error_message = 'No admin account found with this email address.';
@@ -106,11 +109,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($verified) {
             // Get admin details
             try {
-                $stmt = $pdo->prepare("SELECT id, name, phone FROM admins WHERE email = ? AND phone = ?");
+                $stmt = $pdo->prepare("SELECT id, name, phone, role FROM admins WHERE email = ? AND phone = ?");
                 $stmt->execute([$email, $normalized_phone]);
                 $admin = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 if ($admin) {
+                    // Get role from database
+                    $admin_role = $admin['role'] ?? 'admin';
+                    
                     // Update last login and login method
                     $stmt = $pdo->prepare("UPDATE admins SET last_login = NOW(), login_method = 'otp' WHERE id = ?");
                     $stmt->execute([$admin['id']]);
@@ -121,13 +127,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['admin_name'] = $admin['name'];
                     $_SESSION['admin_email'] = $email;
                     $_SESSION['admin_phone'] = $normalized_phone;
-                    $_SESSION['user_role'] = $is_superadmin ? 'superadmin' : 'admin';
+                    $_SESSION['user_role'] = $admin_role;
                     $_SESSION['admin_login_time'] = time();
                     
                     // Clear pending session data
                     unset($_SESSION['pending_admin_email']);
                     unset($_SESSION['pending_admin_phone']);
                     unset($_SESSION['pending_is_superadmin']);
+                    unset($_SESSION['pending_admin_role']);
                     
                     // Redirect to unified dashboard
                     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
@@ -158,13 +165,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 // Get admin details
-                $stmt = $pdo->prepare("SELECT id, name, email, password FROM admins WHERE email = ?");
+                $stmt = $pdo->prepare("SELECT id, name, email, password, role FROM admins WHERE email = ?");
                 $stmt->execute([$email]);
                 $admin = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 if ($admin && password_verify($password, $admin['password'])) {
-                    // Determine role
-                    $is_superadmin = (stripos($admin['name'], 'Super Admin') !== false || stripos($admin['name'], 'superadmin') !== false);
+                    // Get role from database
+                    $admin_role = $admin['role'] ?? 'admin';
                     
                     // Update last login and login method
                     $stmt = $pdo->prepare("UPDATE admins SET last_login = NOW(), login_method = 'password' WHERE id = ?");
@@ -175,12 +182,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['admin_id'] = $admin['id'];
                     $_SESSION['admin_name'] = $admin['name'];
                     $_SESSION['admin_email'] = $admin['email'];
-                    $_SESSION['user_role'] = $is_superadmin ? 'superadmin' : 'admin';
+                    $_SESSION['user_role'] = $admin_role;
                     $_SESSION['admin_login_time'] = time();
                     
                     // Clear pending session data
                     unset($_SESSION['pending_admin_email']);
                     unset($_SESSION['pending_is_superadmin']);
+                    unset($_SESSION['pending_admin_role']);
                     
                     // Redirect to unified dashboard
                     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';

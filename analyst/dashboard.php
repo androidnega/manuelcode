@@ -4,7 +4,7 @@ include '../includes/db.php';
 
 // Check if analyst is logged in
 if (!isset($_SESSION['analyst_logged_in']) || $_SESSION['analyst_logged_in'] !== true) {
-    header('Location: login.php');
+    header('Location: /analyst/login.php');
     exit;
 }
 
@@ -64,7 +64,7 @@ if (isset($_GET['logout'])) {
     
     // Destroy session
     session_destroy();
-    header('Location: login.php');
+    header('Location: /analyst/login.php');
     exit;
 }
 ?>
@@ -111,7 +111,7 @@ if (isset($_GET['logout'])) {
                         </h1>
                     </div>
                                          <div class="flex items-center space-x-3 sm:space-x-4">
-                         <a href="settings.php" 
+                         <a href="/dashboard/analyst-settings" 
                             class="bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:bg-blue-600 transition-colors text-sm shadow-sm">
                              <i class="fas fa-cog mr-1 sm:mr-2"></i><span class="hidden sm:inline">Settings</span><span class="sm:hidden">⚙️</span>
                          </a>
@@ -193,7 +193,7 @@ if (isset($_GET['logout'])) {
                            <h3 class="text-base sm:text-lg leading-6 font-medium text-gray-700">
                                <i class="fas fa-cog mr-2 text-blue-600"></i>System Settings
                            </h3>
-                           <a href="settings.php" 
+                           <a href="/dashboard/analyst-settings" 
                               class="bg-blue-500 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-blue-600 transition-all duration-200 text-sm shadow-sm">
                                <i class="fas fa-external-link-alt mr-2"></i>Open Settings
                            </a>
@@ -245,7 +245,7 @@ if (isset($_GET['logout'])) {
                            </h3>
                        </div>
                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                           <a href="reference_lookup.php" 
+                           <a href="/dashboard/analyst-reference-lookup" 
                               class="bg-blue-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg hover:bg-blue-600 transition-all duration-200 text-center shadow-sm hover:shadow-md">
                                <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3">
                                    <i class="fas fa-search text-xl sm:text-2xl"></i>
@@ -255,7 +255,7 @@ if (isset($_GET['logout'])) {
                                    </div>
                                </div>
                            </a>
-                           <a href="price_control.php" 
+                           <a href="/dashboard/analyst-price-control" 
                               class="bg-green-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg hover:bg-green-600 transition-all duration-200 text-center shadow-sm hover:shadow-md">
                                <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3">
                                    <i class="fas fa-dollar-sign text-xl sm:text-2xl"></i>
@@ -265,7 +265,7 @@ if (isset($_GET['logout'])) {
                                    </div>
                                </div>
                            </a>
-                           <a href="download_all_documents.php" 
+                           <a href="/dashboard/analyst-download-all" 
                               class="bg-purple-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg hover:bg-purple-600 transition-all duration-200 text-center shadow-sm hover:shadow-md sm:col-span-2 lg:col-span-1">
                                <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-3">
                                    <i class="fas fa-file-archive text-xl sm:text-2xl"></i>
@@ -293,22 +293,29 @@ if (isset($_GET['logout'])) {
                            </h3>
                           
                           <div class="flex flex-wrap gap-2">
+                              <!-- Bulk Delete Button -->
+                              <button id="bulk-delete-btn" 
+                                      class="bg-red-500 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-red-600 transition-colors text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                      style="display: none;">
+                                  <i class="fas fa-trash-alt mr-1 sm:mr-2"></i><span class="hidden sm:inline">Delete Selected (<span id="selected-count">0</span>)</span><span class="sm:hidden">Delete</span>
+                              </button>
+                              
                               <!-- ZIP Export Button (Prominent) -->
                               <?php if (class_exists('ZipArchive')): ?>
-                                  <a href="download_all_documents.php" 
+                                  <a href="/dashboard/analyst-download-all" 
                                      class="bg-purple-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-purple-600 transition-colors font-semibold text-sm sm:text-base">
                                       <i class="fas fa-file-archive mr-1 sm:mr-2"></i><span class="hidden sm:inline">📦 Export All ZIP</span><span class="sm:hidden">ZIP</span>
                                   </a>
                               <?php endif; ?>
                               
                               <!-- Download All Documents -->
-                              <a href="download_all_documents.php" 
+                              <a href="/dashboard/analyst-download-all" 
                                  class="bg-green-500 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-green-600 transition-colors text-xs sm:text-sm">
                                   <i class="fas fa-download mr-1 sm:mr-2"></i><span class="hidden sm:inline">Download All</span><span class="sm:hidden">All</span>
                               </a>
                               
                               <!-- Export Info -->
-                              <a href="export_submissions.php?type=all" 
+                              <a href="/dashboard/analyst-export-submissions?type=all" 
                                  class="bg-blue-500 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-blue-600 transition-colors text-xs sm:text-sm">
                                   <i class="fas fa-file-text mr-1 sm:mr-2"></i><span class="hidden sm:inline">Export Info</span><span class="sm:hidden">Info</span>
                               </a>
@@ -380,14 +387,21 @@ if (isset($_GET['logout'])) {
                                                                    <?php foreach ($recent_submissions as $submission): ?>
                                       <div class="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 submission-card" 
                                            data-search="<?php echo strtolower(htmlspecialchars($submission['name'] . ' ' . $submission['index_number'] . ' ' . $submission['phone_number'] . ' ' . $submission['file_name'])); ?>"
-                                           data-date="<?php echo date('Y-m-d', strtotime($submission['created_at'])); ?>">
-                                          <!-- Student Info -->
+                                           data-date="<?php echo date('Y-m-d', strtotime($submission['created_at'])); ?>"
+                                           data-submission-id="<?php echo $submission['id']; ?>">
+                                          <!-- Checkbox and Student Info -->
                                           <div class="mb-3 sm:mb-4">
                                               <div class="flex justify-between items-start">
-                                                  <div class="flex-1 min-w-0">
-                                                      <h4 class="font-semibold text-gray-900 text-base sm:text-lg truncate"><?php echo htmlspecialchars($submission['name']); ?></h4>
-                                                      <p class="text-xs sm:text-sm text-gray-600 font-medium"><?php echo htmlspecialchars($submission['index_number']); ?></p>
-                                                      <p class="text-xs sm:text-sm text-gray-500">📞 <?php echo htmlspecialchars($submission['phone_number']); ?></p>
+                                                  <div class="flex items-start flex-1 min-w-0">
+                                                      <input type="checkbox" 
+                                                             class="submission-checkbox mt-1 mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                                             value="<?php echo $submission['id']; ?>"
+                                                             data-submission-name="<?php echo htmlspecialchars($submission['name']); ?>">
+                                                      <div class="flex-1 min-w-0">
+                                                          <h4 class="font-semibold text-gray-900 text-base sm:text-lg truncate"><?php echo htmlspecialchars($submission['name']); ?></h4>
+                                                          <p class="text-xs sm:text-sm text-gray-600 font-medium"><?php echo htmlspecialchars($submission['index_number']); ?></p>
+                                                          <p class="text-xs sm:text-sm text-gray-500">📞 <?php echo htmlspecialchars($submission['phone_number']); ?></p>
+                                                      </div>
                                                   </div>
                                                   <span class="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded ml-2 flex-shrink-0"><?php echo date('M j, Y', strtotime($submission['created_at'])); ?></span>
                                               </div>
@@ -410,7 +424,7 @@ if (isset($_GET['logout'])) {
                                           </div>
                                           <!-- Action Buttons -->
                                           <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-1 sm:gap-2 pt-3 border-t border-gray-200">
-                                              <a href="view_submission.php?id=<?php echo $submission['id']; ?>" 
+                                              <a href="/dashboard/analyst-view-submission?id=<?php echo $submission['id']; ?>" 
                                                  class="bg-blue-500 text-white px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-blue-600 transition-colors flex items-center justify-center">
                                                   <i class="fas fa-eye mr-1 sm:mr-2 text-xs sm:text-sm"></i><span class="hidden xs:inline">View</span><span class="xs:hidden">V</span>
                                               </a>
@@ -443,6 +457,11 @@ if (isset($_GET['logout'])) {
                               <table class="min-w-full divide-y divide-gray-200 hidden lg:table submission-table">
                                   <thead class="bg-gray-50">
                                       <tr>
+                                          <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                              <input type="checkbox" 
+                                                     id="select-all-checkbox"
+                                                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                          </th>
                                           <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
                                           <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
                                           <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Reference</th>
@@ -454,7 +473,14 @@ if (isset($_GET['logout'])) {
                                       <?php foreach ($recent_submissions as $submission): ?>
                                           <tr class="hover:bg-gray-50 submission-row" 
                                               data-search="<?php echo strtolower(htmlspecialchars($submission['name'] . ' ' . $submission['index_number'] . ' ' . $submission['phone_number'] . ' ' . $submission['file_name'])); ?>"
-                                              data-date="<?php echo date('Y-m-d', strtotime($submission['created_at'])); ?>">
+                                              data-date="<?php echo date('Y-m-d', strtotime($submission['created_at'])); ?>"
+                                              data-submission-id="<?php echo $submission['id']; ?>">
+                                              <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                                  <input type="checkbox" 
+                                                         class="submission-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                                         value="<?php echo $submission['id']; ?>"
+                                                         data-submission-name="<?php echo htmlspecialchars($submission['name']); ?>">
+                                              </td>
                                               <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                                   <div>
                                                       <div class="text-sm font-medium text-gray-900">
@@ -489,7 +515,7 @@ if (isset($_GET['logout'])) {
                                               </td>
                                               <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                   <div class="flex flex-wrap space-x-1 sm:space-x-2">
-                                                      <a href="view_submission.php?id=<?php echo $submission['id']; ?>" 
+                                                      <a href="/dashboard/analyst-view-submission?id=<?php echo $submission['id']; ?>" 
                                                          class="text-blue-600 hover:text-blue-900 px-2 py-1 rounded hover:bg-blue-50">
                                                           <i class="fas fa-eye mr-1"></i>View
                                                       </a>
@@ -696,7 +722,116 @@ if (isset($_GET['logout'])) {
              filterSubmissions();
          });
  
-         // Delete submission function
+         // Bulk delete functionality
+         const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+         const selectAllCheckbox = document.getElementById('select-all-checkbox');
+         const submissionCheckboxes = document.querySelectorAll('.submission-checkbox');
+         const selectedCountSpan = document.getElementById('selected-count');
+         
+         // Update bulk delete button visibility and count
+         function updateBulkDeleteButton() {
+             const checkedBoxes = document.querySelectorAll('.submission-checkbox:checked');
+             const count = checkedBoxes.length;
+             
+             if (count > 0) {
+                 bulkDeleteBtn.style.display = 'inline-block';
+                 selectedCountSpan.textContent = count;
+                 bulkDeleteBtn.disabled = false;
+             } else {
+                 bulkDeleteBtn.style.display = 'none';
+                 bulkDeleteBtn.disabled = true;
+             }
+             
+             // Update select all checkbox state
+             if (selectAllCheckbox) {
+                 selectAllCheckbox.checked = count === submissionCheckboxes.length && count > 0;
+                 selectAllCheckbox.indeterminate = count > 0 && count < submissionCheckboxes.length;
+             }
+         }
+         
+         // Select all checkbox handler
+         if (selectAllCheckbox) {
+             selectAllCheckbox.addEventListener('change', function() {
+                 submissionCheckboxes.forEach(checkbox => {
+                     checkbox.checked = this.checked;
+                 });
+                 updateBulkDeleteButton();
+             });
+         }
+         
+         // Individual checkbox handlers
+         submissionCheckboxes.forEach(checkbox => {
+             checkbox.addEventListener('change', updateBulkDeleteButton);
+         });
+         
+         // Bulk delete button handler
+         bulkDeleteBtn.addEventListener('click', function() {
+             const checkedBoxes = document.querySelectorAll('.submission-checkbox:checked');
+             const selectedIds = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+             const selectedNames = Array.from(checkedBoxes).map(cb => cb.dataset.submissionName);
+             
+             if (selectedIds.length === 0) {
+                 alert('Please select at least one submission to delete.');
+                 return;
+             }
+             
+             const confirmMessage = `Are you sure you want to delete ${selectedIds.length} submission(s)?\n\nThis action cannot be undone and will permanently remove the submission records and associated files.\n\nSelected: ${selectedNames.join(', ')}`;
+             
+             if (confirm(confirmMessage)) {
+                 // Show loading state
+                 const originalText = this.innerHTML;
+                 this.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Deleting...';
+                 this.disabled = true;
+                 
+                 // Send bulk delete request
+                 fetch('delete_submission.php', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                     },
+                     body: JSON.stringify({
+                         submission_ids: selectedIds
+                     })
+                 })
+                 .then(response => response.json())
+                 .then(data => {
+                     if (data.success) {
+                         // Remove all selected rows/cards from DOM
+                         checkedBoxes.forEach(checkbox => {
+                             const row = checkbox.closest('.submission-row') || checkbox.closest('.submission-card');
+                             if (row) {
+                                 row.remove();
+                             }
+                         });
+                         
+                         // Update count
+                         const currentCount = parseInt(submissionCount.textContent);
+                         submissionCount.textContent = currentCount - selectedIds.length;
+                         
+                         // Hide bulk delete button
+                         updateBulkDeleteButton();
+                         
+                         // Show success message
+                         alert(`Successfully deleted ${data.deleted_count || selectedIds.length} submission(s)!`);
+                         
+                         // Reload page if no submissions left
+                         if (currentCount - selectedIds.length === 0) {
+                             location.reload();
+                         }
+                     } else {
+                         throw new Error(data.message || 'Failed to delete submissions');
+                     }
+                 })
+                 .catch(error => {
+                     alert('Error deleting submissions: ' + error.message);
+                     // Restore button
+                     this.innerHTML = originalText;
+                     this.disabled = false;
+                 });
+             }
+         });
+         
+         // Delete submission function (single delete)
          function deleteSubmission(submissionId, studentName) {
              if (confirm(`Are you sure you want to delete the submission for "${studentName}"?\n\nThis action cannot be undone and will permanently remove the submission record and associated file.`)) {
                  // Show loading state
@@ -704,7 +839,7 @@ if (isset($_GET['logout'])) {
                  const originalText = deleteBtn.innerHTML;
                  deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Deleting...';
                  deleteBtn.disabled = true;
- 
+
                  // Send delete request
                  fetch('delete_submission.php', {
                      method: 'POST',
@@ -726,6 +861,9 @@ if (isset($_GET['logout'])) {
                              // Update count
                              const currentCount = parseInt(submissionCount.textContent);
                              submissionCount.textContent = currentCount - 1;
+                             
+                             // Update bulk delete button
+                             updateBulkDeleteButton();
                              
                              // Show success message
                              alert('Submission deleted successfully!');

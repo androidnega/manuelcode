@@ -226,7 +226,7 @@ if (isset($_GET['logout'])) {
                         </h1>
                     </div>
                     <div class="flex items-center space-x-3 sm:space-x-4">
-                        <a href="dashboard.php" 
+                        <a href="/dashboard" 
                            class="bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:bg-blue-600 transition-colors text-sm shadow-sm">
                             <i class="fas fa-tachometer-alt mr-1 sm:mr-2"></i><span class="hidden sm:inline">Dashboard</span><span class="sm:hidden">Home</span>
                         </a>

@@ -20,9 +20,9 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 // Include admin configuration
 include 'config.php';
 
-// Check user role - allow both admin and superadmin
-if (!isset($_SESSION['user_role']) || ($_SESSION['user_role'] !== 'admin' && $_SESSION['user_role'] !== 'superadmin')) {
-    // This is not an admin or superadmin, redirect to appropriate login
+// Check user role - allow admin, superadmin, and sales_monitor
+if (!isset($_SESSION['user_role']) || ($_SESSION['user_role'] !== 'admin' && $_SESSION['user_role'] !== 'superadmin' && $_SESSION['user_role'] !== 'sales_monitor')) {
+    // This is not an admin, superadmin, or sales_monitor, redirect to appropriate login
     $sessionManager->destroySession();
     // Use absolute path to avoid redirect loops
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';

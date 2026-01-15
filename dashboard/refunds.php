@@ -179,6 +179,16 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .whitespace-nowrap {
           white-space: normal;
         }
+        .main-content {
+          padding: 0.75rem;
+        }
+        .dashboard-card {
+          margin: 0;
+          border-radius: 0;
+        }
+        .dashboard-card > div:first-child {
+          padding: 0.75rem;
+        }
       }
       .refund-table th,
       .refund-table td {
@@ -294,7 +304,7 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </aside>
 
     <!-- Main Content -->
-    <div class="flex-1 lg:ml-0 min-h-screen">
+    <div class="flex-1 lg:ml-0 min-h-screen w-0 min-w-0">
              <!-- Desktop Header -->
        <header class="hidden lg:block <?php echo $dark_mode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'; ?> border-b px-6 py-4">
          <div class="flex items-center justify-between">
@@ -325,7 +335,7 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
        </header>
 
       <!-- Main Content Area -->
-      <main class="main-content p-3 sm:p-4 lg:p-6">
+      <main class="main-content p-3 sm:p-4 lg:p-6 w-full max-w-full overflow-x-hidden">
         <!-- Success/Error Messages -->
         <div id="message-container"></div>
 
@@ -356,7 +366,7 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
            </div>
           <div class="p-3 sm:p-4 lg:p-6">
             <!-- Mobile Card View -->
-            <div class="block sm:hidden space-y-3">
+            <div class="block sm:hidden space-y-3 w-full max-w-full">
               <?php foreach ($refunds as $refund): ?>
                 <?php
                 $status_colors = [
@@ -367,17 +377,17 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 ];
                 $status_color = $status_colors[$refund['status']] ?? 'bg-gray-100 text-gray-800';
                 ?>
-                <div class="bg-white border border-gray-200 rounded-lg p-3">
-                  <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($refund['product_title']); ?></h3>
-                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <?php echo $status_color; ?>">
+                <div class="bg-white border border-gray-200 rounded-lg p-3 w-full max-w-full overflow-hidden">
+                  <div class="flex justify-between items-start mb-2 gap-2">
+                    <h3 class="text-sm font-medium text-gray-900 truncate flex-1 min-w-0"><?php echo htmlspecialchars($refund['product_title']); ?></h3>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <?php echo $status_color; ?> flex-shrink-0">
                       <?php echo ucfirst($refund['status']); ?>
                     </span>
                   </div>
-                  <p class="text-xs text-gray-600 mb-2"><?php echo htmlspecialchars($refund['reason']); ?></p>
-                  <div class="flex justify-between items-center">
+                  <p class="text-xs text-gray-600 mb-2 break-words"><?php echo htmlspecialchars($refund['reason']); ?></p>
+                  <div class="flex justify-between items-center gap-2">
                     <span class="text-sm font-semibold text-green-600">GHS <?php echo number_format($refund['amount'], 2); ?></span>
-                    <span class="text-xs text-gray-500"><?php echo date('M j, Y', strtotime($refund['created_at'])); ?></span>
+                    <span class="text-xs text-gray-500 whitespace-nowrap"><?php echo date('M j, Y', strtotime($refund['created_at'])); ?></span>
                   </div>
                 </div>
               <?php endforeach; ?>
@@ -451,7 +461,7 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </div>
             <?php else: ?>
               <!-- Mobile Card View -->
-              <div class="block sm:hidden space-y-3">
+              <div class="block sm:hidden space-y-3 w-full max-w-full">
                 <?php foreach ($purchases as $purchase): ?>
                   <?php 
                   $purchase_date = new DateTime($purchase['created_at']);
@@ -467,8 +477,8 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       }
                   }
                   ?>
-                  <div class="bg-white border border-gray-200 rounded-lg p-3">
-                    <div class="flex items-start space-x-3 mb-3">
+                  <div class="bg-white border border-gray-200 rounded-lg p-3 w-full max-w-full overflow-hidden">
+                    <div class="flex items-start gap-3 mb-3 w-full">
                       <?php if ($purchase['preview_image']): ?>
                         <img src="../assets/images/products/<?php echo htmlspecialchars($purchase['preview_image']); ?>" alt="<?php echo htmlspecialchars($purchase['product_title']); ?>" class="w-12 h-12 rounded object-cover flex-shrink-0">
                       <?php else: ?>
@@ -476,9 +486,9 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           <i class="fas fa-file <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-400'; ?>"></i>
                         </div>
                       <?php endif; ?>
-                      <div class="flex-1 min-w-0">
+                      <div class="flex-1 min-w-0 overflow-hidden">
                         <h3 class="text-sm font-medium <?php echo $dark_mode ? 'text-white' : 'text-gray-900'; ?> truncate"><?php echo htmlspecialchars($purchase['product_title']); ?></h3>
-                        <p class="text-xs <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?>">Digital Product</p>
+                        <p class="text-xs <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> truncate">Digital Product</p>
                         <p class="text-xs <?php echo $dark_mode ? 'text-gray-400' : 'text-gray-500'; ?> mt-1"><?php echo date('M j, Y', strtotime($purchase['created_at'])); ?></p>
                         <p class="text-sm font-semibold text-green-600 mt-1">GHS <?php echo number_format($purchase['price'], 2); ?></p>
                         <div class="mt-2">
@@ -492,9 +502,9 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                       </div>
                     </div>
-                    <div class="flex flex-col space-y-2">
+                    <div class="flex flex-col space-y-2 w-full">
                       <?php if ($is_eligible && !$has_refund): ?>
-                        <button onclick="showRefundModal(<?php echo $purchase['id']; ?>, '<?php echo htmlspecialchars($purchase['product_title']); ?>')" class="btn-danger text-xs py-2 text-center">
+                        <button onclick="showRefundModal(<?php echo $purchase['id']; ?>, '<?php echo htmlspecialchars($purchase['product_title']); ?>')" class="btn-danger text-xs py-2 text-center w-full">
                           <i class="fas fa-undo mr-1"></i>Request Refund
                         </button>
                       <?php elseif ($has_refund): ?>
@@ -502,7 +512,7 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       <?php else: ?>
                         <span class="text-xs <?php echo $dark_mode ? 'text-gray-500' : 'text-gray-400'; ?> text-center py-2">Refund period expired</span>
                       <?php endif; ?>
-                      <a href="my-purchases" class="btn-secondary text-xs py-2 text-center">
+                      <a href="my-purchases" class="btn-secondary text-xs py-2 text-center w-full">
                         <i class="fas fa-eye mr-1"></i>View Details
                       </a>
                     </div>

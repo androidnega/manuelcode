@@ -23,7 +23,7 @@ if ($success_message !== '') {
 
 // Check if already logged in
 if (isset($_SESSION['analyst_logged_in']) && $_SESSION['analyst_logged_in'] === true) {
-    header('Location: dashboard.php');
+    header('Location: /dashboard');
     exit;
 }
 
@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     unset($_SESSION['pending_analyst'], $_SESSION['otp_success_message'], $_SESSION['otp_request_time']);
                     
                     // Redirect to dashboard
-                    header('Location: dashboard.php');
+                    header('Location: /dashboard');
                     exit;
                 }
             } catch (Exception $e) {

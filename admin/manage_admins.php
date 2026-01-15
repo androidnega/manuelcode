@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_admin'])) {
     $password = trim($_POST['password'] ?? '');
     $role = trim($_POST['role'] ?? 'admin');
     
-    // Security: Only allow admin, superadmin, and analyst roles
-    if (!in_array($role, ['admin', 'superadmin', 'analyst'])) {
+    // Security: Only allow admin, superadmin, analyst, and sales_monitor roles
+    if (!in_array($role, ['admin', 'superadmin', 'analyst', 'sales_monitor'])) {
         $error_message = 'Invalid role selected.';
     } elseif (empty($name) || empty($email) || empty($phone)) {
         $error_message = 'All fields are required.';
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_admin'])) {
                         $error_message = 'Failed to create analyst account.';
                     }
                 } else {
-                    // Create admin/superadmin account (with password option)
+                    // Create admin/superadmin/sales_monitor account (with password option)
                     $hashed_password = null;
                     if (!empty($password)) {
                         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -83,7 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_admin'])) {
                     
                     $stmt = $pdo->prepare("INSERT INTO admins (name, email, phone, password, role, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
                     if ($stmt->execute([$name, $email, $normalized_phone, $hashed_password, $role])) {
-                        $success_message = ucfirst($role) . ' account created successfully!';
+                        $role_display = ($role === 'sales_monitor') ? 'Sales Monitor' : ucfirst($role);
+                        $success_message = $role_display . ' account created successfully!';
                         if (!empty($password)) {
                             $success_message .= ' Password has been set.';
                         } else {
@@ -384,6 +385,7 @@ $regular_admins = count(array_filter($all_accounts, function($account) { return 
                                     <option value="admin">Admin</option>
                                     <option value="superadmin">Super Admin</option>
                                     <option value="analyst">Analyst</option>
+                                    <option value="sales_monitor">Sales Monitor</option>
                                 </select>
                                 <p class="text-xs text-gray-500 mt-1">Select account role</p>
                             </div>
@@ -456,9 +458,16 @@ $regular_admins = count(array_filter($all_accounts, function($account) { return 
                                                         <?php 
                                                         if ($admin['role'] === 'superadmin') echo 'bg-red-100 text-red-800';
                                                         elseif ($admin['role'] === 'analyst') echo 'bg-orange-100 text-orange-800';
+                                                        elseif ($admin['role'] === 'sales_monitor') echo 'bg-purple-100 text-purple-800';
                                                         else echo 'bg-blue-100 text-blue-800';
                                                         ?>">
-                                                        <?php echo ucfirst($admin['role']); ?>
+                                                        <?php 
+                                                        if ($admin['role'] === 'sales_monitor') {
+                                                            echo 'Sales Monitor';
+                                                        } else {
+                                                            echo ucfirst($admin['role']);
+                                                        }
+                                                        ?>
                                                     </span>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">

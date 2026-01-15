@@ -20,9 +20,12 @@ RewriteRule ^login/?$ auth/otp_login.php [L]
 RewriteCond %{REQUEST_URI} ^/contact/?$
 RewriteRule ^contact/?$ contact.php [L]
 
+# Route /store to store page
+RewriteCond %{REQUEST_URI} ^/store/?$
+RewriteRule ^store/?$ store.php [L]
+
 # Route /help/* to help pages (clean URLs)
-RewriteCond %{REQUEST_URI} ^/help/(download-guide|refund-guide|payment-issues|account-security)/?$
-RewriteRule ^help/(.+)$ help/$1.php [L]
+RewriteRule ^help/(download-guide|refund-guide|payment-issues|account-security)/?$ help/$1.php [L,NC]
 
 # Route /help to help index
 RewriteCond %{REQUEST_URI} ^/help/?$

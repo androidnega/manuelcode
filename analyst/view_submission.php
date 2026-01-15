@@ -12,7 +12,7 @@ $analyst_id = $_SESSION['analyst_id'];
 $submission_id = $_GET['id'] ?? '';
 
 if (empty($submission_id)) {
-    header('Location: dashboard.php');
+    header('Location: /dashboard');
     exit;
 }
 
@@ -22,7 +22,7 @@ try {
     $submission = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$submission) {
-        header('Location: dashboard.php');
+        header('Location: /dashboard');
         exit;
     }
     
@@ -40,7 +40,7 @@ try {
     
 } catch (Exception $e) {
     error_log("Error fetching submission: " . $e->getMessage());
-    header('Location: dashboard.php');
+    header('Location: /dashboard');
     exit;
 }
 ?>
@@ -66,7 +66,7 @@ try {
                         </h1>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <a href="dashboard.php" class="text-gray-500 hover:text-gray-700">
+                        <a href="/dashboard" class="text-gray-500 hover:text-gray-700">
                             <i class="fas fa-arrow-left mr-1"></i>Back to Dashboard
                         </a>
                     </div>
@@ -154,7 +154,7 @@ try {
                                class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors">
                                 <i class="fas fa-archive mr-2"></i>Export as ZIP
                             </a>
-                            <a href="dashboard.php" 
+                            <a href="/dashboard" 
                                class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">
                                 <i class="fas fa-arrow-left mr-2"></i>Back to List
                             </a>
