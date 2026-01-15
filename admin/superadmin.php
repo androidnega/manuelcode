@@ -258,9 +258,9 @@ try {
     </div>
 
     <!-- Quick Navigation Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
         <!-- Purchase Tracking Card -->
-        <a href="#purchase-tracking" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+        <a href="../dashboard/purchase-tracking" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-search text-blue-600 text-xl"></i>
@@ -273,7 +273,7 @@ try {
         </a>
 
         <!-- System Settings Card -->
-        <a href="#system-settings" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+        <a href="../dashboard/system-settings" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-cog text-gray-600 text-xl"></i>
@@ -286,7 +286,7 @@ try {
         </a>
 
         <!-- System Logs Card -->
-        <a href="#system-logs" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+        <a href="../dashboard/system-logs" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-list-alt text-red-600 text-xl"></i>
@@ -299,7 +299,7 @@ try {
         </a>
 
         <!-- Maintenance Mode Card -->
-        <a href="#maintenance-mode" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+        <a href="../dashboard/maintenance-mode" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-tools text-yellow-600 text-xl"></i>
@@ -312,7 +312,7 @@ try {
         </a>
 
         <!-- System Cleanup Card -->
-        <a href="#system-cleanup" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+        <a href="../dashboard/system-cleanup" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
             <div class="flex items-center">
                 <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
                     <i class="fas fa-broom text-orange-600 text-xl"></i>
@@ -320,6 +320,19 @@ try {
                 <div>
                     <h3 class="font-semibold text-gray-900">System Cleanup</h3>
                     <p class="text-sm text-gray-500">Reset system</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- Cloudinary Card -->
+        <a href="../dashboard/cloudinary" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-cloud text-blue-500 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">Cloudinary</h3>
+                    <p class="text-sm text-gray-500">Media management</p>
                 </div>
             </div>
         </a>

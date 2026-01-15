@@ -71,6 +71,12 @@ $routes = [
     'superadmin-tools' => ['admin/superadmin_tools.php', 'admin', 'superadmin'],
     'manage-admins' => ['admin/manage_admins.php', 'admin', 'superadmin'],
     'edit-admin' => ['admin/edit_admin.php', 'admin', 'superadmin'],
+    'purchase-tracking' => ['admin/superadmin_purchase_tracking.php', 'admin', 'superadmin'],
+    'system-settings' => ['admin/superadmin_system_settings.php', 'admin', 'superadmin'],
+    'system-logs' => ['admin/superadmin_system_logs.php', 'admin', 'superadmin'],
+    'maintenance-mode' => ['admin/superadmin_maintenance.php', 'admin', 'superadmin'],
+    'system-cleanup' => ['admin/superadmin_cleanup.php', 'admin', 'superadmin'],
+    'cloudinary' => ['admin/superadmin_cloudinary.php', 'admin', 'superadmin'],
     
     // Support Routes
     'support-dashboard' => ['admin/support_dashboard.php', 'support', 'support'],

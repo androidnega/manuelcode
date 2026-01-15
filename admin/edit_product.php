@@ -33,18 +33,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Handle preview image upload
             if (isset($_FILES['preview_image']) && $_FILES['preview_image']['error'] === UPLOAD_ERR_OK) {
-                $imgName = time() . '_' . sanitize_filename($_FILES['preview_image']['name']);
-                $imgPath = '../assets/images/products/' . $imgName;
+                $cloudinaryHelper = new CloudinaryHelper($pdo);
+                $imgName = null;
                 
-                // Ensure the upload directory exists
-                $uploadDir = '../assets/images/products/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
+                // Try Cloudinary upload first
+                if ($cloudinaryHelper->isEnabled()) {
+                    $uploadResult = $cloudinaryHelper->uploadImage($_FILES['preview_image']['tmp_name'], 'products');
+                    if ($uploadResult && isset($uploadResult['url'])) {
+                        $imgName = $uploadResult['url'];
+                    }
                 }
                 
-                // Move uploaded file with error handling
-                if (!move_uploaded_file($_FILES['preview_image']['tmp_name'], $imgPath)) {
-                    throw new Exception('Failed to upload preview image. Please check directory permissions.');
+                // Fallback to local storage
+                if (!$imgName) {
+                    $imgName = time() . '_' . sanitize_filename($_FILES['preview_image']['name']);
+                    $imgPath = '../assets/images/products/' . $imgName;
+                    
+                    // Ensure the upload directory exists
+                    $uploadDir = '../assets/images/products/';
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0755, true);
+                    }
+                    
+                    // Move uploaded file with error handling
+                    if (!move_uploaded_file($_FILES['preview_image']['tmp_name'], $imgPath)) {
+                        throw new Exception('Failed to upload preview image. Please check directory permissions.');
+                    }
                 }
             }
             

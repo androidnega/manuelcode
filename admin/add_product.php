@@ -5,6 +5,7 @@ include '../includes/db.php';
 include '../includes/config.php';
 include '../includes/util.php';
 include '../includes/product_notification_helper.php';
+include '../includes/cloudinary_helper.php';
 
 $admin_username = $_SESSION['admin_username'] ?? 'Admin';
 
@@ -26,16 +27,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die('Preview image: ' . $preview_validation['error']);
     }
     
-    $imgName = sanitize_filename($_FILES['preview_image']['name']);
-    $imgPath = "../assets/images/products/" . $imgName;
+    // Try Cloudinary upload first, fallback to local storage
+    $cloudinaryHelper = new CloudinaryHelper($pdo);
+    $imgName = null;
     
-    // Ensure the upload directory exists
-    $uploadDir = "../assets/images/products/";
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
+    if ($cloudinaryHelper->isEnabled()) {
+        $uploadResult = $cloudinaryHelper->uploadImage($_FILES['preview_image']['tmp_name'], 'products');
+        if ($uploadResult && isset($uploadResult['url'])) {
+            $imgName = $uploadResult['url']; // Store Cloudinary URL
+        }
     }
     
-    move_uploaded_file($_FILES['preview_image']['tmp_name'], $imgPath);
+    // Fallback to local storage if Cloudinary failed or not enabled
+    if (!$imgName) {
+        $imgName = sanitize_filename($_FILES['preview_image']['name']);
+        $imgPath = "../assets/images/products/" . $imgName;
+        
+        // Ensure the upload directory exists
+        $uploadDir = "../assets/images/products/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+        
+        move_uploaded_file($_FILES['preview_image']['tmp_name'], $imgPath);
+    }
 
     // Optional documentation file
     $docName = null;
@@ -64,11 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle gallery images
     $gallery_images = [];
     if (isset($_FILES['gallery_images'])) {
-        $uploadDir = "../assets/images/products/";
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
-        }
-        
         foreach ($_FILES['gallery_images']['tmp_name'] as $key => $tmp_name) {
             if ($_FILES['gallery_images']['error'][$key] === UPLOAD_ERR_OK) {
                 $file_validation = validate_file_upload([
@@ -80,11 +90,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ], ALLOWED_IMAGE_TYPES, MAX_PREVIEW_SIZE);
                 
                 if ($file_validation['valid']) {
-                    $galleryName = sanitize_filename($_FILES['gallery_images']['name'][$key]);
-                    $galleryPath = $uploadDir . $galleryName;
+                    $galleryUrl = null;
                     
-                    if (move_uploaded_file($tmp_name, $galleryPath)) {
-                        $gallery_images[] = $galleryName;
+                    // Try Cloudinary upload first
+                    if ($cloudinaryHelper->isEnabled()) {
+                        $uploadResult = $cloudinaryHelper->uploadImage($tmp_name, 'products/gallery');
+                        if ($uploadResult && isset($uploadResult['url'])) {
+                            $galleryUrl = $uploadResult['url'];
+                        }
+                    }
+                    
+                    // Fallback to local storage
+                    if (!$galleryUrl) {
+                        $uploadDir = "../assets/images/products/";
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
+                        
+                        $galleryName = sanitize_filename($_FILES['gallery_images']['name'][$key]);
+                        $galleryPath = $uploadDir . $galleryName;
+                        
+                        if (move_uploaded_file($tmp_name, $galleryPath)) {
+                            $galleryUrl = $galleryName;
+                        }
+                    }
+                    
+                    if ($galleryUrl) {
+                        $gallery_images[] = $galleryUrl;
                     }
                 }
             }
