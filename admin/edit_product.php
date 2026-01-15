@@ -155,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 // Handle gallery images - merge new with existing (excluding deleted)
+                // Always update gallery if there are deletions or new uploads
                 if (!empty($deleted_gallery) || !empty($gallery_images)) {
                     $existing_gallery = [];
                     if (!empty($current_product['gallery_images'])) {
@@ -176,6 +177,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     // Merge existing (non-deleted) with new images
                     $final_gallery = array_values(array_merge($existing_gallery, $gallery_images));
+                    $updateFields .= ", gallery_images = ?";
+                    $params[] = json_encode($final_gallery);
+                } elseif (!empty($deleted_gallery)) {
+                    // If only deletions, still need to update gallery
+                    $existing_gallery = [];
+                    if (!empty($current_product['gallery_images'])) {
+                        $existing_gallery = json_decode($current_product['gallery_images'], true) ?: [];
+                    }
+                    
+                    // Remove deleted images
+                    foreach ($deleted_gallery as $deleted_img) {
+                        $oldGalleryPath = '../assets/images/products/' . $deleted_img;
+                        if (file_exists($oldGalleryPath) && !filter_var($deleted_img, FILTER_VALIDATE_URL)) {
+                            @unlink($oldGalleryPath);
+                        }
+                        $existing_gallery = array_filter($existing_gallery, function($img) use ($deleted_img) {
+                            return $img !== $deleted_img;
+                        });
+                    }
+                    
+                    $final_gallery = array_values($existing_gallery);
                     $updateFields .= ", gallery_images = ?";
                     $params[] = json_encode($final_gallery);
                 }
