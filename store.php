@@ -84,31 +84,6 @@ if (isset($_SESSION['user_id'])) {
             overflow: hidden;
         }
         
-        /* Typewriter Effect Styles */
-        .typewriter-text::after {
-            content: '|';
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-        
-        .typewriter-text.color-white { color: white; }
-        .typewriter-text.color-yellow { color: #F5A623; }
-        .typewriter-text.color-yellow-white { 
-            background: linear-gradient(45deg, #F5A623 50%, white 50%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .typewriter-text.color-blue-yellow { 
-            background: linear-gradient(45deg, #536895 50%, #F5A623 50%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
     </style>
     <script>
         tailwind.config = {
@@ -126,13 +101,10 @@ if (isset($_SESSION['user_id'])) {
 <body class="bg-gray-50">
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8 sm:py-12">
         <div class="max-w-6xl mx-auto px-4">
             <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">Digital Store</h1>
-                <div class="text-xl md:text-2xl mb-8 h-12 flex items-center justify-center">
-                    <span class="typewriter-text"></span>
-                </div>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold">Digital Store</h1>
             </div>
         </div>
     </section>
@@ -253,26 +225,26 @@ if (isset($_SESSION['user_id'])) {
               <?php endif; ?>
               
               <!-- Purchase Status Badge -->
-              <div class="absolute top-4 right-4">
+              <div class="absolute top-2 right-2">
                 <?php if ($is_purchased && isset($_SESSION['user_id'])): ?>
                   <?php if ($purchase_type === 'guest'): ?>
-                    <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      <i class="fas fa-user mr-1"></i>Guest Purchase
+                    <span class="bg-blue-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+                      <i class="fas fa-user mr-1"></i>Guest
                     </span>
                   <?php else: ?>
-                    <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      <i class="fas fa-check mr-1"></i>Purchased
+                    <span class="bg-green-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+                      <i class="fas fa-check mr-1"></i>Owned
                     </span>
                   <?php endif; ?>
                 <?php else: ?>
-                  <span class="bg-[#F5A623] text-white px-3 py-1 rounded-full text-xs font-medium">New</span>
+                  <span class="bg-[#F5A623] text-white px-2 py-0.5 rounded text-xs font-medium">New</span>
                 <?php endif; ?>
               </div>
               
               <!-- Version Badge -->
               <?php if (!empty($product['version'])): ?>
-                <div class="absolute top-4 left-4">
-                  <span class="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                <div class="absolute top-2 left-2">
+                  <span class="bg-blue-500 text-white px-2 py-0.5 rounded text-xs font-medium">
                     v<?php echo htmlspecialchars($product['version']); ?>
                   </span>
                 </div>
@@ -280,106 +252,73 @@ if (isset($_SESSION['user_id'])) {
             </div>
             
             <div class="p-3 sm:p-4">
-              <div class="flex items-center justify-between mb-3">
-                <h3 class="text-lg sm:text-xl font-bold text-gray-900"><?php echo htmlspecialchars($product['title']); ?></h3>
-                <div class="flex items-center">
-                  <div class="flex text-yellow-400">
+              <div class="flex items-center justify-between mb-1 sm:mb-2">
+                <h3 class="text-sm sm:text-base font-semibold text-gray-900 truncate flex-1"><?php echo htmlspecialchars($product['title']); ?></h3>
+                <div class="flex items-center ml-2 flex-shrink-0">
+                  <div class="flex text-yellow-400 text-xs">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                   </div>
-                  <span class="text-sm text-gray-500 ml-2">(5)</span>
+                  <span class="text-xs text-gray-500 ml-1">(5)</span>
                 </div>
               </div>
               
-              <p class="text-gray-600 mb-3 text-sm line-clamp-2"><?php echo htmlspecialchars($product['short_desc']); ?></p>
+              <p class="text-gray-600 mb-2 text-xs line-clamp-1 hidden sm:block"><?php echo htmlspecialchars($product['short_desc']); ?></p>
               
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center space-x-2">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center">
                   <?php if ($is_purchased && isset($_SESSION['user_id'])): ?>
-                    <!-- Purchased Status -->
-                    <div class="flex items-center space-x-2">
-                      <span class="text-xl sm:text-2xl font-bold text-green-600">Purchased</span>
-                      <span class="text-sm text-gray-500">₵<?php echo number_format($product['price'], 2); ?></span>
-                    </div>
+                    <span class="text-base sm:text-lg font-semibold text-green-600">Purchased</span>
                   <?php elseif ($product['price'] == 0): ?>
-                    <!-- Free Product -->
-                    <span class="text-xl sm:text-2xl font-bold text-blue-600">FREE</span>
+                    <span class="text-base sm:text-lg font-semibold text-blue-600">FREE</span>
                   <?php else: ?>
-                    <!-- Regular Price -->
-                    <span class="text-xl sm:text-2xl font-bold text-[#536895]">₵<?php echo number_format($product['price'], 2); ?></span>
-                  <?php endif; ?>
-                </div>
-                <div class="flex space-x-2">
-                  <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Digital</span>
-                  <?php if (!empty($product['last_updated'])): ?>
-                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
-                      Updated <?php echo date('M j', strtotime($product['last_updated'])); ?>
-                    </span>
-                  <?php endif; ?>
-                  <?php if ($is_purchased && isset($_SESSION['user_id'])): ?>
-                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
-                      <i class="fas fa-check mr-1"></i>Owned
-                    </span>
+                    <span class="text-base sm:text-lg font-semibold text-[#536895]">₵<?php echo number_format($product['price'], 2); ?></span>
                   <?php endif; ?>
                 </div>
               </div>
               
-              <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+              <div class="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2">
                 <?php if ($is_purchased && $download_link): ?>
-                  <!-- FIXED: Purchased - Show Download Button -->
                   <a href="<?php echo $download_link; ?>" 
-                     class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors text-center">
-                    <i class="fas fa-download mr-2"></i>
-                    Download
+                     class="flex-1 bg-green-600 text-white py-1.5 px-3 rounded text-sm font-medium text-center">
+                    <i class="fas fa-download mr-1"></i>Download
                   </a>
                   <a href="product.php?id=<?php echo $product['id']; ?>" 
-                     class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors text-center">
-                    <i class="fas fa-info-circle mr-2"></i>
-                    Details
+                     class="bg-blue-600 text-white py-1.5 px-3 rounded text-sm font-medium text-center">
+                    <i class="fas fa-info-circle mr-1"></i>Details
                   </a>
                 <?php else: ?>
-                  <!-- Not Purchased - Show appropriate button -->
                   <?php if ($product['price'] == 0): ?>
-                    <!-- Free Product -->
                     <?php if (isset($_SESSION['user_id'])): ?>
-                      <!-- Logged in user - Direct download -->
                       <a href="download_free_product.php?id=<?php echo $product['id']; ?>" 
-                         class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors text-center">
-                        <i class="fas fa-download mr-2"></i>
-                        Download Free
+                         class="flex-1 bg-green-600 text-white py-1.5 px-3 rounded text-sm font-medium text-center">
+                        <i class="fas fa-download mr-1"></i>Download Free
                       </a>
                     <?php else: ?>
-                      <!-- Guest user - Login to download -->
                       <a href="auth/login.php" 
-                         class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors text-center">
-                        <i class="fas fa-sign-in-alt mr-2"></i>
-                        Login to Download
+                         class="flex-1 bg-blue-600 text-white py-1.5 px-3 rounded text-sm font-medium text-center">
+                        <i class="fas fa-sign-in-alt mr-1"></i>Login
                       </a>
                     <?php endif; ?>
                   <?php else: ?>
-                    <!-- Paid Product -->
                     <?php if (isset($_SESSION['user_id'])): ?>
-                      <!-- Registered User - Direct Purchase -->
                       <a href="payment/process_payment.php?id=<?php echo $product['id']; ?>" 
-                         class="flex-1 bg-[#536895] hover:bg-[#4a5a7a] text-white py-2 px-4 rounded-lg font-medium transition-colors text-center">
-                        <i class="fas fa-credit-card mr-2"></i>
-                        Buy Now
+                         class="flex-1 bg-[#536895] text-white py-1.5 px-3 rounded text-sm font-medium text-center">
+                        <i class="fas fa-credit-card mr-1"></i>Buy Now
                       </a>
                     <?php else: ?>
-                      <!-- Guest User - Guest Purchase -->
                       <a href="guest_purchase.php?id=<?php echo $product['id']; ?>" 
-                         class="flex-1 bg-[#536895] hover:bg-[#4a5a7a] text-white py-2 px-4 rounded-lg font-medium transition-colors text-center">
-                        <i class="fas fa-credit-card mr-2"></i>
-                        Buy Now
+                         class="flex-1 bg-[#536895] text-white py-1.5 px-3 rounded text-sm font-medium text-center">
+                        <i class="fas fa-credit-card mr-1"></i>Buy Now
                       </a>
                     <?php endif; ?>
                   <?php endif; ?>
                   <a href="product.php?id=<?php echo $product['id']; ?>" 
-                     class="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-lg transition-colors text-center">
-                    <i class="fas fa-eye"></i>
+                     class="bg-gray-100 text-gray-700 p-1.5 rounded text-center">
+                    <i class="fas fa-eye text-sm"></i>
                   </a>
                 <?php endif; ?>
               </div>
@@ -398,9 +337,9 @@ if (isset($_SESSION['user_id'])) {
                 }
                 ?>
                 <?php if ($has_unread): ?>
-                  <div class="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                  <div class="mt-2 p-1.5 bg-yellow-50 border border-yellow-200 rounded text-xs">
                     <i class="fas fa-bell text-yellow-600 mr-1"></i>
-                    <span class="text-yellow-800">New update available!</span>
+                    <span class="text-yellow-800">New update</span>
                   </div>
                 <?php endif; ?>
               <?php endif; ?>
@@ -586,54 +525,8 @@ if (isset($_SESSION['user_id'])) {
       window.location.reload();
   }
   
-  // Typewriter Effect
-  const typewriterText = document.querySelector('.typewriter-text');
-  const texts = [
-      { text: 'Discover amazing digital products and resources', color: 'white' },
-      { text: 'Premium software solutions for developers', color: 'yellow' },
-      { text: 'Professional tools and development resources', color: 'yellow-white' },
-      { text: 'Quality digital products for your business', color: 'blue-yellow' },
-      { text: 'Cutting-edge technology at your fingertips', color: 'white' },
-      { text: 'Innovative solutions for modern development', color: 'yellow' }
-  ];
-  
-  let textIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
-  let typeSpeed = 100;
-  
-  function typeWriter() {
-      const currentText = texts[textIndex];
-      
-      if (isDeleting) {
-          typewriterText.textContent = currentText.text.substring(0, charIndex - 1);
-          charIndex--;
-          typeSpeed = 50;
-      } else {
-          typewriterText.textContent = currentText.text.substring(0, charIndex + 1);
-          charIndex++;
-          typeSpeed = 100;
-      }
-      
-      // Update color class
-      typewriterText.className = `typewriter-text color-${currentText.color}`;
-      
-      if (!isDeleting && charIndex === currentText.text.length) {
-          typeSpeed = 2000; // Pause at end
-          isDeleting = true;
-      } else if (isDeleting && charIndex === 0) {
-          isDeleting = false;
-          textIndex = (textIndex + 1) % texts.length;
-          typeSpeed = 500; // Pause before typing next
-      }
-      
-      setTimeout(typeWriter, typeSpeed);
-  }
-  
   // Check for existing coupon on page load
   document.addEventListener('DOMContentLoaded', function() {
-      // Start typewriter effect
-      setTimeout(typeWriter, 1000);
       
       const storedCoupon = sessionStorage.getItem('store_applied_coupon');
       if (storedCoupon) {
