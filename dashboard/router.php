@@ -42,6 +42,7 @@ $routes = [
     'edit-project' => ['admin/edit_project.php', 'admin', 'admin'],
     'orders' => ['admin/orders.php', 'admin', 'admin'],
     'users' => ['admin/users.php', 'admin', 'admin'],
+    'users.php' => ['admin/users.php', 'admin', 'admin'], // Direct file access redirect
     'user-management' => ['admin/user_management.php', 'admin', 'admin'],
     'view-user' => ['admin/view_user.php', 'admin', 'admin'],
     'reports' => ['admin/reports.php', 'admin', 'admin'],
