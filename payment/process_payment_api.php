@@ -43,6 +43,20 @@ if (!defined('PAYSTACK_GUEST_CALLBACK_URL') || !defined('PAYSTACK_CALLBACK_URL')
     exit;
 }
 
+// Check if database connection is available
+if (!isset($pdo) || $pdo === null) {
+    error_log("Database connection not available");
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Database connection error']);
+    exit;
+}
+
+// Check if CouponManager class exists
+if (!class_exists('CouponManager')) {
+    error_log("CouponManager class not found");
+    // Don't exit - coupon functionality will just be unavailable
+}
+
 header('Content-Type: application/json');
 
 // Get JSON input
@@ -181,6 +195,10 @@ try {
     } elseif (isset($input['coupon_data']) && $input['coupon_data']) {
         $coupon_data = $input['coupon_data'];
         try {
+            // Check if CouponManager is available
+            if (!class_exists('CouponManager')) {
+                throw new Exception('Coupon system not available');
+            }
             // Use CouponManager for validation
             $couponManager = new CouponManager($pdo);
             // Fix: Pass null for user_id when guest, use $user_id for logged-in users
