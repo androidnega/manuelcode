@@ -1229,7 +1229,9 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
             }
           }
         });
-        selectedPurchasesInput.value = JSON.stringify(selectedPurchases);
+        const jsonData = JSON.stringify(selectedPurchases);
+        console.log('Selected purchases JSON:', jsonData);
+        selectedPurchasesInput.value = jsonData;
       } else {
         bulkActionsBar.classList.add('hidden');
       }
