@@ -9,30 +9,49 @@ session_start();
 // Get the route from query string or parse from REQUEST_URI
 $route = $_GET['route'] ?? '';
 
-// If route is empty, try to parse from REQUEST_URI
-if (empty($route) && isset($_SERVER['REQUEST_URI'])) {
-    $request_uri = $_SERVER['REQUEST_URI'];
-    // Remove query string
-    $request_uri = strtok($request_uri, '?');
-    // Extract route from /dashboard/route
-    if (preg_match('#^/dashboard/(.+)$#', $request_uri, $matches)) {
-        $route = $matches[1];
-        // Remove .php extension if present
+// If route is empty, try multiple methods to extract it
+if (empty($route)) {
+    // Method 1: Parse from REQUEST_URI
+    if (isset($_SERVER['REQUEST_URI'])) {
+        $request_uri = $_SERVER['REQUEST_URI'];
+        // Remove query string
+        $request_uri = strtok($request_uri, '?');
+        // Extract route from /dashboard/route or /dashboard/router.php/route
+        if (preg_match('#^/dashboard/(?:router\.php/)?(.+)$#', $request_uri, $matches)) {
+            $route = $matches[1];
+            // Remove .php extension if present
+            $route = preg_replace('/\.php$/', '', $route);
+        } elseif (preg_match('#^/dashboard/(.+)$#', $request_uri, $matches)) {
+            $route = $matches[1];
+            $route = preg_replace('/\.php$/', '', $route);
+        }
+    }
+    
+    // Method 2: Check PATH_INFO
+    if (empty($route) && isset($_SERVER['PATH_INFO'])) {
+        $route = ltrim($_SERVER['PATH_INFO'], '/');
         $route = preg_replace('/\.php$/', '', $route);
     }
-}
-
-// Also check PATH_INFO if available
-if (empty($route) && isset($_SERVER['PATH_INFO'])) {
-    $route = ltrim($_SERVER['PATH_INFO'], '/');
-    $route = preg_replace('/\.php$/', '', $route);
+    
+    // Method 3: Check if script name contains route
+    if (empty($route) && isset($_SERVER['SCRIPT_NAME'])) {
+        $script_name = $_SERVER['SCRIPT_NAME'];
+        if (preg_match('#/dashboard/(.+)$#', $script_name, $matches)) {
+            $route = $matches[1];
+            $route = preg_replace('/\.php$/', '', $route);
+            // If it's router.php, route should be empty
+            if ($route === 'router') {
+                $route = '';
+            }
+        }
+    }
 }
 
 // Remove trailing slash
 $route = rtrim($route, '/');
 
-// Log for debugging (remove in production)
-error_log("Dashboard Router - Route: '$route', REQUEST_URI: " . ($_SERVER['REQUEST_URI'] ?? 'none') . ", GET: " . json_encode($_GET));
+// Log for debugging
+error_log("Dashboard Router - Route: '$route', REQUEST_URI: " . ($_SERVER['REQUEST_URI'] ?? 'none') . ", SCRIPT_NAME: " . ($_SERVER['SCRIPT_NAME'] ?? 'none') . ", PATH_INFO: " . ($_SERVER['PATH_INFO'] ?? 'none'));
 
 // Set global variable for current page detection in included files
 $_SESSION['current_route'] = $route;
