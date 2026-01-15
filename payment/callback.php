@@ -50,50 +50,126 @@ foreach ($includes as $include_file) {
 }
 
 // Include payment config - CRITICAL: This file contains verifyPaystackPayment function
-$payment_config = $base_dir . '/config/payment_config.php';
-if (file_exists($payment_config)) {
-    include_once $payment_config;
-    error_log("callback.php: payment_config.php loaded from: $payment_config");
-} else {
-    // Try alternative path
-    $payment_config = dirname(__DIR__) . '/config/payment_config.php';
+$payment_config_loaded = false;
+$payment_config_paths = [
+    $base_dir . '/config/payment_config.php',
+    dirname(__DIR__) . '/config/payment_config.php',
+    __DIR__ . '/../config/payment_config.php'
+];
+
+foreach ($payment_config_paths as $payment_config) {
     if (file_exists($payment_config)) {
         include_once $payment_config;
-        error_log("callback.php: payment_config.php loaded from alternative path: $payment_config");
-    } else {
-        error_log("callback.php: payment_config.php not found at: $payment_config");
-        
-        // Show error to user
-        echo "<!DOCTYPE html><html><head><title>Configuration Error</title></head><body>";
-        echo "<h1>Configuration Error</h1>";
-        echo "<p>Payment configuration file not found.</p>";
-        echo "<p>Searched locations:</p><ul>";
-        echo "<li>" . $base_dir . '/config/payment_config.php' . "</li>";
-        echo "<li>" . dirname(__DIR__) . '/config/payment_config.php' . "</li>";
-        echo "</ul>";
-        echo "<p>Please contact support with reference: " . htmlspecialchars($_GET['reference'] ?? 'N/A') . "</p>";
-        echo "</body></html>";
-        exit;
+        $payment_config_loaded = true;
+        error_log("callback.php: payment_config.php loaded from: $payment_config");
+        break;
     }
 }
 
-// Verify the function is loaded
-if (!function_exists('verifyPaystackPayment')) {
-    error_log("callback.php: verifyPaystackPayment function not found after including payment_config.php");
-    error_log("callback.php: Loaded functions: " . implode(', ', get_defined_functions()['user']));
+// If payment_config.php not found, load settings from database and define functions
+if (!$payment_config_loaded) {
+    error_log("callback.php: payment_config.php not found in any location, loading from database");
     
-    echo "<!DOCTYPE html><html><head><title>Configuration Error</title></head><body>";
-    echo "<h1>Configuration Error</h1>";
-    echo "<p>Payment verification function not found after loading config file.</p>";
-    echo "<p>Config file loaded from: $payment_config</p>";
-    echo "<p>Please contact support with reference: " . htmlspecialchars($_GET['reference'] ?? 'N/A') . "</p>";
-    echo "</body></html>";
-    exit;
+    // Function to get setting from database
+    if (!function_exists('getSetting')) {
+        function getSetting($key, $default = '') {
+            global $pdo;
+            try {
+                $stmt = $pdo->prepare("SELECT value FROM settings WHERE setting_key = ?");
+                $stmt->execute([$key]);
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $result ? $result['value'] : $default;
+            } catch (Exception $e) {
+                error_log("Error getting setting $key: " . $e->getMessage());
+                return $default;
+            }
+        }
+    }
+    
+    // Load Paystack credentials from database
+    $paystack_secret_key = getSetting('paystack_secret_key', '');
+    if (empty($paystack_secret_key)) {
+        $paystack_secret_key = getSetting('paystack_live_secret_key', '');
+    }
+    
+    if (!defined('PAYSTACK_SECRET_KEY')) {
+        define('PAYSTACK_SECRET_KEY', $paystack_secret_key);
+    }
+    if (!defined('PAYSTACK_CURRENCY')) {
+        define('PAYSTACK_CURRENCY', 'GHS');
+    }
+    
+    error_log("Loaded Paystack secret key from database: " . (empty($paystack_secret_key) ? 'EMPTY' : 'OK'));
 }
 
-// Define fallback redirect URLs if not already defined
+// Define redirect URLs if not already defined
 if (!defined('PAYMENT_SUCCESS_REDIRECT')) define('PAYMENT_SUCCESS_REDIRECT', '../dashboard/my-purchases');
 if (!defined('PAYMENT_FAILURE_REDIRECT')) define('PAYMENT_FAILURE_REDIRECT', '../store.php?error=payment_failed');
+
+// Define verifyPaystackPayment function if it doesn't exist
+if (!function_exists('verifyPaystackPayment')) {
+    error_log("callback.php: Defining verifyPaystackPayment function");
+    
+    function verifyPaystackPayment($reference) {
+        $url = 'https://api.paystack.co/transaction/verify/' . $reference;
+        
+        $headers = [
+            'Authorization: Bearer ' . PAYSTACK_SECRET_KEY,
+            'Content-Type: application/json'
+        ];
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        if ($error) {
+            error_log("Paystack verification CURL error: " . $error);
+            return ['success' => false, 'message' => 'CURL Error: ' . $error];
+        }
+        
+        if ($http_code !== 200) {
+            error_log("Paystack verification HTTP error: " . $http_code);
+            return ['success' => false, 'message' => 'Payment verification failed - HTTP ' . $http_code];
+        }
+        
+        $result = json_decode($response, true);
+        
+        if (!$result || !isset($result['status'])) {
+            error_log("Paystack verification invalid response: " . $response);
+            return ['success' => false, 'message' => 'Invalid response from Paystack'];
+        }
+        
+        // Check both API status and transaction status
+        if ($result['status'] === true && isset($result['data']) && $result['data']['status'] === 'success') {
+            $transaction_data = $result['data'];
+            
+            if (!isset($transaction_data['amount']) || $transaction_data['amount'] <= 0) {
+                error_log("Paystack verification failed: Invalid amount");
+                return ['success' => false, 'message' => 'Payment verification failed - Invalid amount'];
+            }
+            
+            if (isset($transaction_data['currency']) && $transaction_data['currency'] !== PAYSTACK_CURRENCY) {
+                error_log("Paystack verification failed: Currency mismatch");
+                return ['success' => false, 'message' => 'Payment verification failed - Currency mismatch'];
+            }
+            
+            error_log("Paystack payment verified successfully for reference: " . $reference);
+            return ['success' => true, 'data' => $transaction_data];
+        } else {
+            $status = $result['data']['status'] ?? 'unknown';
+            error_log("Paystack verification failed: Transaction status is " . $status);
+            return ['success' => false, 'message' => 'Payment verification failed - Status: ' . $status];
+        }
+    }
+}
 
 // Handle Paystack callback for registered users
 $reference = $_GET['reference'] ?? '';
