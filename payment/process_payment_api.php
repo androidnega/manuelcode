@@ -4,6 +4,20 @@ error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
+// Set error handler to catch fatal errors
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== NULL && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        header('Content-Type: application/json');
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Fatal error: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line']
+        ]);
+        exit;
+    }
+});
+
 session_start();
 
 // Get the directory of this file for reliable path resolution
@@ -25,7 +39,11 @@ if (!file_exists($db_file)) {
         exit;
     }
 }
-include $db_file;
+
+// Include db.php only if not already included
+if (!isset($pdo)) {
+    include_once $db_file;
+}
 
 if (!file_exists($coupon_file)) {
     $coupon_file = '../includes/coupon_helper.php';
@@ -123,7 +141,64 @@ if (!$payment_config_file) {
         define('ARKASSEL_SENDER_ID', getSetting('sms_sender_name', 'ManuelCode'));
     }
 } else {
-    include $payment_config_file;
+    // Include payment config file - use include_once to prevent redeclaration issues
+    // Check if getSetting is already defined to avoid redeclaration
+    if (!function_exists('getSetting')) {
+        // getSetting will be defined in payment_config.php
+    }
+    
+    try {
+        // Suppress warnings about already included files
+        $old_error_level = error_reporting(E_ALL & ~E_WARNING);
+        include_once $payment_config_file;
+        error_reporting($old_error_level);
+        error_log("Payment config file loaded successfully from: " . $payment_config_file);
+    } catch (Throwable $e) {
+        error_log("Error loading payment config file: " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+        // Fall back to database loading
+        if (!function_exists('getSetting')) {
+            function getSetting($key, $default = '') {
+                global $pdo;
+                if (!isset($pdo)) {
+                    error_log("getSetting called but \$pdo is not set");
+                    return $default;
+                }
+                try {
+                    $stmt = $pdo->prepare("SELECT value FROM settings WHERE setting_key = ?");
+                    $stmt->execute([$key]);
+                    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                    return $result ? $result['value'] : $default;
+                } catch (Exception $e) {
+                    error_log("Error getting setting $key: " . $e->getMessage());
+                    return $default;
+                }
+            }
+        }
+        
+        // Load from database as fallback
+        $paystack_public_key = getSetting('paystack_public_key', '');
+        $paystack_secret_key = getSetting('paystack_secret_key', '');
+        
+        if (empty($paystack_public_key) || strpos($paystack_public_key, 'pk_test_') === false) {
+            $live_public_key = getSetting('paystack_live_public_key', '');
+            $live_secret_key = getSetting('paystack_live_secret_key', '');
+            
+            if (!empty($live_public_key) && !empty($live_secret_key)) {
+                $paystack_public_key = $live_public_key;
+                $paystack_secret_key = $live_secret_key;
+            }
+        }
+        
+        if (!defined('PAYSTACK_PUBLIC_KEY')) define('PAYSTACK_PUBLIC_KEY', $paystack_public_key);
+        if (!defined('PAYSTACK_SECRET_KEY')) define('PAYSTACK_SECRET_KEY', $paystack_secret_key);
+        if (!defined('PAYSTACK_CURRENCY')) define('PAYSTACK_CURRENCY', 'GHS');
+        
+        $is_localhost = in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', '127.0.0.1']);
+        $base_url = $is_localhost ? 'http://localhost/manuela' : 'https://manuelcode.info';
+        
+        if (!defined('PAYSTACK_CALLBACK_URL')) define('PAYSTACK_CALLBACK_URL', $base_url . '/payment/callback.php');
+        if (!defined('PAYSTACK_GUEST_CALLBACK_URL')) define('PAYSTACK_GUEST_CALLBACK_URL', $base_url . '/payment/guest_callback.php');
+    }
 }
 
 // Check if required constants are defined
