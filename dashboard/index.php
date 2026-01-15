@@ -283,38 +283,50 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
         <!-- Recent Purchases -->
         <?php if (!empty($user_stats['recent_purchases'])): ?>
         <div class="bg-white rounded-xl shadow-lg border border-gray-100 mb-6 lg:mb-8">
-          <div class="px-4 lg:px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg lg:text-xl font-semibold text-gray-800">Recent Purchases</h2>
+          <div class="px-3 lg:px-6 py-3 lg:py-4 border-b border-gray-200">
+            <h2 class="text-base lg:text-xl font-semibold text-gray-800">Recent Purchases</h2>
           </div>
-          <div class="p-4 lg:p-6">
-            <div class="overflow-x-auto">
-              <table class="w-full">
-                <thead>
+          <div class="p-2 lg:p-6">
+            <div class="overflow-x-auto -mx-2 lg:mx-0">
+              <table class="w-full min-w-full">
+                <thead class="hidden sm:table-header-group">
                   <tr class="border-b border-gray-200">
-                    <th class="text-left py-3 px-2 lg:px-4 font-medium text-gray-700 text-sm lg:text-base">Product</th>
-                    <th class="text-left py-3 px-2 lg:px-4 font-medium text-gray-700 text-sm lg:text-base">Price</th>
-                    <th class="text-left py-3 px-2 lg:px-4 font-medium text-gray-700 text-sm lg:text-base">Downloads</th>
-                    <th class="text-left py-3 px-2 lg:px-4 font-medium text-gray-700 text-sm lg:text-base">Date</th>
-                    <th class="text-left py-3 px-2 lg:px-4 font-medium text-gray-700 text-sm lg:text-base">Status</th>
-                    <th class="text-left py-3 px-2 lg:px-4 font-medium text-gray-700 text-sm lg:text-base">Actions</th>
+                    <th class="text-left py-2 px-2 lg:px-4 font-medium text-gray-700 text-xs lg:text-sm">Product</th>
+                    <th class="text-left py-2 px-2 lg:px-4 font-medium text-gray-700 text-xs lg:text-sm hidden md:table-cell">Price</th>
+                    <th class="text-left py-2 px-2 lg:px-4 font-medium text-gray-700 text-xs lg:text-sm hidden lg:table-cell">Downloads</th>
+                    <th class="text-left py-2 px-2 lg:px-4 font-medium text-gray-700 text-xs lg:text-sm hidden sm:table-cell">Date</th>
+                    <th class="text-left py-2 px-2 lg:px-4 font-medium text-gray-700 text-xs lg:text-sm hidden lg:table-cell">Status</th>
+                    <th class="text-left py-2 px-2 lg:px-4 font-medium text-gray-700 text-xs lg:text-sm">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php foreach ($user_stats['recent_purchases'] as $purchase): ?>
-                    <tr class="border-b border-gray-100">
-                      <td class="py-3 px-2 lg:px-4">
-                        <div class="flex items-center">
+                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                      <td class="py-2 px-2 lg:px-4">
+                        <div class="flex items-center min-w-0">
                           <?php if (isset($purchase['preview_image']) && $purchase['preview_image']): ?>
-                            <img src="../assets/images/products/<?php echo htmlspecialchars($purchase['preview_image']); ?>" alt="<?php echo htmlspecialchars($purchase['product_title']); ?>" class="w-8 h-8 lg:w-10 lg:h-10 rounded object-cover mr-2 lg:mr-3">
+                            <img src="../assets/images/products/<?php echo htmlspecialchars($purchase['preview_image']); ?>" alt="<?php echo htmlspecialchars($purchase['product_title']); ?>" class="w-8 h-8 lg:w-10 lg:h-10 rounded object-cover mr-2 lg:mr-3 flex-shrink-0">
                           <?php else: ?>
-                            <div class="w-8 h-8 lg:w-10 lg:h-10 bg-gray-200 rounded flex items-center justify-center mr-2 lg:mr-3">
-                              <i class="fas fa-file text-gray-400 text-sm lg:text-base"></i>
+                            <div class="w-8 h-8 lg:w-10 lg:h-10 bg-gray-200 rounded flex items-center justify-center mr-2 lg:mr-3 flex-shrink-0">
+                              <i class="fas fa-file text-gray-400 text-xs lg:text-sm"></i>
                             </div>
                           <?php endif; ?>
-                          <span class="font-medium text-gray-900 text-sm lg:text-base"><?php echo htmlspecialchars($purchase['product_title']); ?></span>
+                          <span class="font-medium text-gray-900 text-xs lg:text-sm truncate"><?php echo htmlspecialchars($purchase['product_title']); ?></span>
+                        </div>
+                        <!-- Mobile: Show price and date inline -->
+                        <div class="sm:hidden mt-1 text-xs text-gray-600">
+                          <span class="font-semibold text-green-600">
+                            <?php 
+                            $original_price = $purchase['original_price'] ?? $purchase['price'];
+                            $final_amount = $purchase['amount'] ?? 0;
+                            echo 'GHS ' . number_format($final_amount > 0 ? $final_amount : $original_price, 2);
+                            ?>
+                          </span>
+                          <span class="mx-2">•</span>
+                          <span><?php echo date('M j, Y', strtotime($purchase['created_at'])); ?></span>
                         </div>
                       </td>
-                      <td class="py-3 px-2 lg:px-4 font-semibold text-green-600 text-sm lg:text-base">
+                      <td class="py-2 px-2 lg:px-4 font-semibold text-green-600 text-xs lg:text-sm hidden md:table-cell">
                         <?php 
                         // Show appropriate price based on purchase type
                         $original_price = $purchase['original_price'] ?? $purchase['price'];
@@ -342,7 +354,7 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
                         }
                         ?>
                       </td>
-                      <td class="py-3 px-2 lg:px-4 text-gray-600 text-sm lg:text-base">
+                      <td class="py-2 px-2 lg:px-4 text-gray-600 text-xs lg:text-sm hidden lg:table-cell">
                         <div class="text-center">
                           <div class="font-medium text-gray-900">
                             <?php echo $purchase['download_count'] ?? 0; ?>
@@ -350,23 +362,23 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
                           <div class="text-xs text-gray-500">downloads</div>
                         </div>
                       </td>
-                      <td class="py-3 px-2 lg:px-4 text-gray-600 text-sm lg:text-base"><?php echo date('M j, Y', strtotime($purchase['created_at'])); ?></td>
-                      <td class="py-3 px-2 lg:px-4">
+                      <td class="py-2 px-2 lg:px-4 text-gray-600 text-xs lg:text-sm hidden sm:table-cell"><?php echo date('M j, Y', strtotime($purchase['created_at'])); ?></td>
+                      <td class="py-2 px-2 lg:px-4 hidden lg:table-cell">
                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                           Completed
                         </span>
                       </td>
-                      <td class="py-3 px-2 lg:px-4">
-                        <div class="flex flex-col sm:flex-row gap-2">
+                      <td class="py-2 px-2 lg:px-4">
+                        <div class="flex flex-col sm:flex-row gap-1.5 lg:gap-2">
                           <?php if (isset($purchase['doc_file']) && $purchase['doc_file'] || isset($purchase['drive_link']) && $purchase['drive_link']): ?>
-                            <a href="downloads" class="inline-flex items-center justify-center px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                              <i class="fas fa-download mr-1"></i>Download
+                            <a href="downloads" class="inline-flex items-center justify-center px-2 py-1 lg:px-3 lg:py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">
+                              <i class="fas fa-download mr-1 text-xs"></i><span class="hidden sm:inline">Download</span>
                             </a>
                           <?php else: ?>
-                            <span class="text-gray-400 text-xs">File not available</span>
+                            <span class="text-gray-400 text-xs hidden sm:inline">File not available</span>
                           <?php endif; ?>
-                          <a href="my-purchases" class="inline-flex items-center justify-center px-3 py-1.5 bg-gray-600 text-white text-xs font-medium rounded-lg hover:bg-gray-700 transition-colors">
-                            <i class="fas fa-eye mr-1"></i>View
+                          <a href="my-purchases" class="inline-flex items-center justify-center px-2 py-1 lg:px-3 lg:py-1.5 bg-gray-600 text-white text-xs font-medium rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">
+                            <i class="fas fa-eye mr-1 text-xs"></i><span class="hidden sm:inline">View</span>
                           </a>
                         </div>
                       </td>
@@ -394,39 +406,73 @@ $unread_notifications = $notificationHelper->getUnreadCount($user_id);
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('mobile-overlay');
         
-        if (sidebar.classList.contains('translate-x-0')) {
+        // Check if sidebar is visible (not translated off-screen)
+        const isOpen = !sidebar.classList.contains('-translate-x-full') || sidebar.classList.contains('translate-x-0');
+        
+        if (isOpen) {
           // Close sidebar
+          sidebar.classList.remove('translate-x-0');
           sidebar.classList.add('-translate-x-full');
-          overlay.classList.add('hidden');
+          if (overlay) overlay.classList.add('hidden');
           document.body.style.overflow = '';
         } else {
           // Open sidebar
           sidebar.classList.remove('-translate-x-full');
-          overlay.classList.remove('hidden');
+          sidebar.classList.add('translate-x-0');
+          if (overlay) overlay.classList.remove('hidden');
           document.body.style.overflow = 'hidden';
         }
       }
       
+      // Close sidebar when clicking overlay
+      const overlay = document.getElementById('mobile-overlay');
+      if (overlay) {
+        overlay.addEventListener('click', toggleSidebar);
+      }
+      
       // Real-time dashboard statistics refresh
       function refreshDashboardStats() {
-        fetch('get_dashboard_stats.php')
-          .then(response => response.json())
+        // Try multiple paths for the stats endpoint
+        const paths = [
+          'get_dashboard_stats.php',
+          './get_dashboard_stats.php',
+          '../dashboard/get_dashboard_stats.php'
+        ];
+        
+        let fetchPath = paths[0];
+        
+        fetch(fetchPath)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+              return response.text().then(text => {
+                throw new Error('Invalid JSON response: ' + text.substring(0, 100));
+              });
+            }
+            return response.json();
+          })
           .then(data => {
             if (data.success) {
-              // Update statistics
-              document.getElementById('total-purchases').textContent = data.stats.total_purchases;
-              document.getElementById('total-spent').textContent = 'GHS ' + parseFloat(data.stats.total_spent).toFixed(2);
-              document.getElementById('total-downloads').textContent = data.stats.total_downloads;
-              document.getElementById('total-receipts').textContent = data.stats.total_receipts;
-              document.getElementById('total-notifications').textContent = data.stats.unread_notifications;
+              // Update statistics only if elements exist
+              const totalPurchases = document.getElementById('total-purchases');
+              const totalSpent = document.getElementById('total-spent');
+              const totalDownloads = document.getElementById('total-downloads');
+              const totalReceipts = document.getElementById('total-receipts');
+              const totalNotifications = document.getElementById('total-notifications');
               
-
-              
-              console.log('Dashboard stats refreshed:', data.stats);
+              if (totalPurchases) totalPurchases.textContent = data.stats.total_purchases || 0;
+              if (totalSpent) totalSpent.textContent = 'GHS ' + parseFloat(data.stats.total_spent || 0).toFixed(2);
+              if (totalDownloads) totalDownloads.textContent = data.stats.total_downloads || 0;
+              if (totalReceipts) totalReceipts.textContent = data.stats.total_receipts || 0;
+              if (totalNotifications) totalNotifications.textContent = data.stats.unread_notifications || 0;
             }
           })
           .catch(error => {
-            console.error('Error refreshing dashboard stats:', error);
+            // Silently fail - don't spam console
+            console.debug('Dashboard stats refresh:', error.message);
           });
       }
       
