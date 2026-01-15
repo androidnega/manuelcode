@@ -6,8 +6,21 @@
 
 session_start();
 
-// Get the route from query string
+// Get the route from query string or parse from REQUEST_URI
 $route = $_GET['route'] ?? '';
+
+// If route is empty, try to parse from REQUEST_URI
+if (empty($route) && isset($_SERVER['REQUEST_URI'])) {
+    $request_uri = $_SERVER['REQUEST_URI'];
+    // Remove query string
+    $request_uri = strtok($request_uri, '?');
+    // Extract route from /dashboard/route
+    if (preg_match('#^/dashboard/(.+)$#', $request_uri, $matches)) {
+        $route = $matches[1];
+        // Remove .php extension if present
+        $route = preg_replace('/\.php$/', '', $route);
+    }
+}
 
 // Remove trailing slash
 $route = rtrim($route, '/');
@@ -172,6 +185,10 @@ if (!file_exists($full_path)) {
     http_response_code(404);
     die('Page file not found: ' . $file_path);
 }
+
+// Set a flag to indicate this file is being included via router
+define('ROUTER_INCLUDED', true);
+$_SERVER['HTTP_X_ROUTER'] = 'true';
 
 // Include the requested file
 include $full_path;
