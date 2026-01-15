@@ -129,12 +129,25 @@ $routes = [
     'support-open-tickets' => ['admin/support_open_tickets.php', 'support', 'support'],
     'support-closed-tickets' => ['admin/support_closed_tickets.php', 'support', 'support'],
     'support-dashboard-old' => ['admin/support_dashboard.php', 'support', 'support'], // Legacy route
+    
+    // Analyst Routes
+    'analyst' => ['analyst/dashboard.php', 'analyst', null],
+    'analyst-dashboard' => ['analyst/dashboard.php', 'analyst', null],
+    'analyst-settings' => ['analyst/settings.php', 'analyst', null],
+    'analyst-view-submission' => ['analyst/view_submission.php', 'analyst', null],
+    'analyst-reference-lookup' => ['analyst/reference_lookup.php', 'analyst', null],
+    'analyst-price-control' => ['analyst/price_control.php', 'analyst', null],
+    'analyst-download-submission' => ['analyst/download_submission.php', 'analyst', null],
+    'analyst-download-all' => ['analyst/download_all_documents.php', 'analyst', null],
+    'analyst-export-submissions' => ['analyst/export_submissions.php', 'analyst', null],
 ];
 
 // Handle empty route (dashboard root) - Unified dashboard
 if (empty($route)) {
-    // Check if user is admin/superadmin or regular user and show appropriate dashboard
-    if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+    // Check if user is analyst, admin/superadmin, or regular user and show appropriate dashboard
+    if (isset($_SESSION['analyst_logged_in']) && $_SESSION['analyst_logged_in'] === true) {
+        $route = 'analyst';
+    } elseif (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
         $user_role = $_SESSION['user_role'] ?? 'admin';
         // Show superadmin dashboard if superadmin, otherwise admin dashboard
         if ($user_role === 'superadmin') {
@@ -193,6 +206,15 @@ if ($auth_type === 'admin') {
             header('Location: ../admin?error=access_denied&type=support');
             exit;
         }
+    }
+} elseif ($auth_type === 'analyst') {
+    // Check analyst authentication
+    if (!isset($_SESSION['analyst_logged_in']) || $_SESSION['analyst_logged_in'] !== true) {
+        // Use absolute path to avoid redirect loops
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+        header('Location: ' . $protocol . '://' . $host . '/analyst/login.php');
+        exit;
     }
 } elseif ($auth_type === 'user') {
     // Check user authentication

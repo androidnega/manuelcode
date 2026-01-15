@@ -150,11 +150,35 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
         font-weight: 600;
       }
       .table-container {
-        overflow-x: auto;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100%;
         border-radius: 8px;
       }
       .table-responsive {
-        min-width: 600px;
+        width: 100%;
+        table-layout: auto;
+      }
+      
+      body, html {
+        overflow-x: hidden;
+        max-width: 100vw;
+      }
+      
+      .main-content, main {
+        overflow-x: hidden;
+        max-width: 100%;
+      }
+      
+      @media (max-width: 640px) {
+        .table-responsive th,
+        .table-responsive td {
+          padding: 0.5rem 0.25rem;
+          font-size: 0.75rem;
+        }
+        .whitespace-nowrap {
+          white-space: normal;
+        }
       }
       .refund-table th,
       .refund-table td {
@@ -360,8 +384,8 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             
             <!-- Desktop Table View -->
-            <div class="hidden sm:block table-container overflow-x-auto">
-              <table class="table-responsive w-full refund-table">
+            <div class="hidden sm:block table-container w-full">
+              <table class="table-responsive w-full refund-table min-w-0">
                 <thead>
                   <tr>
                     <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
@@ -487,8 +511,8 @@ $refunds = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </div>
               
               <!-- Desktop Table View -->
-              <div class="hidden sm:block table-container overflow-x-auto">
-                <table class="table-responsive w-full refund-table">
+              <div class="hidden sm:block table-container w-full">
+                <table class="table-responsive w-full refund-table min-w-0">
                   <thead>
                     <tr>
                       <th class="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>

@@ -136,6 +136,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: none;
         }
         
+        body, html {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        
+        .main-content, main {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        
+        * {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
         .dashboard-card {
             background: white;
             border-radius: 8px;

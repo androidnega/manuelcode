@@ -95,6 +95,14 @@ try {
         }
         body {
             overflow-x: hidden;
+            max-width: 100vw;
+        }
+        html {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        * {
+            max-width: 100%;
         }
         .overflow-y-auto {
             -ms-overflow-style: none;
@@ -102,6 +110,22 @@ try {
         }
         .overflow-y-auto::-webkit-scrollbar {
             display: none;
+        }
+        .main-content, main {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        table {
+            width: 100%;
+            table-layout: auto;
+        }
+        @media (max-width: 640px) {
+            table {
+                font-size: 0.75rem;
+            }
+            .whitespace-nowrap {
+                white-space: normal;
+            }
         }
     </style>
 </head>
@@ -383,8 +407,8 @@ try {
             <h2 class="text-base lg:text-xl font-semibold text-gray-800">Recent Purchases</h2>
           </div>
           <div class="p-2 lg:p-6">
-            <div class="overflow-x-auto -mx-2 lg:mx-0">
-              <table class="w-full table-auto">
+            <div class="overflow-x-hidden -mx-2 lg:mx-0 w-full">
+              <table class="w-full table-auto min-w-0">
                 <thead class="hidden sm:table-header-group">
                   <tr class="border-b border-gray-200">
                     <th class="text-left py-2 px-2 lg:px-4 font-medium text-gray-700 text-xs lg:text-sm">Product</th>
