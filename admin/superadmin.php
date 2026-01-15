@@ -257,12 +257,80 @@ try {
         </div>
     </div>
 
+    <!-- Quick Navigation Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+        <!-- Purchase Tracking Card -->
+        <a href="#purchase-tracking" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-search text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">Purchase Tracking</h3>
+                    <p class="text-sm text-gray-500">Track orders</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- System Settings Card -->
+        <a href="#system-settings" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-cog text-gray-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">System Settings</h3>
+                    <p class="text-sm text-gray-500">Configure APIs</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- System Logs Card -->
+        <a href="#system-logs" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-list-alt text-red-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">System Logs</h3>
+                    <p class="text-sm text-gray-500">View activity</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- Maintenance Mode Card -->
+        <a href="#maintenance-mode" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-tools text-yellow-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">Maintenance</h3>
+                    <p class="text-sm text-gray-500">Site mode</p>
+                </div>
+            </div>
+        </a>
+
+        <!-- System Cleanup Card -->
+        <a href="#system-cleanup" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-broom text-orange-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">System Cleanup</h3>
+                    <p class="text-sm text-gray-500">Reset system</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
     <!-- Main Content Grid -->
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <!-- Left Column - Purchase Tracking & System Settings -->
         <div class="xl:col-span-2 space-y-6">
             <!-- Purchase Tracking Section -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <div id="purchase-tracking" class="bg-white rounded-lg border border-gray-200 p-6">
                 <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
                     <i class="fas fa-search text-blue-600 mr-3"></i>Purchase Tracking
                 </h2>
@@ -312,7 +380,7 @@ try {
 
 
             <!-- System Settings Section -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <div id="system-settings" class="bg-white rounded-lg border border-gray-200 p-6">
                 <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
                     <i class="fas fa-cog text-gray-600 mr-3"></i>System Settings
                 </h2>
@@ -456,7 +524,7 @@ try {
             </div>
 
             <!-- System Logs Section -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <div id="system-logs" class="bg-white rounded-lg border border-gray-200 p-6">
                 <h2 class="text-xl font-semibold text-[#2D3E50] mb-4 flex items-center">
                     <i class="fas fa-list-alt text-red-600 mr-3"></i>Recent System Logs
                 </h2>
@@ -644,7 +712,7 @@ try {
 
 
     <!-- Site Maintenance Mode Section -->
-    <div class="bg-white rounded border p-4 mt-6">
+    <div id="maintenance-mode" class="bg-white rounded border p-4 mt-6">
         <h2 class="font-semibold text-[#2D3E50] mb-3"><i class="fas fa-tools mr-2"></i>Site Maintenance Mode</h2>
         
         <!-- Current Status -->
@@ -723,7 +791,7 @@ try {
     </div>
 
     <!-- System Cleanup Section -->
-    <div class="bg-white rounded border p-4 mt-6">
+    <div id="system-cleanup" class="bg-white rounded border p-4 mt-6">
         <h2 class="font-semibold text-[#2D3E50] mb-3">
             <i class="fas fa-broom mr-2 text-red-600"></i>System Cleanup & Production Reset
         </h2>
