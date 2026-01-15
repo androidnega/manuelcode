@@ -3,6 +3,7 @@ include 'auth/check_auth.php';
 include '../includes/db.php';
 include '../includes/notification_helper.php';
 include '../includes/product_notification_helper.php';
+include '../includes/cloudinary_helper.php';
 
 $notificationHelper = new NotificationHelper($pdo);
 $productNotificationHelper = new ProductNotificationHelper($pdo);
@@ -82,18 +83,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Handle gallery images upload
             $gallery_images = [];
             if (isset($_FILES['gallery_images'])) {
-                $uploadDir = '../assets/images/products/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
+                $cloudinaryHelper = new CloudinaryHelper($pdo);
                 
                 foreach ($_FILES['gallery_images']['tmp_name'] as $key => $tmp_name) {
                     if ($_FILES['gallery_images']['error'][$key] === UPLOAD_ERR_OK) {
-                        $galleryName = time() . '_' . sanitize_filename($_FILES['gallery_images']['name'][$key]);
-                        $galleryPath = $uploadDir . $galleryName;
+                        $galleryUrl = null;
                         
-                        if (move_uploaded_file($tmp_name, $galleryPath)) {
-                            $gallery_images[] = $galleryName;
+                        // Try Cloudinary upload first
+                        if ($cloudinaryHelper->isEnabled()) {
+                            $uploadResult = $cloudinaryHelper->uploadImage($tmp_name, 'products/gallery');
+                            if ($uploadResult && isset($uploadResult['url'])) {
+                                $galleryUrl = $uploadResult['url'];
+                            }
+                        }
+                        
+                        // Fallback to local storage
+                        if (!$galleryUrl) {
+                            $uploadDir = '../assets/images/products/';
+                            if (!is_dir($uploadDir)) {
+                                mkdir($uploadDir, 0755, true);
+                            }
+                            
+                            $galleryName = time() . '_' . sanitize_filename($_FILES['gallery_images']['name'][$key]);
+                            $galleryPath = $uploadDir . $galleryName;
+                            
+                            if (move_uploaded_file($tmp_name, $galleryPath)) {
+                                $galleryUrl = $galleryName;
+                            }
+                        }
+                        
+                        if ($galleryUrl) {
+                            $gallery_images[] = $galleryUrl;
                         }
                     }
                 }
