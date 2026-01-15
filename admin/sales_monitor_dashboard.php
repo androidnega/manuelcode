@@ -1,7 +1,8 @@
 <?php
 // Sales Monitor Dashboard - View purchases, prices, and user details
-// Check if accessed via router (role already verified)
+// Check if accessed via router (role already verified by router)
 if (!defined('ROUTER_INCLUDED') && !isset($_SERVER['HTTP_X_ROUTER'])) {
+    // Accessed directly - need to check auth and role
     session_start();
     include 'auth/check_auth.php';
     
@@ -25,11 +26,18 @@ if (!defined('ROUTER_INCLUDED') && !isset($_SERVER['HTTP_X_ROUTER'])) {
         exit;
     }
 } else {
-    // Accessed via router - session already started and role verified
+    // Accessed via router - router already verified authentication and role
+    // Just ensure session is started, but don't include check_auth.php to avoid redirect loops
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    include 'auth/check_auth.php';
+    // Verify we're logged in (basic check without full auth check to avoid loops)
+    if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+        header('Location: ' . $protocol . '://' . $host . '/admin');
+        exit;
+    }
 }
 
 include '../includes/db.php';
