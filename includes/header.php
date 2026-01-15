@@ -1560,7 +1560,7 @@ window.addEventListener('beforeunload', function() {
             <?php else: ?>
               <a href="dashboard/" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center shadow-sm">
                 <i class="fas fa-user-circle mr-2"></i>
-                My Dashboard
+                Dashboard
               </a>
             <?php endif; ?>
             <a href="auth/logout.php" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center shadow-sm">
@@ -1693,7 +1693,7 @@ window.addEventListener('beforeunload', function() {
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
-                My Dashboard
+                Dashboard
               </a>
             <?php endif; ?>
             <a href="auth/logout.php" class="block text-gray-700 hover:text-[#536895] transition-colors py-2 flex items-center">
