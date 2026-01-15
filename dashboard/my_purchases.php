@@ -461,9 +461,8 @@ $purchases = $unique_purchases;
                        }
                        
                        if ($download_link && $purchase['status'] === 'paid'): ?>
-                         <!-- Unified Download Button - No hint about storage location -->
+                         <!-- Unified Download Button - Direct download for all file types -->
                          <a href="<?php echo htmlspecialchars($download_link); ?>" 
-                            <?php echo ($download_type === 'drive') ? 'target="_blank"' : ''; ?>
                             class="flex-1 btn-primary text-center">
                            <i class="fas fa-download mr-1"></i>
                            Download
