@@ -56,6 +56,18 @@ if (!file_exists($coupon_file)) {
 }
 include $coupon_file;
 
+// Include user_functions.php for generatePaymentReference and generateUniqueUserId
+$user_functions_file = $base_dir . '/includes/user_functions.php';
+if (!file_exists($user_functions_file)) {
+    $user_functions_file = '../includes/user_functions.php';
+}
+if (file_exists($user_functions_file)) {
+    include_once $user_functions_file;
+    error_log("user_functions.php loaded successfully");
+} else {
+    error_log("user_functions.php not found, using fallback functions");
+}
+
 // Try multiple paths for payment config (handle both local and server environments)
 $payment_config_paths = [
     $base_dir . '/config/payment_config.php',
@@ -558,15 +570,68 @@ try {
     exit;
 }
 
-// Define helper functions at the top to ensure they're available
+// Define fallback helper functions if not already loaded from user_functions.php
 if (!function_exists('generatePaymentReference')) {
     function generatePaymentReference($prefix) {
-        return $prefix . '_' . time() . '_' . rand(1000, 9999);
+        global $pdo;
+        
+        do {
+            // Generate reference with prefix
+            $timestamp = time();
+            $random = rand(1000, 9999);
+            $reference = $prefix . '_' . $timestamp . '_' . $random;
+            
+            // Check if this reference already exists in purchases table
+            try {
+                $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM purchases WHERE payment_ref = ?");
+                $stmt->execute([$reference]);
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                $exists_in_purchases = $result['count'] > 0;
+            } catch (PDOException $e) {
+                $exists_in_purchases = false;
+            }
+            
+            // Check if this reference already exists in guest_orders table
+            try {
+                $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM guest_orders WHERE reference = ?");
+                $stmt->execute([$reference]);
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                $exists_in_guest_orders = $result['count'] > 0;
+            } catch (PDOException $e) {
+                $exists_in_guest_orders = false;
+            }
+            
+        } while ($exists_in_purchases || $exists_in_guest_orders);
+        
+        return $reference;
     }
 }
 
 if (!function_exists('generateUniqueUserId')) {
     function generateUniqueUserId() {
-        return 'U' . strtoupper(substr(md5(uniqid()), 0, 5));
+        global $pdo;
+        
+        do {
+            // Generate a 5-character alphanumeric ID
+            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            $userId = '';
+            
+            for ($i = 0; $i < 5; $i++) {
+                $userId .= $characters[rand(0, strlen($characters) - 1)];
+            }
+            
+            // Check if this ID already exists
+            try {
+                $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM users WHERE user_id = ?");
+                $stmt->execute([$userId]);
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                $exists = $result['count'] > 0;
+            } catch (PDOException $e) {
+                $exists = false;
+            }
+            
+        } while ($exists);
+        
+        return $userId;
     }
 }
