@@ -479,7 +479,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                class="text-blue-600 hover:text-blue-800">
                               <i class="fas fa-edit"></i>
                             </a>
-                            <a href="../product.php?id=<?php echo $prod['id']; ?>" 
+                            <a href="/product?id=<?php echo $prod['id']; ?>" 
                                target="_blank"
                                class="text-green-600 hover:text-green-800">
                               <i class="fas fa-eye"></i>
