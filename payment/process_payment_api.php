@@ -33,10 +33,59 @@ try {
         exit;
     }
     
+    // Calculate final amount with coupon discount FIRST (before creating order)
+    $final_amount = $product['price'];
+    $discount_amount = 0;
+    $coupon_id = null;
+    
+    // FIXED: Check for discounted amount in session first
+    if ($is_guest && isset($_SESSION['guest_discounted_amount'])) {
+        $final_amount = $_SESSION['guest_discounted_amount'];
+        $discount_amount = $_SESSION['guest_discount_amount'] ?? 0;
+        error_log("Using guest discounted amount from session: {$final_amount}");
+    } elseif (!$is_guest && isset($_SESSION['user_discounted_amount'])) {
+        $final_amount = $_SESSION['user_discounted_amount'];
+        $discount_amount = $_SESSION['user_discount_amount'] ?? 0;
+        error_log("Using user discounted amount from session: {$final_amount}");
+    } elseif (isset($input['coupon_data']) && $input['coupon_data']) {
+        $coupon_data = $input['coupon_data'];
+        try {
+            // Use CouponManager for validation
+            $couponManager = new CouponManager($pdo);
+            // Fix: Pass null for user_id when guest, get user_id from session if logged in
+            $validation_user_id = null;
+            if (!$is_guest && isset($_SESSION['user_id'])) {
+                $validation_user_id = $_SESSION['user_id'];
+            }
+            $validation_result = $couponManager->validateCoupon($coupon_data['code'], $validation_user_id, $product_id, $product['price']);
+            
+            if ($validation_result['valid']) {
+                $coupon = $validation_result['coupon'];
+                $discount_amount = $couponManager->calculateDiscount($coupon, $product['price']);
+                $final_amount = $product['price'] - $discount_amount;
+                $coupon_id = $coupon['id'];
+                
+                // Ensure final amount doesn't go below 0
+                $final_amount = max(0, $final_amount);
+            } else {
+                // Return error message if coupon is invalid
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => $validation_result['message']]);
+                exit;
+            }
+        } catch (Exception $e) {
+            error_log("Coupon processing error: " . $e->getMessage());
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Error processing coupon']);
+            exit;
+        }
+    }
+    
     if ($is_guest) {
         // Handle guest payment
         if (!isset($_SESSION['guest_data'])) {
             error_log("Payment API Error: Guest payment attempted but guest_data not found in session");
+            http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Guest data not found. Please fill in your details again.']);
             exit;
         }
@@ -49,12 +98,26 @@ try {
         // Generate unique payment reference
         $reference = generatePaymentReference('GUEST_' . time());
         
-        // Create pending guest order record (this will be updated to 'paid' only after successful payment)
-        $stmt = $pdo->prepare("
-            INSERT INTO guest_orders (email, name, phone, product_id, total_amount, reference, status, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())
-        ");
-        $stmt->execute([$email, $name, $phone, $product_id, $product['price'], $reference]);
+        // Create pending guest order record with final_amount (supports both total_amount and amount columns)
+        try {
+            $stmt = $pdo->prepare("
+                INSERT INTO guest_orders (email, name, phone, product_id, total_amount, reference, status, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())
+            ");
+            $stmt->execute([$email, $name, $phone, $product_id, $final_amount, $reference]);
+        } catch (PDOException $e) {
+            // If total_amount column doesn't exist, try with amount column
+            if (strpos($e->getMessage(), 'total_amount') !== false || strpos($e->getMessage(), 'Unknown column') !== false) {
+                error_log("total_amount column not found, trying amount column");
+                $stmt = $pdo->prepare("
+                    INSERT INTO guest_orders (email, name, phone, product_id, amount, reference, status, created_at) 
+                    VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())
+                ");
+                $stmt->execute([$email, $name, $phone, $product_id, $final_amount, $reference]);
+            } else {
+                throw $e;
+            }
+        }
         
     } else {
         // Handle logged-in user payment
@@ -105,49 +168,7 @@ try {
             INSERT INTO purchases (user_id, product_id, payment_ref, reference, amount, status, created_at) 
             VALUES (?, ?, ?, ?, ?, 'pending', NOW())
         ");
-        $stmt->execute([$user_id, $product_id, $reference, $reference, $product['price']]);
-    }
-    
-    // Calculate final amount with coupon discount
-    $final_amount = $product['price'];
-    $discount_amount = 0;
-    $coupon_id = null;
-    
-    // FIXED: Check for discounted amount in session first
-    if ($is_guest && isset($_SESSION['guest_discounted_amount'])) {
-        $final_amount = $_SESSION['guest_discounted_amount'];
-        $discount_amount = $_SESSION['guest_discount_amount'] ?? 0;
-        error_log("Using guest discounted amount from session: {$final_amount}");
-    } elseif (!$is_guest && isset($_SESSION['user_discounted_amount'])) {
-        $final_amount = $_SESSION['user_discounted_amount'];
-        $discount_amount = $_SESSION['user_discount_amount'] ?? 0;
-        error_log("Using user discounted amount from session: {$final_amount}");
-        } elseif ($coupon_data) {
-        try {
-            // Use CouponManager for validation
-            $couponManager = new CouponManager($pdo);
-            // Fix: Pass null for user_id when guest, otherwise pass user_id
-            $validation_user_id = $is_guest ? null : ($user_id ?? null);
-            $validation_result = $couponManager->validateCoupon($coupon_data['code'], $validation_user_id, $product_id, $product['price']);
-            
-            if ($validation_result['valid']) {
-                $coupon = $validation_result['coupon'];
-                $discount_amount = $couponManager->calculateDiscount($coupon, $product['price']);
-                $final_amount = $product['price'] - $discount_amount;
-                $coupon_id = $coupon['id'];
-                
-                // Ensure final amount doesn't go below 0
-                $final_amount = max(0, $final_amount);
-            } else {
-                // Return error message if coupon is invalid
-                echo json_encode(['success' => false, 'message' => $validation_result['message']]);
-                exit;
-            }
-        } catch (Exception $e) {
-            error_log("Coupon processing error: " . $e->getMessage());
-            echo json_encode(['success' => false, 'message' => 'Error processing coupon']);
-            exit;
-        }
+        $stmt->execute([$user_id, $product_id, $reference, $reference, $final_amount]);
     }
     
     // Check if product becomes free after discount

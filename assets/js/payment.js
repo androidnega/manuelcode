@@ -3,6 +3,9 @@ function initializePayment(productId, isGuest = false, guestData = null) {
     const button = document.getElementById('paystack-button');
     if (!button) return;
     
+    // Store original button HTML to restore on error
+    const originalButtonHTML = button.innerHTML;
+    
     button.addEventListener('click', function() {
         this.disabled = true;
         this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
@@ -115,10 +118,10 @@ function initializePayment(productId, isGuest = false, guestData = null) {
                 }
             }
             
-            // Re-enable button
+            // Re-enable button with original text
             if (button) {
                 button.disabled = false;
-                button.innerHTML = '<i class="fas fa-mobile-alt mr-2"></i>Pay with MoMo';
+                button.innerHTML = originalButtonHTML;
             }
         });
     });
