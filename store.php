@@ -251,8 +251,8 @@ if (isset($_SESSION['user_id'])) {
               <?php endif; ?>
             </div>
             
-            <div class="p-3 sm:p-4">
-              <div class="flex items-center justify-between mb-1 sm:mb-2">
+            <div class="p-2 sm:p-3">
+              <div class="flex items-center justify-between mb-1">
                 <h3 class="text-sm sm:text-base font-semibold text-gray-900 truncate flex-1"><?php echo htmlspecialchars($product['title']); ?></h3>
                 <div class="flex items-center ml-2 flex-shrink-0">
                   <div class="flex text-yellow-400 text-xs">
@@ -266,16 +266,14 @@ if (isset($_SESSION['user_id'])) {
                 </div>
               </div>
               
-              <p class="text-gray-600 mb-2 text-xs line-clamp-1 hidden sm:block"><?php echo htmlspecialchars($product['short_desc']); ?></p>
-              
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center">
                   <?php if ($is_purchased && isset($_SESSION['user_id'])): ?>
-                    <span class="text-base sm:text-lg font-semibold text-green-600">Purchased</span>
+                    <span class="text-sm sm:text-base font-semibold text-green-600">Purchased</span>
                   <?php elseif ($product['price'] == 0): ?>
-                    <span class="text-base sm:text-lg font-semibold text-blue-600">FREE</span>
+                    <span class="text-sm sm:text-base font-semibold text-blue-600">FREE</span>
                   <?php else: ?>
-                    <span class="text-base sm:text-lg font-semibold text-[#536895]">₵<?php echo number_format($product['price'], 2); ?></span>
+                    <span class="text-sm sm:text-base font-semibold text-[#536895]">₵<?php echo number_format($product['price'], 2); ?></span>
                   <?php endif; ?>
                 </div>
               </div>
