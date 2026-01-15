@@ -125,7 +125,7 @@ try {
      <?php endif; ?>
 
     <!-- Stats Overview Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 mb-8">
         <!-- Total Orders Card -->
         <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow-sm border border-blue-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div class="flex items-center justify-between">
@@ -145,7 +145,7 @@ try {
         </div>
         
         <!-- Downloads Card -->
-        <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-2xl shadow-sm border border-emerald-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+        <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-2xl border border-emerald-200">
             <div class="flex items-center justify-between">
                 <div class="flex-shrink-0">
                     <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center shadow-sm">
@@ -163,7 +163,7 @@ try {
         </div>
         
         <!-- SMS Sent Card -->
-        <div class="bg-gradient-to-br from-violet-50 to-violet-100 p-6 rounded-2xl shadow-sm border border-violet-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+        <div class="bg-gradient-to-br from-violet-50 to-violet-100 p-6 rounded-2xl border border-violet-200">
             <div class="flex items-center justify-between">
                 <div class="flex-shrink-0">
                     <div class="w-12 h-12 bg-gradient-to-br from-violet-400 to-violet-600 rounded-xl flex items-center justify-center shadow-sm">
@@ -183,7 +183,7 @@ try {
         </div>
         
         <!-- System Logs Card -->
-        <div class="bg-gradient-to-br from-rose-50 to-rose-100 p-6 rounded-2xl shadow-sm border border-rose-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+        <div class="bg-gradient-to-br from-rose-50 to-rose-100 p-6 rounded-2xl border border-rose-200">
             <div class="flex items-center justify-between">
                 <div class="flex-shrink-0">
                     <div class="w-12 h-12 bg-gradient-to-br from-rose-400 to-rose-600 rounded-xl flex items-center justify-center shadow-sm">
@@ -201,7 +201,7 @@ try {
         </div>
         
         <!-- Super Admins Card -->
-        <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-2xl shadow-sm border border-indigo-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+        <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-2xl border border-indigo-200">
             <div class="flex items-center justify-between">
                 <div class="flex-shrink-0">
                     <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl flex items-center justify-center shadow-sm">
@@ -219,7 +219,7 @@ try {
         </div>
         
         <!-- Active Users Card -->
-        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow-sm border border-green-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl border border-green-200">
             <div class="flex items-center justify-between">
                 <div class="flex-shrink-0">
                     <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-sm">
@@ -237,7 +237,7 @@ try {
         </div>
         
         <!-- User Management Card -->
-        <div class="bg-gradient-to-br from-cyan-50 to-cyan-100 p-6 rounded-2xl shadow-sm border border-cyan-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+        <div class="bg-gradient-to-br from-cyan-50 to-cyan-100 p-6 rounded-2xl border border-cyan-200">
             <div class="flex items-center justify-between">
                 <div class="flex-shrink-0">
                     <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-xl flex items-center justify-center shadow-sm">
