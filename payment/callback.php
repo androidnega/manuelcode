@@ -489,13 +489,14 @@ try {
                 echo "<li>Amount: GHS {$check_order['amount']}</li>";
                 echo "</ul>";
                 
-                // If status is pending, update it to paid
+                // If status is pending, update it to paid (fallback for edge cases)
                 if ($check_order['status'] === 'pending') {
-                    echo "<p style='color:orange;'>⚠️ Order is marked as PENDING. Let me try to update it...</p>";
+                    echo "<p style='color:orange;'>⚠️ Order is marked as PENDING. Updating to PAID...</p>";
                     
                     try {
-                        $stmt = $pdo->prepare("UPDATE purchases SET status = 'paid', updated_at = NOW() WHERE id = ?");
-                        $stmt->execute([$check_order['id']]);
+                        // Update both by ID and by reference to ensure it's updated
+                        $stmt = $pdo->prepare("UPDATE purchases SET status = 'paid', updated_at = NOW() WHERE id = ? OR payment_ref = ? OR reference = ?");
+                        $stmt->execute([$check_order['id'], $reference, $reference]);
                         echo "<p style='color:green;'>✓ Order status updated to PAID!</p>";
                         echo "<p><a href='" . PAYMENT_SUCCESS_REDIRECT . "'>Go to My Purchases</a></p>";
                     } catch (Exception $e2) {
