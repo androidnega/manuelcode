@@ -45,6 +45,42 @@ if (isset($_POST['delete_purchase'])) {
     }
 }
 
+// Handle bulk deletion
+if (isset($_POST['bulk_delete']) && isset($_POST['selected_purchases'])) {
+    $selected = $_POST['selected_purchases'];
+    $deleted_count = 0;
+    $errors = [];
+    
+    try {
+        $pdo->beginTransaction();
+        
+        foreach ($selected as $purchase_data) {
+            $data = json_decode($purchase_data, true);
+            $purchase_id = $data['id'];
+            $purchase_type = $data['type'] ?? 'user';
+            
+            try {
+                if ($purchase_type === 'guest') {
+                    $stmt = $pdo->prepare("DELETE FROM guest_orders WHERE id = ?");
+                } else {
+                    $stmt = $pdo->prepare("DELETE FROM purchases WHERE id = ?");
+                }
+                $stmt->execute([$purchase_id]);
+                $deleted_count++;
+            } catch (Exception $e) {
+                $errors[] = "Error deleting purchase ID {$purchase_id}: " . $e->getMessage();
+            }
+        }
+        
+        $pdo->commit();
+        header("Location: ../dashboard/purchase-management?success=bulk_deleted&count=" . $deleted_count);
+        exit;
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        $error_message = "Error during bulk deletion: " . $e->getMessage();
+    }
+}
+
 // Handle search and filtering
 $search = $_GET['search'] ?? '';
 $status_filter = $_GET['status'] ?? '';
@@ -607,7 +643,7 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
       </div>
       
       <div class="p-4 border-t border-[#243646]">
-        <a href="auth/logout.php" class="flex items-center py-3 px-4 text-red-300 hover:bg-[#243646] rounded-lg transition-colors">
+        <a href="../../admin/auth/logout.php" class="flex items-center py-3 px-4 text-red-300 hover:bg-[#243646] rounded-lg transition-colors">
           <i class="fas fa-sign-out-alt mr-3"></i>
           <span>Logout</span>
         </a>
@@ -665,6 +701,22 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
           </div>
         <?php endif; ?>
 
+        <?php if (isset($_GET['success']) && $_GET['success'] === 'bulk_deleted'): ?>
+          <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-6 rounded-r-lg">
+            <div class="flex items-center">
+              <i class="fas fa-check-circle text-green-400 mr-3"></i>
+              <div>
+                <p class="text-sm text-green-700">
+                  <?php 
+                  $count = isset($_GET['count']) ? (int)$_GET['count'] : 0;
+                  echo $count > 0 ? "Successfully deleted {$count} purchase(s)!" : "Purchases deleted successfully!";
+                  ?>
+                </p>
+              </div>
+            </div>
+          </div>
+        <?php endif; ?>
+
         <!-- Search and Filter Form -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <form method="GET" class="space-y-4">
@@ -708,7 +760,7 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
               <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
                 <i class="fas fa-search mr-2"></i>Search
               </button>
-              <a href="purchase_management.php" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+              <a href="../dashboard/purchase-management" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
                 <i class="fas fa-times mr-2"></i>Clear Filters
               </a>
             </div>
@@ -747,11 +799,34 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
             </p>
           </div>
         <?php else: ?>
+          <!-- Bulk Actions Bar -->
+          <div id="bulkActionsBar" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 hidden">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <span id="selectedCount" class="text-sm font-medium text-blue-800">0 selected</span>
+                <button onclick="clearSelection()" class="text-sm text-blue-600 hover:text-blue-800 underline">
+                  Clear selection
+                </button>
+              </div>
+              <form method="POST" id="bulkDeleteForm" onsubmit="return confirmBulkDelete()">
+                <input type="hidden" name="bulk_delete" value="1">
+                <input type="hidden" name="selected_purchases" id="selectedPurchasesInput">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+                  <i class="fas fa-trash mr-2"></i>
+                  Delete Selected
+                </button>
+              </form>
+            </div>
+          </div>
+
           <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mobile-card">
             <div class="table-container">
               <table class="table-responsive w-full" style="min-width: 0;">
                 <thead class="bg-gray-50">
                   <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 40px;">
+                      <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-label="Purchase ID">Purchase ID</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-label="Customer">Customer</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-label="Product">Product</th>
@@ -764,6 +839,12 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
                 <tbody class="bg-white divide-y divide-gray-200">
                   <?php foreach ($all_purchases as $purchase): ?>
                     <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4" style="width: 40px;">
+                        <input type="checkbox" 
+                               class="purchase-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500" 
+                               data-purchase='<?php echo htmlspecialchars(json_encode(['id' => $purchase['id'], 'type' => $purchase['purchase_type']])); ?>'
+                               onchange="updateBulkActions()">
+                      </td>
                       <td class="px-6 py-4 text-sm font-medium text-gray-900" data-label="Purchase ID">
                         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2">
                           <span class="text-xs sm:text-sm"><?php echo $purchase['order_id'] ?? 'PUR' . str_pad($purchase['id'], 6, '0', STR_PAD_LEFT); ?></span>
@@ -1084,6 +1165,67 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
       if (e.target === this) {
         closePurchaseModal();
       }
+    });
+
+    // Bulk Selection Functions
+    function toggleSelectAll(checkbox) {
+      const checkboxes = document.querySelectorAll('.purchase-checkbox');
+      checkboxes.forEach(cb => {
+        cb.checked = checkbox.checked;
+      });
+      updateBulkActions();
+    }
+
+    function updateBulkActions() {
+      const checkboxes = document.querySelectorAll('.purchase-checkbox:checked');
+      const bulkActionsBar = document.getElementById('bulkActionsBar');
+      const selectedCount = document.getElementById('selectedCount');
+      const selectedPurchasesInput = document.getElementById('selectedPurchasesInput');
+      const selectAllCheckbox = document.getElementById('selectAll');
+      
+      const count = checkboxes.length;
+      
+      if (count > 0) {
+        bulkActionsBar.classList.remove('hidden');
+        selectedCount.textContent = count + ' selected';
+        
+        // Collect selected purchase data
+        const selectedPurchases = [];
+        checkboxes.forEach(cb => {
+          selectedPurchases.push(cb.getAttribute('data-purchase'));
+        });
+        selectedPurchasesInput.value = JSON.stringify(selectedPurchases);
+      } else {
+        bulkActionsBar.classList.add('hidden');
+      }
+      
+      // Update select all checkbox state
+      const allCheckboxes = document.querySelectorAll('.purchase-checkbox');
+      selectAllCheckbox.checked = allCheckboxes.length > 0 && checkboxes.length === allCheckboxes.length;
+      selectAllCheckbox.indeterminate = checkboxes.length > 0 && checkboxes.length < allCheckboxes.length;
+    }
+
+    function clearSelection() {
+      const checkboxes = document.querySelectorAll('.purchase-checkbox');
+      const selectAllCheckbox = document.getElementById('selectAll');
+      
+      checkboxes.forEach(cb => {
+        cb.checked = false;
+      });
+      selectAllCheckbox.checked = false;
+      selectAllCheckbox.indeterminate = false;
+      updateBulkActions();
+    }
+
+    function confirmBulkDelete() {
+      const checkboxes = document.querySelectorAll('.purchase-checkbox:checked');
+      const count = checkboxes.length;
+      return confirm(`Are you sure you want to delete ${count} selected purchase(s)? This action cannot be undone.`);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateBulkActions();
     });
   </script>
 </body>
