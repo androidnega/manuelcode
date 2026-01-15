@@ -1,15 +1,39 @@
 <?php
 // Sales Monitor Dashboard - View purchases, prices, and user details
-session_start();
-include 'auth/check_auth.php';
+// Check if accessed via router (role already verified)
+if (!defined('ROUTER_INCLUDED') && !isset($_SERVER['HTTP_X_ROUTER'])) {
+    session_start();
+    include 'auth/check_auth.php';
+    
+    // Only check role if accessed directly (not via router)
+    if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'sales_monitor') {
+        // Redirect based on their actual role to avoid redirect loops
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
+        
+        if (isset($_SESSION['user_role'])) {
+            if ($_SESSION['user_role'] === 'superadmin') {
+                header('Location: ' . $protocol . '://' . $host . '/dashboard/superadmin');
+            } elseif ($_SESSION['user_role'] === 'admin') {
+                header('Location: ' . $protocol . '://' . $host . '/dashboard/admin');
+            } else {
+                header('Location: ' . $protocol . '://' . $host . '/dashboard/');
+            }
+        } else {
+            header('Location: ' . $protocol . '://' . $host . '/admin');
+        }
+        exit;
+    }
+} else {
+    // Accessed via router - session already started and role verified
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    include 'auth/check_auth.php';
+}
+
 include '../includes/db.php';
 include '../includes/otp_helper.php';
-
-// Check if user is sales_monitor role
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'sales_monitor') {
-    header('Location: ../admin?error=access_denied');
-    exit;
-}
 
 $admin_name = $_SESSION['admin_name'] ?? 'Sales Monitor';
 

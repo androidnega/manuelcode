@@ -206,10 +206,16 @@ if ($auth_type === 'admin') {
             header('Location: ' . $protocol . '://' . $host . '/admin?error=access_denied');
             exit;
         } elseif ($required_role === 'sales_monitor' && $user_role !== 'sales_monitor') {
-            // Use absolute path to avoid redirect loops
+            // Redirect to appropriate dashboard based on actual role
             $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
             $host = $_SERVER['HTTP_HOST'] ?? 'manuelcode.info';
-            header('Location: ' . $protocol . '://' . $host . '/admin?error=access_denied');
+            if ($user_role === 'superadmin') {
+                header('Location: ' . $protocol . '://' . $host . '/dashboard/superadmin');
+            } elseif ($user_role === 'admin') {
+                header('Location: ' . $protocol . '://' . $host . '/dashboard/admin');
+            } else {
+                header('Location: ' . $protocol . '://' . $host . '/dashboard/');
+            }
             exit;
         } elseif ($required_role === 'support' && $user_role !== 'support') {
             header('Location: ../admin?error=access_denied&type=support');
