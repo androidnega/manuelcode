@@ -1474,35 +1474,35 @@ window.addEventListener('beforeunload', function() {
 <?php endif; ?>
 
 <!-- Desktop Navigation Only -->
-<div class="hidden md:block relative z-[99999]">
+<div class="hidden lg:block relative z-[99999]">
   <nav class="bg-[#f8f9fa] backdrop-blur-sm border-b border-gray-200 shadow-sm relative z-[99999]">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="flex justify-between items-center py-4 lg:py-6">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+      <div class="flex justify-between items-center py-3 lg:py-4 xl:py-6">
         <!-- Logo -->
         <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../index.php' : 'index.php'; ?>" class="flex items-center group flex-shrink-0">
-          <img src="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../assets/favi/favicon.png' : 'assets/favi/favicon.png'; ?>" alt="ManuelCode Logo" class="h-10 lg:h-12 w-auto transition-transform duration-300 group-hover:scale-105">
-          <span class="ml-2 lg:ml-3 text-xl lg:text-2xl font-bold text-gray-800 group-hover:text-[#536895] transition-colors duration-300 whitespace-nowrap" style="font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">ManuelCode</span>
+          <img src="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../assets/favi/favicon.png' : 'assets/favi/favicon.png'; ?>" alt="ManuelCode Logo" class="h-8 sm:h-10 lg:h-12 w-auto transition-transform duration-300 group-hover:scale-105">
+          <span class="ml-2 lg:ml-3 text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 group-hover:text-[#536895] transition-colors duration-300 whitespace-nowrap" style="font-family: 'Inter', sans-serif; letter-spacing: -0.5px;">ManuelCode</span>
         </a>
         
         <!-- Desktop Navigation Links -->
-        <div class="flex items-center space-x-4 lg:space-x-6 flex-1 justify-center mx-4 lg:mx-8">
-          <a href="about.php" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative <?php echo isCurrentPage('about.php') ? 'active' : ''; ?>">
+        <div class="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-center mx-4 xl:mx-8">
+          <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../about.php' : 'about.php'; ?>" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative text-sm xl:text-base <?php echo isCurrentPage('about.php') ? 'active' : ''; ?>">
             About
           </a>
           
           <!-- Services Dropdown -->
           <div class="nav-dropdown">
-            <a href="services.php" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative flex items-center <?php echo (isCurrentPage('services.php') || isCurrentPage('quote_request.php')) ? 'active' : ''; ?>">
+            <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../services.php' : 'services.php'; ?>" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative flex items-center text-sm xl:text-base <?php echo (isCurrentPage('services.php') || isCurrentPage('quote_request.php')) ? 'active' : ''; ?>">
               Services
-              <svg class="w-4 h-4 ml-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-3 h-3 xl:w-4 xl:h-4 ml-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </a>
             <div class="dropdown-menu">
-              <a href="services.php" class="dropdown-item <?php echo isCurrentPage('services.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../services.php' : 'services.php'; ?>" class="dropdown-item <?php echo isCurrentPage('services.php') ? 'active' : ''; ?>">
                 <i class="fas fa-cogs mr-2"></i>All Services
               </a>
-              <a href="quote_request.php" class="dropdown-item <?php echo isCurrentPage('quote_request.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../quote_request.php' : 'quote_request.php'; ?>" class="dropdown-item <?php echo isCurrentPage('quote_request.php') ? 'active' : ''; ?>">
                 <i class="fas fa-quote-left mr-2"></i>Get Quote
               </a>
             </div>
@@ -1510,17 +1510,17 @@ window.addEventListener('beforeunload', function() {
           
           <!-- Projects Dropdown -->
           <div class="nav-dropdown">
-            <a href="projects.php" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative flex items-center <?php echo (isCurrentPage('projects.php') || isCurrentPage('project-detail.php')) ? 'active' : ''; ?>">
+            <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../projects.php' : 'projects.php'; ?>" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative flex items-center text-sm xl:text-base <?php echo (isCurrentPage('projects.php') || isCurrentPage('project-detail.php')) ? 'active' : ''; ?>">
               Projects
-              <svg class="w-4 h-4 ml-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-3 h-3 xl:w-4 xl:h-4 ml-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </a>
             <div class="dropdown-menu">
-              <a href="projects.php" class="dropdown-item <?php echo isCurrentPage('projects.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../projects.php' : 'projects.php'; ?>" class="dropdown-item <?php echo isCurrentPage('projects.php') ? 'active' : ''; ?>">
                 <i class="fas fa-folder mr-2"></i>All Projects
               </a>
-              <a href="submission.php" class="dropdown-item <?php echo isCurrentPage('submission.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../submission.php' : 'submission.php'; ?>" class="dropdown-item <?php echo isCurrentPage('submission.php') ? 'active' : ''; ?>">
                 <i class="fas fa-upload mr-2"></i>Submit Project
               </a>
             </div>
@@ -1528,48 +1528,50 @@ window.addEventListener('beforeunload', function() {
           
           <!-- Store Dropdown -->
           <div class="nav-dropdown">
-            <a href="store.php" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative flex items-center <?php echo (isCurrentPage('store.php') || isCurrentPage('product.php') || isCurrentPage('guest_download.php')) ? 'active' : ''; ?>">
+            <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../store.php' : 'store.php'; ?>" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative flex items-center text-sm xl:text-base <?php echo (isCurrentPage('store.php') || isCurrentPage('product.php') || isCurrentPage('guest_download.php')) ? 'active' : ''; ?>">
               Store
-              <svg class="w-4 h-4 ml-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-3 h-3 xl:w-4 xl:h-4 ml-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </a>
             <div class="dropdown-menu">
-              <a href="store.php" class="dropdown-item <?php echo isCurrentPage('store.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../store.php' : 'store.php'; ?>" class="dropdown-item <?php echo isCurrentPage('store.php') ? 'active' : ''; ?>">
                 <i class="fas fa-store mr-2"></i>All Products
               </a>
-              <a href="guest_download.php" class="dropdown-item <?php echo isCurrentPage('guest_download.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../guest_download.php' : 'guest_download.php'; ?>" class="dropdown-item <?php echo isCurrentPage('guest_download.php') ? 'active' : ''; ?>">
                 <i class="fas fa-download mr-2"></i>Downloads
               </a>
             </div>
           </div>
 
-          <a href="contact.php" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative <?php echo isCurrentPage('contact.php') ? 'active' : ''; ?>">
+          <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../contact.php' : 'contact.php'; ?>" class="nav-link-modern text-gray-700 hover:text-[#536895] font-medium transition-all duration-300 relative text-sm xl:text-base <?php echo isCurrentPage('contact.php') ? 'active' : ''; ?>">
             Contact
           </a>
         </div>
         
         <!-- User Actions -->
-        <div class="flex items-center space-x-2 lg:space-x-4 flex-shrink-0">
+        <div class="hidden lg:flex items-center space-x-2 xl:space-x-4 flex-shrink-0">
           <?php if (isLoggedIn()): ?>
             <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
-              <a href="dashboard/" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center shadow-sm">
-                <i class="fas fa-tachometer-alt mr-2"></i>
-                Admin Dashboard
+              <a href="dashboard/" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-3 xl:px-4 py-2 rounded-lg transition-all duration-300 flex items-center shadow-sm text-xs xl:text-sm whitespace-nowrap">
+                <i class="fas fa-tachometer-alt mr-1 xl:mr-2"></i>
+                <span class="hidden xl:inline">Admin Dashboard</span>
+                <span class="xl:hidden">Admin</span>
               </a>
             <?php else: ?>
-              <a href="dashboard/" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center shadow-sm">
-                <i class="fas fa-user-circle mr-2"></i>
+              <a href="dashboard/" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-3 xl:px-4 py-2 rounded-lg transition-all duration-300 flex items-center shadow-sm text-xs xl:text-sm whitespace-nowrap">
+                <i class="fas fa-user-circle mr-1 xl:mr-2"></i>
                 Dashboard
               </a>
             <?php endif; ?>
-            <a href="auth/logout.php" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center shadow-sm">
-              <i class="fas fa-sign-out-alt mr-2"></i>
-              Logout
+            <a href="auth/logout.php" class="bg-red-500 hover:bg-red-600 text-white px-3 xl:px-4 py-2 rounded-lg transition-all duration-300 flex items-center shadow-sm text-xs xl:text-sm whitespace-nowrap">
+              <i class="fas fa-sign-out-alt mr-1 xl:mr-2"></i>
+              <span class="hidden xl:inline">Logout</span>
+              <span class="xl:hidden">Out</span>
             </a>
           <?php else: ?>
-            <a href="login" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center font-medium">
-              <i class="fas fa-sign-in-alt mr-2"></i>
+            <a href="login" class="bg-[#536895] hover:bg-[#4a5a7a] text-white px-4 xl:px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center font-medium text-xs xl:text-sm whitespace-nowrap">
+              <i class="fas fa-sign-in-alt mr-1 xl:mr-2"></i>
               Login
             </a>
           <?php endif; ?>
@@ -1580,7 +1582,7 @@ window.addEventListener('beforeunload', function() {
 </div>
 
 <!-- Mobile Navigation (Keep existing for mobile) -->
-<div class="md:hidden">
+<div class="lg:hidden">
   <nav class="bg-white shadow-md relative nav-container z-[9999]">
     <div class="max-w-6xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
@@ -1591,7 +1593,7 @@ window.addEventListener('beforeunload', function() {
         </a>
         
         <!-- Mobile Menu Button -->
-        <button id="mobile-menu-btn" class="md:hidden flex flex-col space-y-1 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+        <button id="mobile-menu-btn" class="lg:hidden flex flex-col space-y-1 p-2 rounded-lg hover:bg-gray-100 transition-colors">
           <span class="w-6 h-0.5 bg-gray-700 transition-all duration-300"></span>
           <span class="w-6 h-0.5 bg-gray-700 transition-all duration-300"></span>
           <span class="w-6 h-0.5 bg-gray-700 transition-all duration-300"></span>
@@ -1600,7 +1602,7 @@ window.addEventListener('beforeunload', function() {
     </div>
     
     <!-- Mobile Navigation Menu -->
-    <div id="mobile-menu" class="md:hidden fixed top-0 left-0 right-0 bg-white shadow-lg transform -translate-y-full opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-[99999]">
+    <div id="mobile-menu" class="lg:hidden fixed top-0 left-0 right-0 bg-white shadow-lg transform -translate-y-full opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-[99999] max-h-screen overflow-y-auto">
       <div class="px-4 py-6 space-y-4">
         <!-- Close Button -->
         <div class="flex justify-end mb-4">
@@ -1612,10 +1614,10 @@ window.addEventListener('beforeunload', function() {
         </div>
         <!-- Mobile Navigation Links -->
         <div class="space-y-2">
-          <a href="index.php" class="block text-gray-700 hover:text-[#536895] transition-all duration-300 py-3 px-4 rounded-lg hover:bg-gray-50 font-medium <?php echo isCurrentPage('index.php') ? 'bg-[#536895] text-white' : ''; ?>">
+          <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../index.php' : 'index.php'; ?>" class="block text-gray-700 hover:text-[#536895] transition-all duration-300 py-3 px-4 rounded-lg hover:bg-gray-50 font-medium <?php echo isCurrentPage('index.php') ? 'bg-[#536895] text-white' : ''; ?>">
             Home
           </a>
-          <a href="about.php" class="block text-gray-700 hover:text-[#536895] transition-all duration-300 py-3 px-4 rounded-lg hover:bg-gray-50 font-medium <?php echo isCurrentPage('about.php') ? 'bg-[#536895] text-white' : ''; ?>">
+          <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../about.php' : 'about.php'; ?>" class="block text-gray-700 hover:text-[#536895] transition-all duration-300 py-3 px-4 rounded-lg hover:bg-gray-50 font-medium <?php echo isCurrentPage('about.php') ? 'bg-[#536895] text-white' : ''; ?>">
             About
           </a>
           
@@ -1628,10 +1630,10 @@ window.addEventListener('beforeunload', function() {
               </svg>
             </button>
             <div id="services-dropdown" class="mobile-dropdown">
-              <a href="services.php" class="mobile-dropdown-item <?php echo isCurrentPage('services.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../services.php' : 'services.php'; ?>" class="mobile-dropdown-item <?php echo isCurrentPage('services.php') ? 'active' : ''; ?>">
                 All Services
               </a>
-              <a href="quote_request.php" class="mobile-dropdown-item <?php echo isCurrentPage('quote_request.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../quote_request.php' : 'quote_request.php'; ?>" class="mobile-dropdown-item <?php echo isCurrentPage('quote_request.php') ? 'active' : ''; ?>">
                 Get Quote
               </a>
             </div>
@@ -1646,10 +1648,10 @@ window.addEventListener('beforeunload', function() {
               </svg>
             </button>
             <div id="projects-dropdown" class="mobile-dropdown">
-              <a href="projects.php" class="mobile-dropdown-item <?php echo isCurrentPage('projects.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../projects.php' : 'projects.php'; ?>" class="mobile-dropdown-item <?php echo isCurrentPage('projects.php') ? 'active' : ''; ?>">
                 All Projects
               </a>
-              <a href="submission.php" class="mobile-dropdown-item <?php echo isCurrentPage('submission.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../submission.php' : 'submission.php'; ?>" class="mobile-dropdown-item <?php echo isCurrentPage('submission.php') ? 'active' : ''; ?>">
                 Submit Project
               </a>
             </div>
@@ -1664,16 +1666,16 @@ window.addEventListener('beforeunload', function() {
               </svg>
             </button>
             <div id="store-dropdown" class="mobile-dropdown">
-              <a href="store.php" class="mobile-dropdown-item <?php echo isCurrentPage('store.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../store.php' : 'store.php'; ?>" class="mobile-dropdown-item <?php echo isCurrentPage('store.php') ? 'active' : ''; ?>">
                 All Products
               </a>
-              <a href="guest_download.php" class="mobile-dropdown-item <?php echo isCurrentPage('guest_download.php') ? 'active' : ''; ?>">
+              <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../guest_download.php' : 'guest_download.php'; ?>" class="mobile-dropdown-item <?php echo isCurrentPage('guest_download.php') ? 'active' : ''; ?>">
                 Downloads
               </a>
             </div>
           </div>
 
-          <a href="contact.php" class="block text-gray-700 hover:text-[#536895] transition-all duration-300 py-3 px-4 rounded-lg hover:bg-gray-50 font-medium <?php echo isCurrentPage('contact.php') ? 'bg-[#536895] text-white' : ''; ?>">
+          <a href="<?php echo (strpos($_SERVER['PHP_SELF'], '/help/') !== false || strpos($_SERVER['PHP_SELF'], '/dashboard/') !== false) ? '../contact.php' : 'contact.php'; ?>" class="block text-gray-700 hover:text-[#536895] transition-all duration-300 py-3 px-4 rounded-lg hover:bg-gray-50 font-medium <?php echo isCurrentPage('contact.php') ? 'bg-[#536895] text-white' : ''; ?>">
             Contact
           </a>
         </div>
