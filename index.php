@@ -22,36 +22,52 @@ setQuickMeta(
 );
 
 include_once 'includes/header.php';
+include_once 'includes/cloudinary_helper.php';
+
+// Get team image URL from Cloudinary
+$team_image_url = '';
+try {
+    $stmt = $pdo->prepare("SELECT value FROM settings WHERE setting_key = 'homepage_team_image_url'");
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result && !empty($result['value'])) {
+        $team_image_url = $result['value'];
+    } else {
+        // Fallback: Try to get from Cloudinary using public_id
+        $cloudinaryHelper = new CloudinaryHelper($pdo);
+        if ($cloudinaryHelper->isEnabled()) {
+            $team_image_url = $cloudinaryHelper->getOptimizedUrl('homepage/team', [
+                'width' => 1920,
+                'height' => 1080,
+                'crop' => 'fill',
+                'quality' => 'auto',
+                'format' => 'auto'
+            ]);
+        }
+    }
+} catch (Exception $e) {
+    error_log("Error getting team image URL: " . $e->getMessage());
+}
+
+// Fallback to local image if Cloudinary URL not available
+if (empty($team_image_url)) {
+    $team_image_url = 'assets/images/team.png';
+}
 ?>
 
-<!-- Hero Section with Video Background -->
+<!-- Hero Section with Team Image -->
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden hero-section">
-  <!-- Video Background -->
-  <?php 
-  // Use manuelother video from assets/videos folder
-  $hero_video = 'assets/videos/manuelother.mp4';
-  ?>
-  <?php if (file_exists($hero_video)): ?>
-    <!-- Video Background -->
-    <div class="hero-video-container absolute inset-0 w-full h-full">
-      <!-- Direct Video from assets/videos folder -->
-      <video 
-        class="hero-video-iframe absolute inset-0 w-full h-full object-cover"
-        autoplay 
-        muted 
-        loop 
-        playsinline
-        loading="lazy">
-        <source src="<?php echo htmlspecialchars($hero_video); ?>" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-                    <!-- Black overlay with transparency to reveal background video -->
-              <div class="absolute inset-0 bg-black/60 pointer-events-none"></div>
-    </div>
-  <?php else: ?>
-    <!-- Fallback Black Background -->
-    <div class="absolute inset-0 bg-black"></div>
-  <?php endif; ?>
+  <!-- Team Image Background -->
+  <div class="absolute inset-0 w-full h-full">
+    <img 
+      src="<?php echo htmlspecialchars($team_image_url); ?>" 
+      alt="ManuelCode Team"
+      class="w-full h-full object-cover"
+      loading="eager"
+      style="object-fit: cover; width: 100%; height: 100%;">
+    <!-- Dark overlay for better text readability -->
+    <div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
+  </div>
   
   <!-- Hero Content -->
   <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center">
