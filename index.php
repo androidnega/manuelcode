@@ -82,31 +82,21 @@ $is_homepage = true;
       </div>
       
       <!-- About Section (Mobile) -->
-      <div class="px-4 sm:px-6 py-12">
-        <div class="max-w-4xl mx-auto text-center space-y-6">
+      <div class="px-4 sm:px-6 py-8">
+        <div class="max-w-2xl mx-auto text-center space-y-5 border-2 border-gray-300 rounded-lg p-6 shadow-lg bg-white">
           <div>
-            <h1 class="text-4xl font-bold text-gray-900 mb-3">
-              ManuelCode
-            </h1>
-            <p class="text-xl text-[#536895] font-semibold mb-4">
-              Building Digital Excellence
+            <p class="text-3xl sm:text-4xl text-[#536895] font-semibold mb-4">
+              Welcome
             </p>
           </div>
           
-          <div class="prose prose-lg max-w-none text-left space-y-4">
-            <p class="text-base text-gray-700 leading-relaxed">
-              Professional software development company specializing in transforming ideas into elegant, 
-              high-performance digital solutions. We combine cutting-edge technology with innovative thinking 
-              to deliver software that drives business growth.
-            </p>
-            
-            <p class="text-base text-gray-700 leading-relaxed">
-              Our expertise spans full-stack web development, mobile applications, and custom software 
-              solutions. We work closely with clients to deliver scalable, secure, and maintainable solutions.
+          <div class="prose prose-lg max-w-none">
+            <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
+              Transforming ideas into elegant, high-performance digital solutions.
             </p>
           </div>
           
-          <div class="pt-6">
+          <div class="pt-4">
             <div class="flex flex-col gap-3">
               <a href="store.php" class="inline-flex items-center justify-center px-6 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
                 Store
@@ -138,11 +128,8 @@ $is_homepage = true;
       <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container">
         <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 shadow-lg bg-white flex flex-col justify-center" id="text-card">
           <div>
-            <h1 class="text-5xl xl:text-6xl font-bold text-gray-900 mb-3">
-              ManuelCode
-            </h1>
-            <p class="text-2xl xl:text-3xl text-[#536895] font-semibold mb-4">
-              Building Digital Excellence
+            <p class="text-4xl xl:text-5xl text-[#536895] font-semibold mb-4">
+              Welcome
             </p>
           </div>
           
