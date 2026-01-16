@@ -160,10 +160,20 @@ document.getElementById('testUploadForm').addEventListener('submit', async funct
     formData.append('action', 'test_cloudinary_upload');
     
     try {
-        const response = await fetch('superadmin_tools.php', {
+        const response = await fetch('../admin/test_cloudinary_upload.php', {
             method: 'POST',
             body: formData
         });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            throw new Error(`Unexpected response format. Expected JSON but got: ${contentType}. Response: ${text.substring(0, 200)}`);
+        }
         
         const data = await response.json();
         
@@ -191,4 +201,5 @@ document.getElementById('testUploadForm').addEventListener('submit', async funct
 </script>
 </body>
 </html>
+
 
