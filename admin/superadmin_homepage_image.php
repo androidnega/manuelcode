@@ -27,14 +27,35 @@ $cloudinary_enabled = $cloudinaryHelper->isEnabled();
 
 // Handle image upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
+    // Get specific upload error messages
+    $upload_errors = [
+        UPLOAD_ERR_INI_SIZE => 'The uploaded file exceeds the upload_max_filesize directive in php.ini.',
+        UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
+        UPLOAD_ERR_PARTIAL => 'The uploaded file was only partially uploaded.',
+        UPLOAD_ERR_NO_FILE => 'No file was uploaded.',
+        UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder.',
+        UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
+        UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload.',
+    ];
+    
     if ($_FILES['homepage_image']['error'] !== UPLOAD_ERR_OK) {
-        $error_message = 'Error uploading file. Please try again.';
+        $error_code = $_FILES['homepage_image']['error'];
+        $error_message = isset($upload_errors[$error_code]) 
+            ? 'Upload error: ' . $upload_errors[$error_code] 
+            : 'Error uploading file. Error code: ' . $error_code;
+        
+        // Log the error for debugging
+        error_log("Homepage image upload error: Code $error_code - " . ($upload_errors[$error_code] ?? 'Unknown error'));
     } else {
         // Validate file type
         $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
         $file_type = $_FILES['homepage_image']['type'];
         
-        if (!in_array($file_type, $allowed_types)) {
+        // Also check file extension as backup
+        $file_extension = strtolower(pathinfo($_FILES['homepage_image']['name'], PATHINFO_EXTENSION));
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'webp'];
+        
+        if (!in_array($file_type, $allowed_types) && !in_array($file_extension, $allowed_extensions)) {
             $error_message = 'Invalid file type. Please upload a JPEG, PNG, or WebP image.';
         } else {
             // Validate file size (max 10MB)
@@ -42,47 +63,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
             if ($_FILES['homepage_image']['size'] > $max_size) {
                 $error_message = 'File size too large. Maximum size is 10MB.';
             } else {
-                // Upload to Cloudinary if enabled
-                if ($cloudinary_enabled) {
-                    $uploadResult = $cloudinaryHelper->uploadImage(
-                        $_FILES['homepage_image']['tmp_name'], 
-                        'homepage', 
-                        [
-                            'public_id' => 'team',
-                            'overwrite' => true,
-                            'transformation' => [
-                                'width' => 1920,
-                                'height' => 1080,
-                                'crop' => 'fill',
-                                'quality' => 'auto',
-                                'format' => 'auto'
-                            ]
-                        ]
-                    );
-                    
-                    if ($uploadResult && isset($uploadResult['url'])) {
-                        // Trim URL to remove any whitespace
-                        $image_url = trim($uploadResult['url']);
-                        // Save URL to database
-                        $stmt = $pdo->prepare("
-                            INSERT INTO settings (setting_key, value) 
-                            VALUES ('homepage_team_image_url', ?)
-                            ON DUPLICATE KEY UPDATE value = ?
-                        ");
-                        $stmt->execute([$image_url, $image_url]);
-                        
-                        $success_message = 'Homepage image uploaded successfully!';
-                        $current_image_url = trim($uploadResult['url']);
-                    } else {
-                        $error_message = 'Failed to upload image to Cloudinary. Please check Cloudinary configuration.';
-                    }
+                // Check if file actually exists
+                if (!file_exists($_FILES['homepage_image']['tmp_name'])) {
+                    $error_message = 'Temporary file not found. Please try again.';
                 } else {
-                    // Fallback: Save locally (not recommended for production)
-                    $error_message = 'Cloudinary is not enabled. Please enable Cloudinary in System Settings to upload images.';
+                    // Upload to Cloudinary if enabled
+                    if ($cloudinary_enabled) {
+                        $uploadResult = $cloudinaryHelper->uploadImage(
+                            $_FILES['homepage_image']['tmp_name'], 
+                            'homepage', 
+                            [
+                                'public_id' => 'team',
+                                'overwrite' => true
+                            ]
+                        );
+                        
+                        if ($uploadResult && isset($uploadResult['url'])) {
+                            // Trim URL to remove any whitespace
+                            $image_url = trim($uploadResult['url']);
+                            // Save URL to database
+                            $stmt = $pdo->prepare("
+                                INSERT INTO settings (setting_key, value) 
+                                VALUES ('homepage_team_image_url', ?)
+                                ON DUPLICATE KEY UPDATE value = ?
+                            ");
+                            $stmt->execute([$image_url, $image_url]);
+                            
+                            $success_message = 'Homepage image uploaded successfully!';
+                            $current_image_url = $image_url;
+                        } else {
+                            $error_message = 'Failed to upload image to Cloudinary. Please check Cloudinary configuration and error logs.';
+                            error_log("Cloudinary upload failed. Response: " . json_encode($uploadResult));
+                        }
+                    } else {
+                        $error_message = 'Cloudinary is not enabled. Please enable Cloudinary in System Settings to upload images.';
+                    }
                 }
             }
         }
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $error_message = 'No file was selected. Please choose an image file.';
 }
 ?>
 <!DOCTYPE html>
