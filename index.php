@@ -174,21 +174,21 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
       
       <!-- About Section (Mobile) -->
       <div class="px-4 sm:px-6 pt-0 sm:pt-8 pb-8 w-full flex items-center justify-center" style="margin-top: -0.90px;">
-        <div class="max-w-2xl mx-auto text-center space-y-5 rounded-lg p-6 <?php echo $selected_message['bg']; ?>">
+        <div class="max-w-2xl mx-auto text-center space-y-3 sm:space-y-5 rounded-lg p-4 sm:p-6 <?php echo $selected_message['bg']; ?>">
           <div>
-            <p class="text-3xl sm:text-4xl <?php echo $selected_message['welcome_color']; ?> font-semibold mb-2 md:mb-4">
+            <p class="text-2xl sm:text-3xl md:text-4xl <?php echo $selected_message['welcome_color']; ?> font-semibold mb-1 sm:mb-2 md:mb-4">
               <?php echo htmlspecialchars($selected_welcome); ?>
             </p>
           </div>
           
-          <div class="prose prose-lg max-w-none" style="min-height: 60px; display: flex; align-items: center; justify-content: center;">
-            <p class="text-base sm:text-lg <?php echo $selected_message['text_color']; ?> leading-relaxed">
+          <div class="prose prose-lg max-w-none" style="min-height: 50px; sm:min-height: 60px; display: flex; align-items: center; justify-content: center;">
+            <p class="text-sm sm:text-base md:text-lg <?php echo $selected_message['text_color']; ?> leading-relaxed">
               <?php echo htmlspecialchars($selected_message['text']); ?>
             </p>
           </div>
           
-          <div class="pt-2 md:pt-4">
-            <div class="flex flex-col gap-3">
+          <div class="pt-1 sm:pt-2 md:pt-4">
+            <div class="flex flex-row gap-2 sm:flex-col sm:gap-3">
               <a href="store.php" class="inline-flex items-center justify-center px-6 py-3 <?php echo $selected_message['button_primary']; ?> font-semibold rounded-lg transition-all duration-300">
                 Store
                 <i class="fas fa-store ml-2"></i>
