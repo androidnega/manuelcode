@@ -78,6 +78,13 @@ try {
     
     ob_end_clean();
     
+    // Check for error in result
+    if (is_array($result) && isset($result['error'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => $result['error']]);
+        exit;
+    }
+    
     if ($result && isset($result['url'])) {
         echo json_encode([
             'success' => true,

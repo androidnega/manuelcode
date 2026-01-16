@@ -181,7 +181,18 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'superadmin') {
                     ]
                 );
                 
-                if ($uploadResult && isset($uploadResult['url'])) {
+                // Check for error in result
+                if (is_array($uploadResult) && isset($uploadResult['error'])) {
+                    echo "<div class='error'>";
+                    echo "<strong>❌ Upload Failed</strong><br>";
+                    echo "Error: <strong>" . htmlspecialchars($uploadResult['error']) . "</strong><br>";
+                    echo "<br><strong>To fix this:</strong><br>";
+                    echo "1. Go to <a href='/dashboard/system-settings' target='_blank'>System Settings</a><br>";
+                    echo "2. Configure either:<br>";
+                    echo "   - <strong>Upload Preset</strong> (recommended - create one in Cloudinary dashboard), OR<br>";
+                    echo "   - <strong>API Key + API Secret</strong> (from Cloudinary dashboard → Settings → Security)<br>";
+                    echo "</div>";
+                } elseif ($uploadResult && isset($uploadResult['url'])) {
                     echo "<div class='success'>";
                     echo "<strong>✅ Upload Successful!</strong><br>";
                     echo "URL: <a href='" . htmlspecialchars($uploadResult['url']) . "' target='_blank'>" . htmlspecialchars($uploadResult['url']) . "</a><br>";

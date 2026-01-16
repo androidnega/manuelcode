@@ -69,12 +69,22 @@ class CloudinaryHelper {
     public function uploadImage($filePath, $folder = 'products', $options = []) {
         if (!$this->enabled || empty($this->cloud_name)) {
             error_log("Cloudinary upload error: Cloudinary is not enabled or cloud_name is empty");
-            return false;
+            return ['error' => 'Cloudinary is not enabled or cloud_name is empty'];
         }
         
         if (!file_exists($filePath)) {
             error_log("Cloudinary upload error: File not found - " . $filePath);
-            return false;
+            return ['error' => 'File not found'];
+        }
+        
+        // Check if upload method is configured
+        $hasPreset = !empty($this->upload_preset);
+        $hasCredentials = !empty($this->api_key) && !empty($this->api_secret);
+        
+        if (!$hasPreset && !$hasCredentials) {
+            $error_msg = 'No upload method configured. Please configure either an Upload Preset OR API Key + API Secret in System Settings.';
+            error_log("Cloudinary upload error: " . $error_msg);
+            return ['error' => $error_msg];
         }
         
         try {
@@ -95,11 +105,11 @@ class CloudinaryHelper {
             }
             
             // If using upload preset (unsigned upload)
-            if (!empty($this->upload_preset)) {
+            if ($hasPreset) {
                 $params['upload_preset'] = $this->upload_preset;
             } 
             // If no upload preset, use signed upload (requires API key and secret)
-            elseif (!empty($this->api_key) && !empty($this->api_secret)) {
+            elseif ($hasCredentials) {
                 $params['api_key'] = $this->api_key;
                 $params['timestamp'] = time();
                 
@@ -107,9 +117,6 @@ class CloudinaryHelper {
                 // Signature should include all params except 'file'
                 $signature = $this->generateSignature($params);
                 $params['signature'] = $signature;
-            } else {
-                error_log("Cloudinary upload error: No upload preset and missing API credentials. Cloud Name: " . ($this->cloud_name ?? 'empty') . ", API Key: " . (!empty($this->api_key) ? 'set' : 'empty') . ", API Secret: " . (!empty($this->api_secret) ? 'set' : 'empty'));
-                return false;
             }
             
             // Prepare file for upload (add AFTER signature generation)
