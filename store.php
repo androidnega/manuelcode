@@ -314,10 +314,6 @@ if (isset($_SESSION['user_id'])) {
                       </a>
                     <?php endif; ?>
                   <?php endif; ?>
-                  <a href="product.php?id=<?php echo $product['id']; ?>" 
-                     class="bg-gray-100 text-gray-700 p-1.5 rounded text-center">
-                    <i class="fas fa-eye text-sm"></i>
-                  </a>
                 <?php endif; ?>
               </div>
               

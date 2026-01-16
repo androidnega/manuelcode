@@ -436,11 +436,14 @@ include 'includes/header.php';
   <!-- Product Details Section - Visible to Everyone -->
   <div class="mt-8 bg-white rounded-xl shadow-lg overflow-hidden p-6">
     <!-- Product Description -->
-    <?php if (!empty($product['description'])): ?>
+    <?php 
+    $product_description = !empty($product['description']) ? $product['description'] : (!empty($product['short_desc']) ? $product['short_desc'] : '');
+    if (!empty($product_description)): 
+    ?>
       <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Description</h2>
         <div class="prose max-w-none text-gray-700 leading-relaxed">
-          <?php echo nl2br(htmlspecialchars($product['description'])); ?>
+          <?php echo nl2br(htmlspecialchars($product_description)); ?>
         </div>
       </div>
     <?php endif; ?>
