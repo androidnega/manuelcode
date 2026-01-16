@@ -174,7 +174,7 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
       
       <!-- About Section (Mobile) -->
       <div class="px-4 sm:px-6 pt-0 sm:pt-8 pb-8 w-full flex items-center justify-center" style="margin-top: -0.90px;">
-        <div class="max-w-2xl mx-auto text-center space-y-5 border-2 border-gray-300 rounded-lg p-6 <?php echo $selected_message['bg']; ?>">
+        <div class="max-w-2xl mx-auto text-center space-y-5 rounded-lg p-6 <?php echo $selected_message['bg']; ?>">
           <div>
             <p class="text-3xl sm:text-4xl <?php echo $selected_message['welcome_color']; ?> font-semibold mb-2 md:mb-4">
               <?php echo htmlspecialchars($selected_welcome); ?>
@@ -218,7 +218,7 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
         
         <!-- About Section (Desktop - Right Side) -->
         <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container" style="height: 100vh;">
-          <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 <?php echo $selected_message['bg']; ?> flex flex-col justify-center" id="text-card" style="height: 100%;">
+          <div class="w-full max-w-2xl space-y-5 text-center rounded-lg p-8 xl:p-10 <?php echo $selected_message['bg']; ?> flex flex-col justify-center" id="text-card" style="height: 100%;">
           <div>
             <p class="text-4xl xl:text-5xl <?php echo $selected_message['welcome_color']; ?> font-semibold mb-4">
               <?php echo htmlspecialchars($selected_welcome); ?>
