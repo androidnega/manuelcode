@@ -66,6 +66,15 @@ $team_image_url = trim($team_image_url);
 // Set flag to indicate this is the homepage (for header/footer conditional display)
 $is_homepage = true;
 
+// Dynamic welcome messages (short words)
+$welcome_messages = [
+    'Welcome',
+    'Hello',
+    'Hi There',
+    'Greetings',
+    'Welcome Back'
+];
+
 // Dynamic messages and backgrounds based on user activity
 $messages = [
     [
@@ -103,6 +112,7 @@ if (isset($_SESSION['homepage_visit_count'])) {
 }
 
 $selected_message = $messages[$selected_index];
+$selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)];
 ?>
 
 <!-- Combined Section: Image and About (Side by side on desktop, stacked on mobile) -->
@@ -124,7 +134,7 @@ $selected_message = $messages[$selected_index];
         <div class="max-w-2xl mx-auto text-center space-y-5 border-2 border-gray-300 rounded-lg p-6 <?php echo $selected_message['bg']; ?>">
           <div>
             <p class="text-3xl sm:text-4xl text-[#536895] font-semibold mb-4">
-              Welcome
+              <?php echo htmlspecialchars($selected_welcome); ?>
             </p>
           </div>
           
@@ -168,7 +178,7 @@ $selected_message = $messages[$selected_index];
           <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 <?php echo $selected_message['bg']; ?> flex flex-col justify-center" id="text-card" style="min-height: 200px;">
           <div>
             <p class="text-4xl xl:text-5xl text-[#536895] font-semibold mb-4">
-              Welcome
+              <?php echo htmlspecialchars($selected_welcome); ?>
             </p>
           </div>
           
