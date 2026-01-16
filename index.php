@@ -135,6 +135,29 @@ $selected_message = $messages[$selected_index];
 $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)];
 ?>
 
+<style>
+/* Prevent scrolling on mobile only */
+@media (max-width: 1023px) {
+    html, body {
+        overflow: hidden !important;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+        -webkit-overflow-scrolling: none;
+    }
+    
+    section {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+}
+</style>
+
 <!-- Combined Section: Image and About (Side by side on desktop, stacked on mobile) -->
 <section class="w-full bg-white min-h-screen">
   <div class="w-full">
