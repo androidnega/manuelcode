@@ -83,15 +83,15 @@ $is_homepage = true;
       
       <!-- About Section (Mobile) -->
       <div class="px-4 sm:px-6 py-8">
-        <div class="max-w-2xl mx-auto text-center space-y-5 border-2 border-gray-300 rounded-lg p-6 bg-white">
+        <div class="max-w-2xl mx-auto text-center space-y-5 border-2 border-gray-300 rounded-lg p-6 bg-blue-50">
           <div>
             <p class="text-3xl sm:text-4xl text-[#536895] font-semibold mb-4">
               Welcome
             </p>
           </div>
           
-          <div class="prose prose-lg max-w-none">
-            <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
+          <div class="prose prose-lg max-w-none" style="min-height: 60px; display: flex; align-items: center; justify-content: center;">
+            <p class="text-base sm:text-lg text-gray-700 leading-relaxed" id="dynamic-text-mobile">
               Transforming ideas into elegant, high-performance digital solutions.
             </p>
           </div>
@@ -127,15 +127,15 @@ $is_homepage = true;
         
         <!-- About Section (Desktop - Right Side) -->
         <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container">
-          <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 bg-white flex flex-col justify-center" id="text-card">
+          <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 bg-blue-50 flex flex-col justify-center" id="text-card" style="min-height: 200px;">
           <div>
             <p class="text-4xl xl:text-5xl text-[#536895] font-semibold mb-4">
               Welcome
             </p>
           </div>
           
-          <div class="prose prose-lg max-w-none">
-            <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
+          <div class="prose prose-lg max-w-none" style="min-height: 60px; display: flex; align-items: center; justify-content: center;">
+            <p class="text-lg xl:text-xl text-gray-700 leading-relaxed" id="dynamic-text">
               Transforming ideas into elegant, high-performance digital solutions.
             </p>
           </div>
@@ -215,6 +215,52 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 250);
         });
     }
+});
+
+// Dynamic text rotation
+document.addEventListener('DOMContentLoaded', function() {
+    const texts = [
+        'Transforming ideas into elegant, high-performance digital solutions.',
+        'Building innovative software that drives business growth and success.',
+        'Creating custom solutions tailored to your unique business needs.',
+        'Delivering cutting-edge technology with exceptional user experience.',
+        'Empowering businesses through intelligent software development.'
+    ];
+    
+    let currentIndex = 0;
+    const desktopText = document.getElementById('dynamic-text');
+    const mobileText = document.getElementById('dynamic-text-mobile');
+    
+    function rotateText() {
+        if (desktopText) {
+            desktopText.style.opacity = '0';
+            setTimeout(() => {
+                desktopText.textContent = texts[currentIndex];
+                desktopText.style.opacity = '1';
+            }, 300);
+        }
+        
+        if (mobileText) {
+            mobileText.style.opacity = '0';
+            setTimeout(() => {
+                mobileText.textContent = texts[currentIndex];
+                mobileText.style.opacity = '1';
+            }, 300);
+        }
+        
+        currentIndex = (currentIndex + 1) % texts.length;
+    }
+    
+    // Add transition styles
+    if (desktopText) {
+        desktopText.style.transition = 'opacity 0.5s ease-in-out';
+    }
+    if (mobileText) {
+        mobileText.style.transition = 'opacity 0.5s ease-in-out';
+    }
+    
+    // Rotate text every 4 seconds
+    setInterval(rotateText, 4000);
 });
 </script>
 
