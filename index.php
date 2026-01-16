@@ -79,23 +79,43 @@ $welcome_messages = [
 $messages = [
     [
         'text' => 'Transforming ideas into elegant, high-performance digital solutions.',
-        'bg' => 'bg-blue-50'
+        'bg' => 'bg-blue-600',
+        'text_color' => 'text-white',
+        'welcome_color' => 'text-blue-100',
+        'button_primary' => 'bg-white text-blue-600 hover:bg-blue-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-blue-600'
     ],
     [
         'text' => 'Building innovative software that drives business growth and success.',
-        'bg' => 'bg-green-50'
+        'bg' => 'bg-green-600',
+        'text_color' => 'text-white',
+        'welcome_color' => 'text-green-100',
+        'button_primary' => 'bg-white text-green-600 hover:bg-green-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-green-600'
     ],
     [
         'text' => 'Creating custom solutions tailored to your unique business needs.',
-        'bg' => 'bg-purple-50'
+        'bg' => 'bg-purple-600',
+        'text_color' => 'text-white',
+        'welcome_color' => 'text-purple-100',
+        'button_primary' => 'bg-white text-purple-600 hover:bg-purple-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-purple-600'
     ],
     [
         'text' => 'Delivering cutting-edge technology with exceptional user experience.',
-        'bg' => 'bg-amber-50'
+        'bg' => 'bg-amber-600',
+        'text_color' => 'text-white',
+        'welcome_color' => 'text-amber-100',
+        'button_primary' => 'bg-white text-amber-600 hover:bg-amber-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-amber-600'
     ],
     [
         'text' => 'Empowering businesses through intelligent software development.',
-        'bg' => 'bg-indigo-50'
+        'bg' => 'bg-indigo-600',
+        'text_color' => 'text-white',
+        'welcome_color' => 'text-indigo-100',
+        'button_primary' => 'bg-white text-indigo-600 hover:bg-indigo-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-indigo-600'
     ]
 ];
 
@@ -133,24 +153,24 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
       <div class="px-4 sm:px-6 py-8">
         <div class="max-w-2xl mx-auto text-center space-y-5 border-2 border-gray-300 rounded-lg p-6 <?php echo $selected_message['bg']; ?>">
           <div>
-            <p class="text-3xl sm:text-4xl text-[#536895] font-semibold mb-4">
+            <p class="text-3xl sm:text-4xl <?php echo $selected_message['welcome_color']; ?> font-semibold mb-4">
               <?php echo htmlspecialchars($selected_welcome); ?>
             </p>
           </div>
           
           <div class="prose prose-lg max-w-none" style="min-height: 60px; display: flex; align-items: center; justify-content: center;">
-            <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
+            <p class="text-base sm:text-lg <?php echo $selected_message['text_color']; ?> leading-relaxed">
               <?php echo htmlspecialchars($selected_message['text']); ?>
             </p>
           </div>
           
           <div class="pt-4">
             <div class="flex flex-col gap-3">
-              <a href="store.php" class="inline-flex items-center justify-center px-6 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
+              <a href="store.php" class="inline-flex items-center justify-center px-6 py-3 <?php echo $selected_message['button_primary']; ?> font-semibold rounded-lg transition-all duration-300">
                 Store
                 <i class="fas fa-store ml-2"></i>
               </a>
-              <a href="about.php" class="inline-flex items-center justify-center px-6 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
+              <a href="about.php" class="inline-flex items-center justify-center px-6 py-3 <?php echo $selected_message['button_secondary']; ?> font-semibold rounded-lg transition-all duration-300">
                 About Us
                 <i class="fas fa-info-circle ml-2"></i>
               </a>
@@ -177,24 +197,24 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
         <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container">
           <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 <?php echo $selected_message['bg']; ?> flex flex-col justify-center" id="text-card" style="min-height: 200px;">
           <div>
-            <p class="text-4xl xl:text-5xl text-[#536895] font-semibold mb-4">
+            <p class="text-4xl xl:text-5xl <?php echo $selected_message['welcome_color']; ?> font-semibold mb-4">
               <?php echo htmlspecialchars($selected_welcome); ?>
             </p>
           </div>
           
           <div class="prose prose-lg max-w-none" style="min-height: 60px; display: flex; align-items: center; justify-content: center;">
-            <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
+            <p class="text-lg xl:text-xl <?php echo $selected_message['text_color']; ?> leading-relaxed">
               <?php echo htmlspecialchars($selected_message['text']); ?>
             </p>
           </div>
           
           <div class="pt-2">
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="store.php" class="inline-flex items-center justify-center px-8 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
+              <a href="store.php" class="inline-flex items-center justify-center px-8 py-3 <?php echo $selected_message['button_primary']; ?> font-semibold rounded-lg transition-all duration-300">
                 Store
                 <i class="fas fa-store ml-2"></i>
               </a>
-              <a href="about.php" class="inline-flex items-center justify-center px-8 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
+              <a href="about.php" class="inline-flex items-center justify-center px-8 py-3 <?php echo $selected_message['button_secondary']; ?> font-semibold rounded-lg transition-all duration-300">
                 About Us
                 <i class="fas fa-info-circle ml-2"></i>
               </a>
