@@ -153,7 +153,7 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
       <div class="px-4 sm:px-6 py-8">
         <div class="max-w-2xl mx-auto text-center space-y-5 border-2 border-gray-300 rounded-lg p-6 <?php echo $selected_message['bg']; ?>">
           <div>
-            <p class="text-3xl sm:text-4xl <?php echo $selected_message['welcome_color']; ?> font-semibold mb-4">
+            <p class="text-3xl sm:text-4xl <?php echo $selected_message['welcome_color']; ?> font-semibold mb-2 md:mb-4">
               <?php echo htmlspecialchars($selected_welcome); ?>
             </p>
           </div>
@@ -164,7 +164,7 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
             </p>
           </div>
           
-          <div class="pt-4">
+          <div class="pt-2 md:pt-4">
             <div class="flex flex-col gap-3">
               <a href="store.php" class="inline-flex items-center justify-center px-6 py-3 <?php echo $selected_message['button_primary']; ?> font-semibold rounded-lg transition-all duration-300">
                 Store
