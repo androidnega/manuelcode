@@ -186,11 +186,13 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'superadmin') {
                     echo "<div class='error'>";
                     echo "<strong>❌ Upload Failed</strong><br>";
                     echo "Error: <strong>" . htmlspecialchars($uploadResult['error']) . "</strong><br>";
-                    echo "<br><strong>To fix this:</strong><br>";
-                    echo "1. Go to <a href='/dashboard/system-settings' target='_blank'>System Settings</a><br>";
-                    echo "2. Configure either:<br>";
-                    echo "   - <strong>Upload Preset</strong> (recommended - create one in Cloudinary dashboard), OR<br>";
-                    echo "   - <strong>API Key + API Secret</strong> (from Cloudinary dashboard → Settings → Security)<br>";
+                    echo "<br><strong>Troubleshooting:</strong><br>";
+                    echo "1. Verify your Upload Preset name '<code>" . htmlspecialchars($settings['cloudinary_upload_preset'] ?? '') . "</code>' exists in Cloudinary dashboard<br>";
+                    echo "2. Make sure the preset is set to '<strong>Unsigned</strong>' mode<br>";
+                    echo "3. Check that the preset allows the file format you're uploading<br>";
+                    echo "4. Verify your Cloud Name '<code>" . htmlspecialchars($settings['cloudinary_cloud_name'] ?? '') . "</code>' is correct<br>";
+                    echo "5. Check PHP error logs for detailed error messages<br>";
+                    echo "<br>Full result: <pre>" . htmlspecialchars(print_r($uploadResult, true)) . "</pre>";
                     echo "</div>";
                 } elseif ($uploadResult && isset($uploadResult['url'])) {
                     echo "<div class='success'>";

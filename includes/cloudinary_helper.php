@@ -138,18 +138,38 @@ class CloudinaryHelper {
             $curlInfo = curl_getinfo($ch);
             curl_close($ch);
             
+            // Log request details for debugging
+            error_log("Cloudinary upload request - URL: $uploadUrl, Method: " . ($hasPreset ? 'Upload Preset' : 'Signed'), "Preset: " . ($this->upload_preset ?? 'none'));
+            
             if ($error) {
-                error_log("Cloudinary cURL error: " . $error);
-                return false;
+                $error_msg = "Cloudinary cURL error: " . $error;
+                error_log($error_msg);
+                return ['error' => $error_msg];
             }
             
             if ($httpCode !== 200) {
                 $errorDetails = json_decode($response, true);
-                $errorMessage = isset($errorDetails['error']['message']) 
-                    ? $errorDetails['error']['message'] 
-                    : 'Unknown error';
-                error_log("Cloudinary upload error: HTTP $httpCode - " . $errorMessage . " | Full response: " . substr($response, 0, 500));
-                return false;
+                $errorMessage = 'Unknown error';
+                
+                if (isset($errorDetails['error']['message'])) {
+                    $errorMessage = $errorDetails['error']['message'];
+                } elseif (isset($errorDetails['error'])) {
+                    $errorMessage = is_string($errorDetails['error']) ? $errorDetails['error'] : json_encode($errorDetails['error']);
+                } elseif (!empty($response)) {
+                    $errorMessage = substr($response, 0, 200);
+                }
+                
+                $fullError = "Cloudinary upload error: HTTP $httpCode - $errorMessage";
+                error_log($fullError . " | Full response: " . substr($response, 0, 1000));
+                
+                // Provide helpful error messages based on common issues
+                if ($httpCode === 401) {
+                    return ['error' => 'Authentication failed. Please check your Upload Preset name or API credentials.'];
+                } elseif ($httpCode === 400) {
+                    return ['error' => "Invalid request: $errorMessage. Please check your Upload Preset configuration in Cloudinary dashboard."];
+                } else {
+                    return ['error' => "Upload failed (HTTP $httpCode): $errorMessage"];
+                }
             }
             
             $result = json_decode($response, true);
@@ -165,8 +185,9 @@ class CloudinaryHelper {
                 ];
             }
             
-            error_log("Cloudinary upload error: Invalid response - " . substr($response, 0, 500));
-            return false;
+            $error_msg = "Cloudinary upload error: Invalid response - " . substr($response, 0, 500);
+            error_log($error_msg);
+            return ['error' => 'Invalid response from Cloudinary. Check error logs for details.'];
             
         } catch (Exception $e) {
             error_log("Cloudinary upload error: " . $e->getMessage());

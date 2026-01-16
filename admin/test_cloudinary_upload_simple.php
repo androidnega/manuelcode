@@ -80,8 +80,17 @@ try {
     
     // Check for error in result
     if (is_array($result) && isset($result['error'])) {
+        ob_end_clean();
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => $result['error']]);
+        echo json_encode([
+            'success' => false, 
+            'error' => $result['error'],
+            'debug' => [
+                'has_preset' => !empty($settings['cloudinary_upload_preset'] ?? ''),
+                'preset_name' => $settings['cloudinary_upload_preset'] ?? '',
+                'cloud_name' => $settings['cloudinary_cloud_name'] ?? ''
+            ]
+        ]);
         exit;
     }
     
