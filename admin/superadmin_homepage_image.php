@@ -251,6 +251,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
                         <li>Maximum file size you can upload: <strong><?php echo $max_allowed_mb; ?>MB</strong></li>
                         <li class="mt-2"><strong>To fix:</strong> Edit <code class="bg-yellow-100 px-1 rounded">php.ini</code> and increase both values to at least 10M, then restart your web server.</li>
                         <li class="text-xs mt-1">For XAMPP: Edit <code class="bg-yellow-100 px-1 rounded">C:\xampp\php\php.ini</code></li>
+                        <li class="mt-2">
+                            <strong>Quick Steps:</strong>
+                            <ol class="list-decimal ml-4 mt-1 space-y-1 text-xs">
+                                <li>Open <code class="bg-yellow-100 px-1 rounded">C:\xampp\php\php.ini</code> in Notepad (as Administrator)</li>
+                                <li>Press <kbd class="bg-yellow-100 px-1 rounded">Ctrl+F</kbd> and search for <code class="bg-yellow-100 px-1 rounded">upload_max_filesize</code></li>
+                                <li>Change <code class="bg-yellow-100 px-1 rounded">upload_max_filesize = 2M</code> to <code class="bg-yellow-100 px-1 rounded">upload_max_filesize = 10M</code></li>
+                                <li>Search for <code class="bg-yellow-100 px-1 rounded">post_max_size</code> and change it to <code class="bg-yellow-100 px-1 rounded">post_max_size = 10M</code></li>
+                                <li>Save the file (Ctrl+S)</li>
+                                <li>Restart Apache in XAMPP Control Panel</li>
+                                <li>Refresh this page to verify the changes</li>
+                            </ol>
+                        </li>
                     </ul>
                 </div>
                 <?php endif; ?>
