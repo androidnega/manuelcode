@@ -61,59 +61,121 @@ if (empty($team_image_url)) {
 $team_image_url = trim($team_image_url);
 ?>
 
-<!-- Section 1: Image Section -->
-<section class="w-full overflow-hidden">
-  <div class="relative w-full">
-    <img 
-      src="<?php echo htmlspecialchars($team_image_url); ?>" 
-      alt="ManuelCode"
-      class="w-full h-auto block"
-      style="max-width: 100%; height: auto; display: block;"
-      loading="eager">
-  </div>
-</section>
-
-<!-- Section 2: About ManuelCode -->
-<section class="py-16 md:py-24 bg-white">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto text-center space-y-8">
-      <div>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
-          ManuelCode
-        </h1>
-        <p class="text-xl md:text-2xl text-[#536895] font-semibold mb-6">
-          Building Digital Excellence
-        </p>
+<!-- Combined Section: Image and About (Side by side on desktop, stacked on mobile) -->
+<section class="w-full bg-white">
+  <div class="max-w-7xl mx-auto">
+    <!-- Mobile: Stacked Layout -->
+    <div class="block lg:hidden">
+      <!-- Image Section (Mobile) -->
+      <div class="w-full overflow-hidden">
+        <img 
+          src="<?php echo htmlspecialchars($team_image_url); ?>" 
+          alt="ManuelCode"
+          class="w-full h-auto block"
+          style="max-width: 100%; height: auto; display: block;"
+          loading="eager">
       </div>
       
-      <div class="prose prose-lg max-w-none text-left space-y-6">
-        <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
-          ManuelCode is a professional software development company specializing in transforming ideas into elegant, 
-          high-performance digital solutions. We combine cutting-edge technology with innovative thinking to deliver 
-          software that drives business growth and exceeds expectations.
-        </p>
-        
-        <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
-          Our expertise spans full-stack web development, mobile applications, cloud architecture, and custom software 
-          solutions. We work closely with clients to understand their unique needs and deliver tailored solutions that 
-          are scalable, secure, and maintainable.
-        </p>
-        
-        <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
-          At ManuelCode, we believe in clean code, fast delivery, and exceptional support. Every project is an opportunity 
-          to create something remarkable that makes a real difference for our clients and their users.
-        </p>
+      <!-- About Section (Mobile) -->
+      <div class="px-4 sm:px-6 py-12">
+        <div class="max-w-4xl mx-auto text-center space-y-6">
+          <div>
+            <h1 class="text-4xl font-bold text-gray-900 mb-3">
+              ManuelCode
+            </h1>
+            <p class="text-xl text-[#536895] font-semibold mb-4">
+              Building Digital Excellence
+            </p>
+          </div>
+          
+          <div class="prose prose-lg max-w-none text-left space-y-4">
+            <p class="text-base text-gray-700 leading-relaxed">
+              ManuelCode is a professional software development company specializing in transforming ideas into elegant, 
+              high-performance digital solutions. We combine cutting-edge technology with innovative thinking to deliver 
+              software that drives business growth and exceeds expectations.
+            </p>
+            
+            <p class="text-base text-gray-700 leading-relaxed">
+              Our expertise spans full-stack web development, mobile applications, cloud architecture, and custom software 
+              solutions. We work closely with clients to understand their unique needs and deliver tailored solutions that 
+              are scalable, secure, and maintainable.
+            </p>
+            
+            <p class="text-base text-gray-700 leading-relaxed">
+              At ManuelCode, we believe in clean code, fast delivery, and exceptional support. Every project is an opportunity 
+              to create something remarkable that makes a real difference for our clients and their users.
+            </p>
+          </div>
+          
+          <div class="pt-6">
+            <div class="flex flex-col gap-3">
+              <a href="about.php" class="inline-flex items-center justify-center px-6 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
+                Learn More About Us
+                <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+              <a href="contact.php" class="inline-flex items-center justify-center px-6 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
+                Get In Touch
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Desktop: Side by Side Layout -->
+    <div class="hidden lg:flex lg:items-stretch lg:min-h-[70vh]">
+      <!-- Image Section (Desktop - Left Side) -->
+      <div class="w-1/2 flex-shrink-0 overflow-hidden">
+        <img 
+          src="<?php echo htmlspecialchars($team_image_url); ?>" 
+          alt="ManuelCode"
+          class="w-full h-full object-cover object-center"
+          style="max-height: 70vh; object-fit: cover; object-position: center;"
+          loading="eager">
       </div>
       
-      <div class="pt-8">
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="about.php" class="inline-flex items-center justify-center px-8 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
-            Learn More About Us
-            <i class="fas fa-arrow-right ml-2"></i>
-          </a>
-          <a href="contact.php" class="inline-flex items-center justify-center px-8 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
-            Get In Touch
-          </a>
+      <!-- About Section (Desktop - Right Side) -->
+      <div class="w-1/2 flex items-center px-8 xl:px-12 py-12">
+        <div class="w-full space-y-6">
+          <div>
+            <h1 class="text-5xl xl:text-6xl font-bold text-gray-900 mb-4">
+              ManuelCode
+            </h1>
+            <p class="text-2xl xl:text-3xl text-[#536895] font-semibold mb-6">
+              Building Digital Excellence
+            </p>
+          </div>
+          
+          <div class="prose prose-lg max-w-none space-y-5">
+            <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
+              ManuelCode is a professional software development company specializing in transforming ideas into elegant, 
+              high-performance digital solutions. We combine cutting-edge technology with innovative thinking to deliver 
+              software that drives business growth and exceeds expectations.
+            </p>
+            
+            <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
+              Our expertise spans full-stack web development, mobile applications, cloud architecture, and custom software 
+              solutions. We work closely with clients to understand their unique needs and deliver tailored solutions that 
+              are scalable, secure, and maintainable.
+            </p>
+            
+            <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
+              At ManuelCode, we believe in clean code, fast delivery, and exceptional support. Every project is an opportunity 
+              to create something remarkable that makes a real difference for our clients and their users.
+            </p>
+          </div>
+          
+          <div class="pt-6">
+            <div class="flex flex-col sm:flex-row gap-4">
+              <a href="about.php" class="inline-flex items-center justify-center px-8 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
+                Learn More About Us
+                <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+              <a href="contact.php" class="inline-flex items-center justify-center px-8 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
+                Get In Touch
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
