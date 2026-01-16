@@ -308,9 +308,9 @@ if (isset($_SESSION['user_id'])) {
                         <i class="fas fa-credit-card mr-1"></i>Buy Now
                       </a>
                     <?php else: ?>
-                      <a href="user_login.php?redirect=<?php echo urlencode('store.php'); ?>" 
+                      <a href="product.php?id=<?php echo $product['id']; ?>" 
                          class="flex-1 bg-[#536895] text-white py-1.5 px-3 rounded text-sm font-medium text-center">
-                        <i class="fas fa-sign-in-alt mr-1"></i>Login to Buy
+                        <i class="fas fa-mobile-alt mr-1"></i>Pay with MoMo
                       </a>
                     <?php endif; ?>
                   <?php endif; ?>

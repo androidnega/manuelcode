@@ -412,7 +412,7 @@ include 'includes/header.php';
            <div class="mt-4 space-y-3">
              <div class="p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded">
                <i class="fas fa-info-circle mr-2"></i>
-               Please <a href="user_login.php?redirect=<?php echo urlencode('product.php?id=' . $product['id']); ?>" class="underline font-semibold">login</a> to purchase this product.
+               Please <a href="login?redirect=<?php echo urlencode('product.php?id=' . $product['id']); ?>" class="underline font-semibold">login</a> to purchase this product.
              </div>
              
              <!-- Coupon Information for Guests -->
@@ -816,7 +816,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = `download_free_product_guest_coupon.php?id=<?php echo $product['id']; ?>&coupon=${encodeURIComponent(coupon.code)}`;
             } else {
                 // Fallback to guest purchase page
-                window.location.href = 'user_login.php?redirect=<?php echo urlencode('product.php?id=' . $product['id']); ?>';
+                window.location.href = 'login?redirect=<?php echo urlencode('product.php?id=' . $product['id']); ?>';
             }
         };
     }

@@ -8,9 +8,9 @@ include '../includes/product_functions.php';
 if (!isset($_SESSION['user_id'])) {
     $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
     if ($product_id) {
-        header('Location: ../user_login.php?redirect=' . urlencode('product.php?id=' . $product_id . '&error=Please login to purchase products'));
+        header('Location: ../login?redirect=' . urlencode('product.php?id=' . $product_id . '&error=Please login to purchase products'));
     } else {
-        header('Location: ../user_login.php?redirect=' . urlencode('store.php') . '&error=Please login to purchase products');
+        header('Location: ../login?redirect=' . urlencode('store.php') . '&error=Please login to purchase products');
     }
     exit();
 }
