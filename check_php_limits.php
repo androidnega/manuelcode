@@ -138,30 +138,80 @@ function return_bytes($val) {
             <br><br>
             <?php
             $php_ini_path = php_ini_loaded_file();
-            $is_cpanel = strpos($php_ini_path, '/opt/alt/') !== false || strpos($php_ini_path, 'cpanel') !== false;
+            // Detect cPanel/WHM servers
+            $is_cpanel = (
+                strpos($php_ini_path, '/opt/alt/') !== false || 
+                strpos($php_ini_path, 'cpanel') !== false ||
+                strpos($php_ini_path, '/usr/local/lib/php.ini') !== false ||
+                file_exists('/usr/local/cpanel') ||
+                isset($_SERVER['CPANEL']) ||
+                function_exists('cpanel_version')
+            );
             ?>
             
-            <?php if ($is_cpanel): ?>
-            <strong>To fix this (cPanel/Live Server):</strong>
-            <ol>
-                <li><strong>Method 1 - .htaccess (Recommended):</strong>
-                    <ul>
-                        <li>Edit <code>.htaccess</code> in your website root</li>
-                        <li>Add: <code>php_value upload_max_filesize 10M</code></li>
-                        <li>Add: <code>php_value post_max_size 10M</code></li>
-                        <li>Save and refresh this page</li>
+            <?php if ($is_cpanel || strpos($php_ini_path, '/opt/alt/') !== false): ?>
+            <strong>🌐 You're on a Live Server (cPanel) - Here's how to fix it:</strong>
+            <br><br>
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                <strong>📍 Your PHP Config:</strong> <code><?php echo htmlspecialchars($php_ini_path); ?></code>
+                <br><small style="color: #666;">This file is managed by cPanel - you cannot edit it directly.</small>
+            </div>
+            
+            <ol style="line-height: 2;">
+                <li><strong>Method 1 - .htaccess (Easiest - Try this first):</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Go to <strong>cPanel → File Manager</strong> (or use FTP)</li>
+                        <li>Navigate to your <strong>website root</strong> (usually <code>public_html</code> or <code>htdocs</code>)</li>
+                        <li>Open or create <code>.htaccess</code> file</li>
+                        <li>Add these lines at the <strong>top</strong> of the file:</li>
+                        <li style="margin: 10px 0;">
+                            <code style="display: block; background: #f4f4f4; padding: 10px; border-radius: 3px; margin-top: 5px;">
+php_value upload_max_filesize 10M<br>
+php_value post_max_size 10M<br>
+php_value max_execution_time 300<br>
+php_value memory_limit 256M
+                            </code>
+                        </li>
+                        <li><strong>Save</strong> the file</li>
+                        <li><strong>Refresh this page</strong> to verify changes (may take 1-2 minutes)</li>
+                    </ul>
+                    <div style="background: #fff3cd; padding: 10px; border-radius: 3px; margin-top: 10px;">
+                        <strong>⚠️ Note:</strong> If you get a 500 error after adding these lines, your host doesn't allow PHP overrides. Try Method 2 instead.
+                    </div>
+                </li>
+                <li style="margin-top: 20px;"><strong>Method 2 - cPanel MultiPHP INI Editor:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Login to <strong>cPanel</strong></li>
+                        <li>Find <strong>"MultiPHP INI Editor"</strong> (usually under "Software" or "PHP" section)</li>
+                        <li>Select your <strong>domain</strong> from the dropdown</li>
+                        <li>Click <strong>"Editor Mode"</strong> tab</li>
+                        <li>Find and change these values:</li>
+                        <li style="margin: 10px 0;">
+                            <code style="display: block; background: #f4f4f4; padding: 10px; border-radius: 3px; margin-top: 5px;">
+upload_max_filesize = 10M<br>
+post_max_size = 10M<br>
+max_execution_time = 300<br>
+memory_limit = 256M
+                            </code>
+                        </li>
+                        <li>Click <strong>"Save"</strong></li>
+                        <li>Wait <strong>2-5 minutes</strong> for changes to take effect</li>
+                        <li>Refresh this page to verify</li>
                     </ul>
                 </li>
-                <li><strong>Method 2 - cPanel MultiPHP INI Editor:</strong>
-                    <ul>
-                        <li>Login to cPanel → MultiPHP INI Editor</li>
-                        <li>Select your domain → Editor Mode</li>
-                        <li>Change <code>upload_max_filesize</code> to <code>10M</code></li>
-                        <li>Change <code>post_max_size</code> to <code>10M</code></li>
-                        <li>Save and wait a few minutes</li>
+                <li style="margin-top: 20px;"><strong>Method 3 - Contact Hosting Support:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>If Methods 1 and 2 don't work, contact your hosting provider</li>
+                        <li>Ask them to increase PHP limits for your account:</li>
+                        <li style="margin: 10px 0;">
+                            <code style="display: block; background: #f4f4f4; padding: 10px; border-radius: 3px; margin-top: 5px;">
+upload_max_filesize = 10M<br>
+post_max_size = 10M<br>
+max_execution_time = 300
+                            </code>
+                        </li>
                     </ul>
                 </li>
-                <li><strong>Method 3:</strong> Contact your hosting provider to increase PHP limits</li>
             </ol>
             <?php else: ?>
             <strong>To fix this (XAMPP/Local):</strong>
