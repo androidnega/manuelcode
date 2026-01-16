@@ -120,6 +120,7 @@ $routes = [
     'maintenance-mode' => ['admin/superadmin_maintenance.php', 'admin', 'superadmin'],
     'system-cleanup' => ['admin/superadmin_cleanup.php', 'admin', 'superadmin'],
     'cloudinary' => ['admin/superadmin_cloudinary.php', 'admin', 'superadmin'],
+    'homepage-image' => ['admin/superadmin_homepage_image.php', 'admin', 'superadmin'],
     'user-activity' => ['admin/user_activity.php', 'admin', 'superadmin'],
     'api-testing' => ['admin/superadmin_api_testing.php', 'admin', 'superadmin'],
     'data-management' => ['admin/superadmin_data_management.php', 'admin', 'superadmin'],

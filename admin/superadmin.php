@@ -388,6 +388,19 @@ try {
                 </div>
             </div>
         </a>
+
+        <!-- Homepage Image Card -->
+        <a href="../dashboard/homepage-image" class="bg-white border border-gray-200 rounded-lg p-6 block hover:bg-gray-50">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-image text-pink-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900">Homepage Image</h3>
+                    <p class="text-sm text-gray-500">Manage hero image</p>
+                </div>
+            </div>
+        </a>
     </div>
 
 </div>

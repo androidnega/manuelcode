@@ -59,12 +59,30 @@ if (empty($team_image_url)) {
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden hero-section">
   <!-- Team Image Background -->
   <div class="absolute inset-0 w-full h-full">
-    <img 
-      src="<?php echo htmlspecialchars($team_image_url); ?>" 
-      alt="ManuelCode Team"
-      class="w-full h-full object-cover"
-      loading="eager"
-      style="object-fit: cover; width: 100%; height: 100%;">
+    <picture>
+      <!-- Use Cloudinary transformations for responsive images -->
+      <?php if (strpos($team_image_url, 'cloudinary.com') !== false): ?>
+        <!-- Desktop optimized image -->
+        <source 
+          media="(min-width: 1024px)" 
+          srcset="<?php echo htmlspecialchars($team_image_url); ?>/w_1920,h_1080,c_fill,q_auto,f_auto">
+        <!-- Tablet optimized image -->
+        <source 
+          media="(min-width: 768px)" 
+          srcset="<?php echo htmlspecialchars($team_image_url); ?>/w_1280,h_720,c_fill,q_auto,f_auto">
+        <!-- Mobile optimized image -->
+        <source 
+          media="(max-width: 767px)" 
+          srcset="<?php echo htmlspecialchars($team_image_url); ?>/w_768,h_1024,c_fill,q_auto,f_auto">
+      <?php endif; ?>
+      <!-- Fallback image -->
+      <img 
+        src="<?php echo htmlspecialchars($team_image_url); ?>" 
+        alt="ManuelCode Team"
+        class="w-full h-full object-cover"
+        loading="eager"
+        style="object-fit: cover; width: 100%; height: 100%; min-height: 100vh;">
+    </picture>
     <!-- Dark overlay for better text readability -->
     <div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
   </div>
