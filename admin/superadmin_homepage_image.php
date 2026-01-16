@@ -25,6 +25,24 @@ try {
 $cloudinaryHelper = new CloudinaryHelper($pdo);
 $cloudinary_enabled = $cloudinaryHelper->isEnabled();
 
+// Helper function to convert PHP ini size values to bytes
+if (!function_exists('return_bytes')) {
+    function return_bytes($val) {
+        $val = trim($val);
+        $last = strtolower($val[strlen($val)-1]);
+        $val = (int)$val;
+        switch($last) {
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+        return $val;
+    }
+}
+
 // Handle image upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
     // Get specific upload error messages
@@ -211,6 +229,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
                         <li>Image will be automatically optimized and cropped for best display on mobile and desktop</li>
                     </ul>
                 </div>
+
+                <?php
+                // Display PHP upload limits
+                $upload_max = ini_get('upload_max_filesize');
+                $post_max = ini_get('post_max_size');
+                $upload_max_bytes = return_bytes($upload_max);
+                $post_max_bytes = return_bytes($post_max);
+                $max_allowed = min($upload_max_bytes, $post_max_bytes);
+                $max_allowed_mb = round($max_allowed / (1024 * 1024), 2);
+                
+                if ($max_allowed_mb < 10): ?>
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                    <p class="text-sm text-yellow-800">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <strong>PHP Upload Limit Warning:</strong>
+                    </p>
+                    <ul class="text-sm text-yellow-700 mt-2 ml-6 list-disc space-y-1">
+                        <li>Current PHP upload limit: <strong><?php echo $upload_max; ?></strong> (upload_max_filesize)</li>
+                        <li>Current PHP POST limit: <strong><?php echo $post_max; ?></strong> (post_max_size)</li>
+                        <li>Maximum file size you can upload: <strong><?php echo $max_allowed_mb; ?>MB</strong></li>
+                        <li class="mt-2"><strong>To fix:</strong> Edit <code class="bg-yellow-100 px-1 rounded">php.ini</code> and increase both values to at least 10M, then restart your web server.</li>
+                        <li class="text-xs mt-1">For XAMPP: Edit <code class="bg-yellow-100 px-1 rounded">C:\xampp\php\php.ini</code></li>
+                    </ul>
+                </div>
+                <?php endif; ?>
 
                 <form method="POST" enctype="multipart/form-data" class="space-y-4">
                     <div>
