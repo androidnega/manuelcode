@@ -136,7 +136,7 @@ $is_homepage = true;
       
       <!-- About Section (Desktop - Right Side) -->
       <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container">
-        <div class="w-full max-w-2xl space-y-6 text-center">
+        <div class="w-full max-w-2xl space-y-6 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 shadow-lg bg-white" id="text-card">
           <div>
             <h1 class="text-5xl xl:text-6xl font-bold text-gray-900 mb-4">
               ManuelCode
@@ -146,20 +146,14 @@ $is_homepage = true;
             </p>
           </div>
           
-          <div class="prose prose-lg max-w-none space-y-5">
+          <div class="prose prose-lg max-w-none">
             <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
               Professional software development company specializing in transforming ideas into elegant, 
-              high-performance digital solutions. We combine cutting-edge technology with innovative thinking 
-              to deliver software that drives business growth.
-            </p>
-            
-            <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
-              Our expertise spans full-stack web development, mobile applications, and custom software 
-              solutions. We work closely with clients to deliver scalable, secure, and maintainable solutions.
+              high-performance digital solutions.
             </p>
           </div>
           
-          <div class="pt-6">
+          <div class="pt-4">
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="store.php" class="inline-flex items-center justify-center px-8 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
                 Store
@@ -179,13 +173,14 @@ $is_homepage = true;
 
 
 <script>
-// Match text container height to image container height on desktop
+// Match text container height to image container height on desktop - exact match
 document.addEventListener('DOMContentLoaded', function() {
     const imageContainer = document.getElementById('image-container');
     const textContainer = document.getElementById('text-container');
+    const textCard = document.getElementById('text-card');
     const heroImage = document.getElementById('hero-image');
     
-    if (imageContainer && textContainer && heroImage && window.innerWidth >= 1024) {
+    if (imageContainer && textContainer && textCard && heroImage && window.innerWidth >= 1024) {
         function matchHeights() {
             // Wait for image to load
             if (heroImage.complete) {
@@ -196,10 +191,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function setHeights() {
-            // Get the actual height of the image container (which adapts to image)
+            // Get the exact height of the image container
             const imageHeight = imageContainer.offsetHeight;
-            // Set text container to match image container height exactly
+            
+            // Set text container to match image container height exactly (no difference)
             textContainer.style.height = imageHeight + 'px';
+            textContainer.style.minHeight = imageHeight + 'px';
+            textContainer.style.maxHeight = imageHeight + 'px';
+            
+            // Also ensure the card inside matches
+            textCard.style.height = '100%';
+            textCard.style.display = 'flex';
+            textCard.style.flexDirection = 'column';
+            textCard.style.justifyContent = 'center';
         }
         
         matchHeights();
@@ -213,6 +217,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     setHeights();
                 } else {
                     textContainer.style.height = 'auto';
+                    textContainer.style.minHeight = 'auto';
+                    textContainer.style.maxHeight = 'none';
+                    if (textCard) {
+                        textCard.style.height = 'auto';
+                        textCard.style.display = 'block';
+                    }
                 }
             }, 250);
         });
