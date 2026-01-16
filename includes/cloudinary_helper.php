@@ -97,9 +97,15 @@ class CloudinaryHelper {
             }
             
             // Add custom options (but exclude 'file' and 'transformation' which are not part of signature)
+            // When using unsigned upload preset, exclude 'overwrite' as it's not allowed
             foreach ($options as $key => $value) {
                 // Skip transformation and file - these are handled separately
                 if ($key !== 'file' && $key !== 'transformation') {
+                    // When using upload preset (unsigned), don't include 'overwrite' parameter
+                    if ($hasPreset && $key === 'overwrite') {
+                        error_log("Cloudinary: Skipping 'overwrite' parameter for unsigned upload preset");
+                        continue;
+                    }
                     $params[$key] = $value;
                 }
             }
