@@ -422,7 +422,7 @@ include 'includes/header.php';
                  <div>
                    <h4 class="font-semibold text-green-800">Have a Coupon?</h4>
                    <p class="text-sm text-green-700 mt-1">
-                     Use the "Buy as Guest" button above to access coupon functionality and get discounts!
+                     Login to apply coupon codes and get discounts on your purchase!
                    </p>
                  </div>
                </div>
@@ -431,6 +431,102 @@ include 'includes/header.php';
          <?php endif; ?>
        <?php endif; ?>
     </div>
+  </div>
+  
+  <!-- Product Details Section - Visible to Everyone -->
+  <div class="mt-8 bg-white rounded-xl shadow-lg overflow-hidden p-6">
+    <!-- Product Description -->
+    <?php if (!empty($product['description'])): ?>
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Description</h2>
+        <div class="prose max-w-none text-gray-700 leading-relaxed">
+          <?php echo nl2br(htmlspecialchars($product['description'])); ?>
+        </div>
+      </div>
+    <?php endif; ?>
+    
+    <!-- Gallery Images -->
+    <?php if (!empty($gallery_images) && count($gallery_images) > 0): ?>
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Product Gallery</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <?php foreach ($gallery_images as $gallery_img): 
+              $gallery_url = get_product_image_url($gallery_img, $base_url);
+          ?>
+            <?php if ($gallery_url): ?>
+              <div class="relative group cursor-pointer overflow-hidden rounded-lg border border-gray-200 hover:border-blue-500 transition-all">
+                <img src="<?php echo htmlspecialchars($gallery_url); ?>" 
+                     alt="Product screenshot" 
+                     class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                     onclick="openImageModal('<?php echo htmlspecialchars($gallery_url); ?>')"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center" style="display: none;">
+                  <i class="fas fa-image text-gray-400 text-2xl"></i>
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
+                  <i class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 transition-opacity text-2xl"></i>
+                </div>
+              </div>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    <?php endif; ?>
+    
+    <!-- Demo URL -->
+    <?php if (!empty($product['demo_url'])): ?>
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Live Demo</h2>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <a href="<?php echo htmlspecialchars($product['demo_url']); ?>" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold">
+            <i class="fas fa-external-link-alt mr-2"></i>
+            View Live Demo
+            <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+    <?php endif; ?>
+    
+    <!-- Downloadable Documents -->
+    <?php if (!empty($product['doc_file'])): ?>
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Documentation</h2>
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <?php if (isset($_SESSION['user_id']) && $has_purchased): ?>
+            <a href="<?php echo $download_link; ?>" 
+               class="inline-flex items-center bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+              <i class="fas fa-download mr-2"></i>
+              Download Documentation
+            </a>
+          <?php else: ?>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-700 font-medium"><?php echo htmlspecialchars(basename($product['doc_file'])); ?></p>
+                <p class="text-sm text-gray-500 mt-1">Available after purchase</p>
+              </div>
+              <?php if (!isset($_SESSION['user_id'])): ?>
+                <a href="login?redirect=<?php echo urlencode('product.php?id=' . $product['id']); ?>" 
+                   class="inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+                  <i class="fas fa-sign-in-alt mr-2"></i>
+                  Login to Download
+                </a>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
+        </div>
+      </div>
+    <?php endif; ?>
+    
+    <!-- Short Description (if different from main description) -->
+    <?php if (!empty($product['short_desc']) && $product['short_desc'] !== $product['description']): ?>
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Overview</h2>
+        <p class="text-gray-700 leading-relaxed"><?php echo nl2br(htmlspecialchars($product['short_desc'])); ?></p>
+      </div>
+    <?php endif; ?>
   </div>
 </section>
 
