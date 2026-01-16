@@ -83,7 +83,7 @@ $is_homepage = true;
       
       <!-- About Section (Mobile) -->
       <div class="px-4 sm:px-6 py-8">
-        <div class="max-w-2xl mx-auto text-center space-y-5 border-2 border-gray-300 rounded-lg p-6 shadow-lg bg-white">
+        <div class="max-w-2xl mx-auto text-center space-y-5 border-2 border-gray-300 rounded-lg p-6 bg-white">
           <div>
             <p class="text-3xl sm:text-4xl text-[#536895] font-semibold mb-4">
               Welcome
@@ -114,19 +114,20 @@ $is_homepage = true;
     
     <!-- Desktop: Side by Side Layout -->
     <div class="hidden lg:flex lg:items-center lg:justify-center min-h-screen" id="desktop-hero-section">
-      <!-- Image Section (Desktop - Left Side) -->
-      <div class="w-1/2 flex-shrink-0 bg-white flex items-center justify-center" id="image-container">
-        <img 
-          src="<?php echo htmlspecialchars($team_image_url); ?>?v=<?php echo time(); ?>" 
-          alt="ManuelCode"
-          class="max-w-full max-h-screen object-contain object-center"
-          id="hero-image"
-          loading="eager">
-      </div>
-      
-      <!-- About Section (Desktop - Right Side) -->
-      <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container">
-        <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 shadow-lg bg-white flex flex-col justify-center" id="text-card">
+      <div class="w-full max-w-7xl mx-auto flex items-center justify-center">
+        <!-- Image Section (Desktop - Left Side) -->
+        <div class="w-1/2 flex-shrink-0 bg-white flex items-center justify-center px-8 xl:px-12" id="image-container">
+          <img 
+            src="<?php echo htmlspecialchars($team_image_url); ?>?v=<?php echo time(); ?>" 
+            alt="ManuelCode"
+            class="max-w-full max-h-screen object-contain object-center"
+            id="hero-image"
+            loading="eager">
+        </div>
+        
+        <!-- About Section (Desktop - Right Side) -->
+        <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container">
+          <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 bg-white flex flex-col justify-center" id="text-card">
           <div>
             <p class="text-4xl xl:text-5xl text-[#536895] font-semibold mb-4">
               Welcome
@@ -152,6 +153,7 @@ $is_homepage = true;
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>
