@@ -31,7 +31,10 @@ try {
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($result && !empty($result['value'])) {
-        $team_image_url = $result['value'];
+        // Trim any whitespace and ensure proper URL format
+        $team_image_url = trim($result['value']);
+        // Remove any trailing spaces or invalid characters
+        $team_image_url = rtrim($team_image_url, " \t\n\r\0\x0B/");
     } else {
         // Fallback: Try to get from Cloudinary using public_id
         $cloudinaryHelper = new CloudinaryHelper($pdo);
@@ -53,6 +56,9 @@ try {
 if (empty($team_image_url)) {
     $team_image_url = 'assets/images/team.png';
 }
+
+// Ensure URL is properly formatted (trim again just in case)
+$team_image_url = trim($team_image_url);
 ?>
 
 <!-- Section 1: Image Section -->

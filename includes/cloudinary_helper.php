@@ -114,7 +114,7 @@ class CloudinaryHelper {
             
             if (isset($result['secure_url'])) {
                 return [
-                    'url' => $result['secure_url'],
+                    'url' => trim($result['secure_url']), // Trim to remove any whitespace
                     'public_id' => $result['public_id'],
                     'format' => $result['format'] ?? '',
                     'width' => $result['width'] ?? 0,
@@ -230,7 +230,8 @@ class CloudinaryHelper {
                 $transformString = implode(',', $parts) . '/';
             }
             
-            return $baseUrl . '/' . $transformString . $publicId;
+            $url = $baseUrl . '/' . $transformString . $publicId;
+            return trim($url); // Trim to remove any trailing whitespace
         } catch (Exception $e) {
             error_log("Cloudinary URL generation error: " . $e->getMessage());
             return $publicId;

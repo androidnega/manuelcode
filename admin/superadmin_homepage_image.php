@@ -61,16 +61,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
                     );
                     
                     if ($uploadResult && isset($uploadResult['url'])) {
+                        // Trim URL to remove any whitespace
+                        $image_url = trim($uploadResult['url']);
                         // Save URL to database
                         $stmt = $pdo->prepare("
                             INSERT INTO settings (setting_key, value) 
                             VALUES ('homepage_team_image_url', ?)
                             ON DUPLICATE KEY UPDATE value = ?
                         ");
-                        $stmt->execute([$uploadResult['url'], $uploadResult['url']]);
+                        $stmt->execute([$image_url, $image_url]);
                         
                         $success_message = 'Homepage image uploaded successfully!';
-                        $current_image_url = $uploadResult['url'];
+                        $current_image_url = trim($uploadResult['url']);
                     } else {
                         $error_message = 'Failed to upload image to Cloudinary. Please check Cloudinary configuration.';
                     }

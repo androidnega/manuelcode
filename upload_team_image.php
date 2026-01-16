@@ -27,16 +27,19 @@ $uploadResult = $cloudinaryHelper->uploadImage($team_image_path, 'homepage', [
 ]);
 
 if ($uploadResult && isset($uploadResult['url'])) {
+    // Trim URL to remove any whitespace
+    $image_url = trim($uploadResult['url']);
+    
     // Save the URL to database settings
     $stmt = $pdo->prepare("
         INSERT INTO settings (setting_key, value) 
         VALUES ('homepage_team_image_url', ?)
         ON DUPLICATE KEY UPDATE value = ?
     ");
-    $stmt->execute([$uploadResult['url'], $uploadResult['url']]);
+    $stmt->execute([$image_url, $image_url]);
     
     echo "✓ Successfully uploaded team image to Cloudinary!\n";
-    echo "URL: " . $uploadResult['url'] . "\n";
+    echo "URL: " . $image_url . "\n";
     echo "Public ID: " . $uploadResult['public_id'] . "\n";
     echo "\nThe image URL has been saved to the database.\n";
 } else {
