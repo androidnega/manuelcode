@@ -188,12 +188,12 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
           </div>
           
           <div class="pt-1 sm:pt-2 md:pt-4">
-            <div class="flex flex-row gap-2 sm:flex-col sm:gap-3">
-              <a href="store.php" class="inline-flex items-center justify-center px-6 py-3 <?php echo $selected_message['button_primary']; ?> font-semibold rounded-lg transition-all duration-300">
+            <div class="flex flex-row gap-2 sm:flex-col sm:gap-3 justify-center">
+              <a href="store.php" class="inline-flex items-center justify-center px-4 sm:px-6 py-3 flex-1 sm:flex-none <?php echo $selected_message['button_primary']; ?> font-semibold rounded-lg transition-all duration-300">
                 Store
                 <i class="fas fa-store ml-2"></i>
               </a>
-              <a href="about.php" class="inline-flex items-center justify-center px-6 py-3 <?php echo $selected_message['button_secondary']; ?> font-semibold rounded-lg transition-all duration-300">
+              <a href="about.php" class="inline-flex items-center justify-center px-4 sm:px-6 py-3 flex-1 sm:flex-none <?php echo $selected_message['button_secondary']; ?> font-semibold rounded-lg transition-all duration-300">
                 About Us
                 <i class="fas fa-info-circle ml-2"></i>
               </a>
