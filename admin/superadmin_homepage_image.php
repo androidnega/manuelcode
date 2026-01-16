@@ -87,31 +87,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
                 } else {
                     // Upload to Cloudinary if enabled
                     if ($cloudinary_enabled) {
-                        $uploadResult = $cloudinaryHelper->uploadImage(
-                            $_FILES['homepage_image']['tmp_name'], 
-                            'homepage', 
-                            [
-                                'public_id' => 'team',
-                                'overwrite' => true
-                            ]
-                        );
-                        
-                        if ($uploadResult && isset($uploadResult['url'])) {
-                            // Trim URL to remove any whitespace
-                            $image_url = trim($uploadResult['url']);
-                            // Save URL to database
-                            $stmt = $pdo->prepare("
-                                INSERT INTO settings (setting_key, value) 
-                                VALUES ('homepage_team_image_url', ?)
-                                ON DUPLICATE KEY UPDATE value = ?
-                            ");
-                            $stmt->execute([$image_url, $image_url]);
-                            
-                            $success_message = 'Homepage image uploaded successfully!';
-                            $current_image_url = $image_url;
+                        // Verify Cloudinary configuration
+                        if (!$cloudinaryHelper->isEnabled()) {
+                            $error_message = 'Cloudinary is enabled but not properly configured. Please check your Cloudinary settings in System Settings.';
                         } else {
-                            $error_message = 'Failed to upload image to Cloudinary. Please check Cloudinary configuration and error logs.';
-                            error_log("Cloudinary upload failed. Response: " . json_encode($uploadResult));
+                            $uploadResult = $cloudinaryHelper->uploadImage(
+                                $_FILES['homepage_image']['tmp_name'], 
+                                'homepage', 
+                                [
+                                    'public_id' => 'team',
+                                    'overwrite' => true
+                                ]
+                            );
+                            
+                            if ($uploadResult && isset($uploadResult['url'])) {
+                                // Trim URL to remove any whitespace
+                                $image_url = trim($uploadResult['url']);
+                                // Save URL to database
+                                $stmt = $pdo->prepare("
+                                    INSERT INTO settings (setting_key, value) 
+                                    VALUES ('homepage_team_image_url', ?)
+                                    ON DUPLICATE KEY UPDATE value = ?
+                                ");
+                                $stmt->execute([$image_url, $image_url]);
+                                
+                                $success_message = 'Homepage image uploaded successfully!';
+                                $current_image_url = $image_url;
+                            } else {
+                                $error_message = 'Failed to upload image to Cloudinary. ';
+                                
+                                // Check if Cloudinary has upload preset or API credentials
+                                $stmt = $pdo->prepare("SELECT value FROM settings WHERE setting_key IN ('cloudinary_upload_preset', 'cloudinary_api_key', 'cloudinary_api_secret')");
+                                $stmt->execute();
+                                $cloudinary_settings = [];
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $cloudinary_settings[$row['setting_key']] = $row['value'];
+                                }
+                                
+                                if (empty($cloudinary_settings['cloudinary_upload_preset']) && 
+                                    (empty($cloudinary_settings['cloudinary_api_key']) || empty($cloudinary_settings['cloudinary_api_secret']))) {
+                                    $error_message .= 'Please configure either an Upload Preset OR API Key + API Secret in System Settings.';
+                                } else {
+                                    $error_message .= 'Please check Cloudinary configuration and error logs. Make sure your credentials are correct.';
+                                }
+                                
+                                error_log("Cloudinary upload failed. Response: " . json_encode($uploadResult));
+                            }
                         }
                     } else {
                         $error_message = 'Cloudinary is not enabled. Please enable Cloudinary in System Settings to upload images.';

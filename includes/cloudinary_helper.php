@@ -29,16 +29,33 @@ class CloudinaryHelper {
     
     /**
      * Generate Cloudinary signature for authenticated uploads
+     * Note: 'file' parameter should NOT be included in signature calculation
      */
     private function generateSignature($params) {
-        $params['timestamp'] = time();
-        ksort($params);
+        // Remove 'file' from params if present (shouldn't be, but just in case)
+        $signatureParams = $params;
+        unset($signatureParams['file']);
+        
+        // Ensure timestamp is set
+        if (!isset($signatureParams['timestamp'])) {
+            $signatureParams['timestamp'] = time();
+        }
+        
+        // Sort parameters alphabetically
+        ksort($signatureParams);
+        
+        // Build signature string
         $signature_string = '';
-        foreach ($params as $key => $value) {
+        foreach ($signatureParams as $key => $value) {
+            // Handle arrays (like transformation parameters)
+            if (is_array($value)) {
+                $value = json_encode($value);
+            }
             $signature_string .= $key . '=' . $value . '&';
         }
         $signature_string = rtrim($signature_string, '&');
         $signature_string .= $this->api_secret;
+        
         return sha1($signature_string);
     }
     
@@ -51,6 +68,7 @@ class CloudinaryHelper {
      */
     public function uploadImage($filePath, $folder = 'products', $options = []) {
         if (!$this->enabled || empty($this->cloud_name)) {
+            error_log("Cloudinary upload error: Cloudinary is not enabled or cloud_name is empty");
             return false;
         }
         
@@ -62,28 +80,39 @@ class CloudinaryHelper {
         try {
             $uploadUrl = "https://api.cloudinary.com/v1_1/{$this->cloud_name}/image/upload";
             
-            // Prepare parameters
+            // Prepare parameters (excluding file for signature calculation)
             $params = [];
             if (!empty($folder)) {
                 $params['folder'] = $folder;
             }
+            
+            // Add custom options (but exclude 'file' and 'transformation' which are not part of signature)
+            foreach ($options as $key => $value) {
+                // Skip transformation and file - these are handled separately
+                if ($key !== 'file' && $key !== 'transformation') {
+                    $params[$key] = $value;
+                }
+            }
+            
+            // If using upload preset (unsigned upload)
             if (!empty($this->upload_preset)) {
                 $params['upload_preset'] = $this->upload_preset;
-            }
-            
-            // Add custom options
-            foreach ($options as $key => $value) {
-                $params[$key] = $value;
-            }
-            
-            // If no upload preset, use signed upload
-            if (empty($this->upload_preset) && !empty($this->api_key) && !empty($this->api_secret)) {
+            } 
+            // If no upload preset, use signed upload (requires API key and secret)
+            elseif (!empty($this->api_key) && !empty($this->api_secret)) {
                 $params['api_key'] = $this->api_key;
+                $params['timestamp'] = time();
+                
+                // Generate signature BEFORE adding file
+                // Signature should include all params except 'file'
                 $signature = $this->generateSignature($params);
                 $params['signature'] = $signature;
+            } else {
+                error_log("Cloudinary upload error: No upload preset and missing API credentials");
+                return false;
             }
             
-            // Prepare file for upload
+            // Prepare file for upload (add AFTER signature generation)
             $file = new CURLFile($filePath, mime_content_type($filePath), basename($filePath));
             $params['file'] = $file;
             
@@ -94,10 +123,12 @@ class CloudinaryHelper {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60); // 60 second timeout
             
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $error = curl_error($ch);
+            $curlInfo = curl_getinfo($ch);
             curl_close($ch);
             
             if ($error) {
@@ -106,7 +137,11 @@ class CloudinaryHelper {
             }
             
             if ($httpCode !== 200) {
-                error_log("Cloudinary upload error: HTTP $httpCode - " . $response);
+                $errorDetails = json_decode($response, true);
+                $errorMessage = isset($errorDetails['error']['message']) 
+                    ? $errorDetails['error']['message'] 
+                    : 'Unknown error';
+                error_log("Cloudinary upload error: HTTP $httpCode - " . $errorMessage . " | Full response: " . substr($response, 0, 500));
                 return false;
             }
             
@@ -123,7 +158,7 @@ class CloudinaryHelper {
                 ];
             }
             
-            error_log("Cloudinary upload error: Invalid response - " . $response);
+            error_log("Cloudinary upload error: Invalid response - " . substr($response, 0, 500));
             return false;
             
         } catch (Exception $e) {
