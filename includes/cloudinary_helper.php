@@ -106,7 +106,8 @@ class CloudinaryHelper {
             
             // If using upload preset (unsigned upload)
             if ($hasPreset) {
-                $params['upload_preset'] = $this->upload_preset;
+                $params['upload_preset'] = trim($this->upload_preset); // Trim whitespace
+                error_log("Cloudinary: Using upload preset: " . $params['upload_preset']);
             } 
             // If no upload preset, use signed upload (requires API key and secret)
             elseif ($hasCredentials) {
@@ -139,7 +140,7 @@ class CloudinaryHelper {
             curl_close($ch);
             
             // Log request details for debugging
-            error_log("Cloudinary upload request - URL: $uploadUrl, Method: " . ($hasPreset ? 'Upload Preset' : 'Signed'), "Preset: " . ($this->upload_preset ?? 'none'));
+            error_log("Cloudinary upload request - URL: $uploadUrl, Method: " . ($hasPreset ? 'Upload Preset' : 'Signed') . ", Preset: " . ($this->upload_preset ?? 'none') . ", Cloud Name: " . $this->cloud_name);
             
             if ($error) {
                 $error_msg = "Cloudinary cURL error: " . $error;
