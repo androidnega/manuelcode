@@ -184,7 +184,12 @@ async function saveSettings(){
   };
   
   try {
-    const res = await fetch('superadmin_settings.php', {
+    // Use absolute path to ensure it works from dashboard router
+    const settingsUrl = window.location.pathname.includes('/dashboard/') 
+      ? '../admin/superadmin_settings.php' 
+      : 'admin/superadmin_settings.php';
+    
+    const res = await fetch(settingsUrl, {
       method: 'POST', 
       headers: {
         'Content-Type': 'application/json',
@@ -214,4 +219,5 @@ async function saveSettings(){
 </script>
 </body>
 </html>
+
 
