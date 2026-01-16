@@ -55,216 +55,58 @@ if (empty($team_image_url)) {
 }
 ?>
 
-<!-- Hero Section with Team Image -->
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden hero-section">
-  <!-- Team Image Background -->
-  <div class="absolute inset-0 w-full h-full">
+<!-- Section 1: Image Section -->
+<section class="w-full">
+  <div class="relative w-full" style="aspect-ratio: 16/9; min-height: 60vh;">
     <img 
       src="<?php echo htmlspecialchars($team_image_url); ?>" 
-      alt="ManuelCode Team"
+      alt="ManuelCode"
       class="w-full h-full object-cover object-center"
-      loading="eager"
-      style="object-fit: cover; object-position: center; width: 100%; height: 100%; min-height: 100vh;">
-    <!-- Dark overlay for better text readability -->
-    <div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
-  </div>
-  
-  <!-- Hero Content -->
-  <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center">
-    <div class="max-w-4xl mx-auto">
-      <!-- Desktop Hero Content -->
-      <h1 class="mb-4 sm:mb-6 desktop-hero-content">
-        <span class="hero-title-main block text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-2 sm:mb-4" style="font-family: 'Inter', sans-serif; text-shadow: none;">ManuelCode</span>
-        <span class="hero-title-accent block text-2xl sm:text-3xl lg:text-5xl font-semibold text-[#F5A623]" style="font-family: 'Inter', sans-serif; text-shadow: none;">Building Digital Excellence</span>
-      </h1>
-      <p class="hero-description text-lg sm:text-xl lg:text-2xl text-gray-200 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed desktop-hero-content">
-        Transforming ideas into elegant code. Full-stack development, custom applications, and innovative software solutions.
-      </p>
-      <div class="hero-buttons flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 lg:gap-6 desktop-hero-content">
-        <a href="services.php" 
-           class="w-full sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg font-semibold text-white bg-[#F5A623] hover:bg-[#d88c1b] rounded-lg transition-all duration-300 flex items-center justify-center transform hover:scale-105">
-          <i class="fas fa-cogs mr-2"></i>Our Services
-        </a>
-        <a href="projects.php" 
-           class="w-full sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg font-semibold text-white bg-transparent border-2 border-white hover:bg-white hover:text-[#2D3E50] rounded-lg transition-all duration-300 flex items-center justify-center transform hover:scale-105">
-          <i class="fas fa-code mr-2"></i>View Projects
-        </a>
-      </div>
-      
-      <!-- Mobile Hero Content -->
-      <div class="mobile-hero-content">
-        <h1 class="mobile-hero-title">ManuelCode!</h1>
-        <p class="mobile-hero-subtitle" id="typewriter-text">Building Digital Excellence</p>
-      </div>
-    </div>
+      loading="eager">
   </div>
 </section>
 
-<script>
-// Typewriter effect for mobile hero with changing messages
-document.addEventListener('DOMContentLoaded', function() {
-  const typewriterElement = document.getElementById('typewriter-text');
-  if (typewriterElement && window.innerWidth <= 768) {
-    const messages = [
-      "Building Digital Excellence",
-      "ManuelCode",
-      "Innovative Web Solutions",
-      "Custom Applications",
-      "Professional Development"
-    ];
-    
-    let currentMessageIndex = 0;
-    let currentCharIndex = 0;
-    let isDeleting = false;
-    let isRunning = true;
-    
-    function typeWriter() {
-      if (!isRunning) return;
-      
-      const currentMessage = messages[currentMessageIndex];
-      
-      if (isDeleting) {
-        // Deleting effect
-        if (currentCharIndex > 0) {
-          typewriterElement.textContent = currentMessage.substring(0, currentCharIndex - 1);
-          currentCharIndex--;
-        } else {
-          // Finished deleting, move to next message
-          isDeleting = false;
-          currentMessageIndex = (currentMessageIndex + 1) % messages.length;
-          currentCharIndex = 0;
-          setTimeout(typeWriter, 500); // Pause before next message
-          return;
-        }
-      } else {
-        // Typing effect
-        if (currentCharIndex < currentMessage.length) {
-          typewriterElement.textContent = currentMessage.substring(0, currentCharIndex + 1);
-          currentCharIndex++;
-        } else {
-          // Finished typing, start deleting
-          isDeleting = true;
-          setTimeout(typeWriter, 2000); // Pause at end before deleting
-          return;
-        }
-      }
-      
-      // Calculate width for smooth animation (only during typing)
-      if (!isDeleting) {
-        const progress = currentCharIndex / currentMessage.length;
-        typewriterElement.style.width = (progress * 100) + '%';
-      }
-      
-      // Set typing speed
-      let speed = isDeleting ? 50 : 100;
-      
-      // Continue the animation
-      setTimeout(typeWriter, speed);
-    }
-    
-    // Start typewriter effect after a short delay
-    setTimeout(typeWriter, 1000);
-    
-    // Pause typewriter when page is not visible (optional performance improvement)
-    document.addEventListener('visibilitychange', function() {
-      if (document.hidden) {
-        isRunning = false;
-      } else {
-        isRunning = true;
-        // Restart if it was paused
-        if (!isDeleting && currentCharIndex === 0) {
-          setTimeout(typeWriter, 100);
-        }
-      }
-    });
-  }
-});
-</script>
-
-<!-- About Section -->
-<section class="py-16 bg-white">
+<!-- Section 2: About ManuelCode -->
+<section class="py-16 md:py-24 bg-white">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <div class="space-y-6">
-        <div class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-          <i class="fas fa-star mr-2"></i>
-          Professional Excellence
-        </div>
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
-          Transforming Ideas Into 
-          <span class="text-[#536895]">Digital Reality</span>
-        </h2>
-        <p class="text-lg text-gray-600 leading-relaxed">
-          We specialize in creating innovative software solutions that drive business growth. 
-          From concept to deployment, we deliver cutting-edge applications that exceed expectations.
+    <div class="max-w-4xl mx-auto text-center space-y-8">
+      <div>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
+          ManuelCode
+        </h1>
+        <p class="text-xl md:text-2xl text-[#536895] font-semibold mb-6">
+          Building Digital Excellence
         </p>
-        <div class="grid grid-cols-2 gap-6 pt-4">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <i class="fas fa-layer-group text-white text-sm"></i>
-            </div>
-            <span class="text-gray-700 font-medium">Full-Stack Development</span>
-          </div>
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <i class="fas fa-mobile-alt text-white text-sm"></i>
-            </div>
-            <span class="text-gray-700 font-medium">Mobile Solutions</span>
-          </div>
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-              <i class="fas fa-cloud text-white text-sm"></i>
-            </div>
-            <span class="text-gray-700 font-medium">Cloud Architecture</span>
-          </div>
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-              <i class="fas fa-headset text-white text-sm"></i>
-            </div>
-            <span class="text-gray-700 font-medium">24/7 Support</span>
-          </div>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-4 pt-6">
-          <a href="about.php" class="inline-flex items-center justify-center px-6 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300 transform hover:scale-105">
-            Learn More
+      </div>
+      
+      <div class="prose prose-lg max-w-none text-left space-y-6">
+        <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
+          ManuelCode is a professional software development company specializing in transforming ideas into elegant, 
+          high-performance digital solutions. We combine cutting-edge technology with innovative thinking to deliver 
+          software that drives business growth and exceeds expectations.
+        </p>
+        
+        <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
+          Our expertise spans full-stack web development, mobile applications, cloud architecture, and custom software 
+          solutions. We work closely with clients to understand their unique needs and deliver tailored solutions that 
+          are scalable, secure, and maintainable.
+        </p>
+        
+        <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
+          At ManuelCode, we believe in clean code, fast delivery, and exceptional support. Every project is an opportunity 
+          to create something remarkable that makes a real difference for our clients and their users.
+        </p>
+      </div>
+      
+      <div class="pt-8">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="about.php" class="inline-flex items-center justify-center px-8 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
+            Learn More About Us
             <i class="fas fa-arrow-right ml-2"></i>
           </a>
-          <a href="contact.php" class="inline-flex items-center justify-center px-6 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
+          <a href="contact.php" class="inline-flex items-center justify-center px-8 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
             Get In Touch
           </a>
-        </div>
-      </div>
-      <div class="relative">
-        <div class="bg-gradient-to-br from-[#536895] to-[#4a5a7a] rounded-2xl p-8 text-white">
-          <div class="space-y-6">
-            <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                <i class="fas fa-code text-xl"></i>
-              </div>
-              <div>
-                <h3 class="text-xl font-bold">Clean Code</h3>
-                <p class="text-blue-100">Maintainable & scalable solutions</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                <i class="fas fa-rocket text-xl"></i>
-              </div>
-              <div>
-                <h3 class="text-xl font-bold">Fast Delivery</h3>
-                <p class="text-blue-100">Quick turnaround times</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                <i class="fas fa-shield-alt text-xl"></i>
-              </div>
-              <div>
-                <h3 class="text-xl font-bold">Secure & Reliable</h3>
-                <p class="text-blue-100">Enterprise-grade security</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
