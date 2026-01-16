@@ -160,10 +160,10 @@ document.getElementById('testUploadForm').addEventListener('submit', async funct
     formData.append('action', 'test_cloudinary_upload');
     
     try {
-        // Use absolute path to ensure it works from dashboard router
+        // Try simplified version first, fallback to original
         const uploadUrl = window.location.pathname.includes('/dashboard/') 
-            ? '../admin/test_cloudinary_upload.php' 
-            : 'admin/test_cloudinary_upload.php';
+            ? '../admin/test_cloudinary_upload_simple.php' 
+            : 'admin/test_cloudinary_upload_simple.php';
         
         const response = await fetch(uploadUrl, {
             method: 'POST',
