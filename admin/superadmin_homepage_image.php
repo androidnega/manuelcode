@@ -101,9 +101,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
                             );
                             
                             if ($uploadResult && isset($uploadResult['url'])) {
-                                // Trim URL to remove any whitespace
+                                // Trim URL to remove any whitespace and any existing cache-busting parameters
                                 $image_url = trim($uploadResult['url']);
-                                // Save URL to database
+                                // Remove any existing cache-busting parameters
+                                $image_url = preg_replace('/[?&]v=\d+/', '', $image_url);
+                                $image_url = preg_replace('/[?&]t=\d+/', '', $image_url);
+                                
+                                // Save base URL to database (without timestamp)
                                 $stmt = $pdo->prepare("
                                     INSERT INTO settings (setting_key, value) 
                                     VALUES ('homepage_team_image_url', ?)
@@ -204,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
                     <div class="space-y-4">
                         <div class="relative bg-gray-100 rounded-lg overflow-hidden" style="aspect-ratio: 16/9; max-height: 500px;">
                             <img 
-                                src="<?php echo htmlspecialchars($current_image_url); ?>" 
+                                src="<?php echo htmlspecialchars($current_image_url); ?>?v=<?php echo time(); ?>" 
                                 alt="Current Homepage Image"
                                 class="w-full h-full object-cover"
                                 id="current-image-preview">
@@ -337,7 +341,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
                         <div class="border-4 border-gray-300 rounded-lg overflow-hidden bg-gray-100" style="aspect-ratio: 16/9;">
                             <div class="relative w-full h-full">
                                 <img 
-                                    src="<?php echo htmlspecialchars($current_image_url); ?>" 
+                                    src="<?php echo htmlspecialchars($current_image_url); ?>?v=<?php echo time(); ?>" 
                                     alt="Desktop Preview"
                                     class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black/50"></div>
@@ -357,7 +361,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
                         <div class="border-4 border-gray-300 rounded-lg overflow-hidden bg-gray-100 mx-auto" style="width: 375px; aspect-ratio: 9/16;">
                             <div class="relative w-full h-full">
                                 <img 
-                                    src="<?php echo htmlspecialchars($current_image_url); ?>" 
+                                    src="<?php echo htmlspecialchars($current_image_url); ?>?v=<?php echo time(); ?>" 
                                     alt="Mobile Preview"
                                     class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black/50"></div>

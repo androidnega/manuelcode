@@ -35,6 +35,9 @@ try {
         $team_image_url = trim($result['value']);
         // Remove any trailing spaces or invalid characters
         $team_image_url = rtrim($team_image_url, " \t\n\r\0\x0B/");
+        // Remove any existing cache-busting parameters
+        $team_image_url = preg_replace('/[?&]v=\d+/', '', $team_image_url);
+        $team_image_url = preg_replace('/[?&]t=\d+/', '', $team_image_url);
     } else {
         // Fallback: Try to get from Cloudinary using public_id
         $cloudinaryHelper = new CloudinaryHelper($pdo);
@@ -72,7 +75,7 @@ $is_homepage = true;
       <!-- Image Section (Mobile) -->
       <div class="w-full overflow-hidden">
         <img 
-          src="<?php echo htmlspecialchars($team_image_url); ?>" 
+          src="<?php echo htmlspecialchars($team_image_url); ?>?v=<?php echo time(); ?>" 
           alt="ManuelCode"
           class="w-full h-auto block"
           style="max-width: 100%; height: auto; display: block;"
@@ -93,20 +96,14 @@ $is_homepage = true;
           
           <div class="prose prose-lg max-w-none text-left space-y-4">
             <p class="text-base text-gray-700 leading-relaxed">
-              ManuelCode is a professional software development company specializing in transforming ideas into elegant, 
-              high-performance digital solutions. We combine cutting-edge technology with innovative thinking to deliver 
-              software that drives business growth and exceeds expectations.
+              Professional software development company specializing in transforming ideas into elegant, 
+              high-performance digital solutions. We combine cutting-edge technology with innovative thinking 
+              to deliver software that drives business growth.
             </p>
             
             <p class="text-base text-gray-700 leading-relaxed">
-              Our expertise spans full-stack web development, mobile applications, cloud architecture, and custom software 
-              solutions. We work closely with clients to understand their unique needs and deliver tailored solutions that 
-              are scalable, secure, and maintainable.
-            </p>
-            
-            <p class="text-base text-gray-700 leading-relaxed">
-              At ManuelCode, we believe in clean code, fast delivery, and exceptional support. Every project is an opportunity 
-              to create something remarkable that makes a real difference for our clients and their users.
+              Our expertise spans full-stack web development, mobile applications, and custom software 
+              solutions. We work closely with clients to deliver scalable, secure, and maintainable solutions.
             </p>
           </div>
           
@@ -127,19 +124,19 @@ $is_homepage = true;
     </div>
     
     <!-- Desktop: Side by Side Layout -->
-    <div class="hidden lg:flex lg:items-stretch" style="min-height: 100vh;">
+    <div class="hidden lg:flex lg:items-stretch" id="desktop-hero-section">
       <!-- Image Section (Desktop - Left Side) -->
-      <div class="w-1/2 flex-shrink-0 bg-gray-100 flex items-center justify-center overflow-hidden">
+      <div class="w-1/2 flex-shrink-0 bg-gray-100 flex items-center justify-center overflow-hidden" id="image-container">
         <img 
-          src="<?php echo htmlspecialchars($team_image_url); ?>" 
+          src="<?php echo htmlspecialchars($team_image_url); ?>?v=<?php echo time(); ?>" 
           alt="ManuelCode"
           class="w-full h-full object-contain object-center"
-          style="max-height: 100vh;"
+          id="hero-image"
           loading="eager">
       </div>
       
       <!-- About Section (Desktop - Right Side) -->
-      <div class="w-1/2 flex items-center justify-center px-8 xl:px-12 py-12" style="min-height: 100vh;">
+      <div class="w-1/2 flex items-center justify-center px-8 xl:px-12 py-12" id="text-container">
         <div class="w-full max-w-2xl space-y-6">
           <div>
             <h1 class="text-5xl xl:text-6xl font-bold text-gray-900 mb-4">
@@ -152,20 +149,14 @@ $is_homepage = true;
           
           <div class="prose prose-lg max-w-none space-y-5">
             <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
-              ManuelCode is a professional software development company specializing in transforming ideas into elegant, 
-              high-performance digital solutions. We combine cutting-edge technology with innovative thinking to deliver 
-              software that drives business growth and exceeds expectations.
+              Professional software development company specializing in transforming ideas into elegant, 
+              high-performance digital solutions. We combine cutting-edge technology with innovative thinking 
+              to deliver software that drives business growth.
             </p>
             
             <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
-              Our expertise spans full-stack web development, mobile applications, cloud architecture, and custom software 
-              solutions. We work closely with clients to understand their unique needs and deliver tailored solutions that 
-              are scalable, secure, and maintainable.
-            </p>
-            
-            <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
-              At ManuelCode, we believe in clean code, fast delivery, and exceptional support. Every project is an opportunity 
-              to create something remarkable that makes a real difference for our clients and their users.
+              Our expertise spans full-stack web development, mobile applications, and custom software 
+              solutions. We work closely with clients to deliver scalable, secure, and maintainable solutions.
             </p>
           </div>
           
@@ -187,6 +178,46 @@ $is_homepage = true;
   </div>
 </section>
 
+
+<script>
+// Match text container height to image container height on desktop
+document.addEventListener('DOMContentLoaded', function() {
+    const imageContainer = document.getElementById('image-container');
+    const textContainer = document.getElementById('text-container');
+    const heroImage = document.getElementById('hero-image');
+    
+    if (imageContainer && textContainer && heroImage && window.innerWidth >= 1024) {
+        function matchHeights() {
+            // Wait for image to load
+            if (heroImage.complete) {
+                setHeights();
+            } else {
+                heroImage.addEventListener('load', setHeights);
+            }
+        }
+        
+        function setHeights() {
+            const imageHeight = imageContainer.offsetHeight;
+            textContainer.style.height = imageHeight + 'px';
+        }
+        
+        matchHeights();
+        
+        // Recalculate on window resize
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (window.innerWidth >= 1024) {
+                    setHeights();
+                } else {
+                    textContainer.style.height = 'auto';
+                }
+            }, 250);
+        });
+    }
+});
+</script>
 
 <?php 
 // Only include footer if not on homepage
