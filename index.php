@@ -62,12 +62,13 @@ $team_image_url = trim($team_image_url);
 ?>
 
 <!-- Section 1: Image Section -->
-<section class="w-full">
-  <div class="relative w-full" style="aspect-ratio: 16/9; min-height: 60vh;">
+<section class="w-full overflow-hidden">
+  <div class="relative w-full">
     <img 
       src="<?php echo htmlspecialchars($team_image_url); ?>" 
       alt="ManuelCode"
-      class="w-full h-full object-cover object-center"
+      class="w-full h-auto block"
+      style="max-width: 100%; height: auto; display: block;"
       loading="eager">
   </div>
 </section>
