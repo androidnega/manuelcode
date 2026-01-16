@@ -79,43 +79,43 @@ $welcome_messages = [
 $messages = [
     [
         'text' => 'Transforming ideas into elegant, high-performance digital solutions.',
-        'bg' => 'bg-blue-600',
+        'bg' => 'bg-blue-800',
         'text_color' => 'text-white',
-        'welcome_color' => 'text-blue-100',
-        'button_primary' => 'bg-white text-blue-600 hover:bg-blue-50',
-        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-blue-600'
+        'welcome_color' => 'text-blue-200',
+        'button_primary' => 'bg-white text-blue-800 hover:bg-blue-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-blue-800'
     ],
     [
         'text' => 'Building innovative software that drives business growth and success.',
-        'bg' => 'bg-green-600',
+        'bg' => 'bg-green-800',
         'text_color' => 'text-white',
-        'welcome_color' => 'text-green-100',
-        'button_primary' => 'bg-white text-green-600 hover:bg-green-50',
-        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-green-600'
+        'welcome_color' => 'text-green-200',
+        'button_primary' => 'bg-white text-green-800 hover:bg-green-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-green-800'
     ],
     [
         'text' => 'Creating custom solutions tailored to your unique business needs.',
-        'bg' => 'bg-purple-600',
+        'bg' => 'bg-purple-800',
         'text_color' => 'text-white',
-        'welcome_color' => 'text-purple-100',
-        'button_primary' => 'bg-white text-purple-600 hover:bg-purple-50',
-        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-purple-600'
+        'welcome_color' => 'text-purple-200',
+        'button_primary' => 'bg-white text-purple-800 hover:bg-purple-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-purple-800'
     ],
     [
         'text' => 'Delivering cutting-edge technology with exceptional user experience.',
-        'bg' => 'bg-amber-600',
+        'bg' => 'bg-amber-800',
         'text_color' => 'text-white',
-        'welcome_color' => 'text-amber-100',
-        'button_primary' => 'bg-white text-amber-600 hover:bg-amber-50',
-        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-amber-600'
+        'welcome_color' => 'text-amber-200',
+        'button_primary' => 'bg-white text-amber-800 hover:bg-amber-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-amber-800'
     ],
     [
         'text' => 'Empowering businesses through intelligent software development.',
-        'bg' => 'bg-indigo-600',
+        'bg' => 'bg-indigo-800',
         'text_color' => 'text-white',
-        'welcome_color' => 'text-indigo-100',
-        'button_primary' => 'bg-white text-indigo-600 hover:bg-indigo-50',
-        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-indigo-600'
+        'welcome_color' => 'text-indigo-200',
+        'button_primary' => 'bg-white text-indigo-800 hover:bg-indigo-50',
+        'button_secondary' => 'border-2 border-white text-white hover:bg-white hover:text-indigo-800'
     ]
 ];
 
@@ -184,7 +184,7 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
     <div class="hidden lg:flex lg:items-center lg:justify-center min-h-screen" id="desktop-hero-section">
       <div class="w-full max-w-7xl mx-auto flex items-center justify-center">
         <!-- Image Section (Desktop - Left Side) -->
-        <div class="w-1/2 flex-shrink-0 bg-white flex items-center justify-center px-8 xl:px-12" id="image-container">
+        <div class="w-1/2 flex-shrink-0 bg-white flex items-center justify-center px-8 xl:px-12" id="image-container" style="height: 100vh;">
           <img 
             src="<?php echo htmlspecialchars($team_image_url); ?>?v=<?php echo time(); ?>" 
             alt="ManuelCode"
@@ -194,8 +194,8 @@ $selected_welcome = $welcome_messages[$selected_index % count($welcome_messages)
         </div>
         
         <!-- About Section (Desktop - Right Side) -->
-        <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container">
-          <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 <?php echo $selected_message['bg']; ?> flex flex-col justify-center" id="text-card" style="min-height: 200px;">
+        <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container" style="height: 100vh;">
+          <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 <?php echo $selected_message['bg']; ?> flex flex-col justify-center" id="text-card" style="height: 100%;">
           <div>
             <p class="text-4xl xl:text-5xl <?php echo $selected_message['welcome_color']; ?> font-semibold mb-4">
               <?php echo htmlspecialchars($selected_welcome); ?>
@@ -247,21 +247,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function setHeights() {
-            // Get the exact height of the image container
-            const imageHeight = imageContainer.offsetHeight;
-            
-            // Set text container to match image container height exactly (no difference)
-            textContainer.style.height = imageHeight + 'px';
-            textContainer.style.minHeight = imageHeight + 'px';
-            textContainer.style.maxHeight = imageHeight + 'px';
-            
-            // Also ensure the card inside matches
+            // Both containers are already set to 100vh in HTML, just ensure card is properly sized
             textCard.style.height = '100%';
             textCard.style.display = 'flex';
             textCard.style.flexDirection = 'column';
             textCard.style.justifyContent = 'center';
         }
         
+        // Set heights immediately without waiting for image load
+        if (imageContainer && textContainer && textCard) {
+            setHeights();
+        }
+        
+        // Also set on image load as backup
         matchHeights();
         
         // Recalculate on window resize
