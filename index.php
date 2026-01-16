@@ -136,24 +136,23 @@ $is_homepage = true;
       
       <!-- About Section (Desktop - Right Side) -->
       <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container">
-        <div class="w-full max-w-2xl space-y-6 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 shadow-lg bg-white" id="text-card">
+        <div class="w-full max-w-2xl space-y-5 text-center border-2 border-gray-300 rounded-lg p-8 xl:p-10 shadow-lg bg-white flex flex-col justify-center" id="text-card">
           <div>
-            <h1 class="text-5xl xl:text-6xl font-bold text-gray-900 mb-4">
+            <h1 class="text-5xl xl:text-6xl font-bold text-gray-900 mb-3">
               ManuelCode
             </h1>
-            <p class="text-2xl xl:text-3xl text-[#536895] font-semibold mb-6">
+            <p class="text-2xl xl:text-3xl text-[#536895] font-semibold mb-4">
               Building Digital Excellence
             </p>
           </div>
           
           <div class="prose prose-lg max-w-none">
             <p class="text-lg xl:text-xl text-gray-700 leading-relaxed">
-              Professional software development company specializing in transforming ideas into elegant, 
-              high-performance digital solutions.
+              Transforming ideas into elegant, high-performance digital solutions.
             </p>
           </div>
           
-          <div class="pt-4">
+          <div class="pt-2">
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="store.php" class="inline-flex items-center justify-center px-8 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
                 Store
