@@ -308,9 +308,9 @@ if (isset($_SESSION['user_id'])) {
                         <i class="fas fa-credit-card mr-1"></i>Buy Now
                       </a>
                     <?php else: ?>
-                      <a href="guest_purchase.php?id=<?php echo $product['id']; ?>" 
+                      <a href="user_login.php?redirect=<?php echo urlencode('store.php'); ?>" 
                          class="flex-1 bg-[#536895] text-white py-1.5 px-3 rounded text-sm font-medium text-center">
-                        <i class="fas fa-credit-card mr-1"></i>Buy Now
+                        <i class="fas fa-sign-in-alt mr-1"></i>Login to Buy
                       </a>
                     <?php endif; ?>
                   <?php endif; ?>
@@ -496,7 +496,7 @@ if (isset($_SESSION['user_id'])) {
                       priceElement.className = 'text-xl sm:text-2xl font-bold text-green-600';
                       
                       // Update button to download
-                      const buyButton = product.querySelector('a[href*="process_payment"], a[href*="guest_purchase"]');
+                      const buyButton = product.querySelector('a[href*="process_payment"]');
                       if (buyButton) {
                           buyButton.innerHTML = '<i class="fas fa-download mr-2"></i>Download Free';
                           buyButton.className = 'flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors text-center';

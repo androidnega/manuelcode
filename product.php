@@ -412,15 +412,8 @@ include 'includes/header.php';
            <div class="mt-4 space-y-3">
              <div class="p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded">
                <i class="fas fa-info-circle mr-2"></i>
-               Please <a href="login" class="underline">login</a> to purchase this product.
+               Please <a href="user_login.php?redirect=<?php echo urlencode('product.php?id=' . $product['id']); ?>" class="underline font-semibold">login</a> to purchase this product.
              </div>
-             <div class="text-center">
-               <span class="text-gray-500 text-sm">or</span>
-             </div>
-             <a href="guest_purchase.php?id=<?php echo $product['id']; ?>" 
-                class="block w-full bg-[#F5A623] text-white px-6 py-3 rounded hover:bg-[#d88c1b] transition-colors text-center">
-               <i class="fas fa-shopping-cart mr-2"></i>Buy as Guest
-             </a>
              
              <!-- Coupon Information for Guests -->
              <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -823,7 +816,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = `download_free_product_guest_coupon.php?id=<?php echo $product['id']; ?>&coupon=${encodeURIComponent(coupon.code)}`;
             } else {
                 // Fallback to guest purchase page
-                window.location.href = 'guest_purchase.php?id=<?php echo $product['id']; ?>';
+                window.location.href = 'user_login.php?redirect=<?php echo urlencode('product.php?id=' . $product['id']); ?>';
             }
         };
     }

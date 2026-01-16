@@ -4,14 +4,19 @@ include '../includes/db.php';
 include '../config/payment_config.php';
 include '../includes/product_functions.php';
 
-// Check if user is logged in or has guest data
-$is_guest = !isset($_SESSION['user_id']);
-$guest_data = $_SESSION['guest_data'] ?? null;
-
-if ($is_guest && !$guest_data) {
-    header('Location: ../store.php');
+// Require user to be logged in - guest purchases are disabled
+if (!isset($_SESSION['user_id'])) {
+    $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    if ($product_id) {
+        header('Location: ../user_login.php?redirect=' . urlencode('product.php?id=' . $product_id . '&error=Please login to purchase products'));
+    } else {
+        header('Location: ../user_login.php?redirect=' . urlencode('store.php') . '&error=Please login to purchase products');
+    }
     exit();
 }
+
+$is_guest = false;
+$guest_data = null;
 
 // Get product ID from URL or session
 $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;

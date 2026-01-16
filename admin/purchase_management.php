@@ -825,7 +825,7 @@ $all_purchases = array_slice($all_purchases, $offset, $limit);
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-bold text-gray-800">Purchase Management</h1>
-            <p class="text-gray-600 mt-1">Manage and track all user and guest purchases</p>
+            <p class="text-gray-600 mt-1">Manage and track all user purchases (guest purchases are disabled - historical records only)</p>
           </div>
           <div class="flex items-center space-x-4">
           </div>

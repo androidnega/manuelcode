@@ -3,27 +3,15 @@ session_start();
 include 'includes/db.php';
 include 'includes/util.php';
 
-// Get site URL for absolute image paths
-$site_url = get_config('site_url', 'https://manuelcode.info');
-$base_url = rtrim($site_url, '/');
-
-// Get product ID from URL
+// Guest purchase has been disabled - redirect to login
 $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if (!$product_id) {
-    header('Location: store.php');
-    exit();
+if ($product_id) {
+    header('Location: user_login.php?redirect=' . urlencode('product.php?id=' . $product_id . '&error=Please login to purchase products'));
+} else {
+    header('Location: user_login.php?redirect=' . urlencode('store.php') . '&error=Please login to purchase products');
 }
-
-// Get product details
-$stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
-$stmt->execute([$product_id]);
-$product = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$product) {
-    header('Location: store.php');
-    exit();
-}
+exit();
 
 // Check for applied coupon in session and calculate discounted amount
 $original_price = $product['price'];
