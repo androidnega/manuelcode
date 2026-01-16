@@ -59,11 +59,14 @@ if (empty($team_image_url)) {
 
 // Ensure URL is properly formatted (trim again just in case)
 $team_image_url = trim($team_image_url);
+
+// Set flag to indicate this is the homepage (for header/footer conditional display)
+$is_homepage = true;
 ?>
 
 <!-- Combined Section: Image and About (Side by side on desktop, stacked on mobile) -->
-<section class="w-full bg-white">
-  <div class="max-w-7xl mx-auto">
+<section class="w-full bg-white min-h-screen">
+  <div class="w-full">
     <!-- Mobile: Stacked Layout -->
     <div class="block lg:hidden">
       <!-- Image Section (Mobile) -->
@@ -109,12 +112,13 @@ $team_image_url = trim($team_image_url);
           
           <div class="pt-6">
             <div class="flex flex-col gap-3">
-              <a href="about.php" class="inline-flex items-center justify-center px-6 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
-                Learn More About Us
-                <i class="fas fa-arrow-right ml-2"></i>
+              <a href="store.php" class="inline-flex items-center justify-center px-6 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
+                Store
+                <i class="fas fa-store ml-2"></i>
               </a>
-              <a href="contact.php" class="inline-flex items-center justify-center px-6 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
-                Get In Touch
+              <a href="about.php" class="inline-flex items-center justify-center px-6 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
+                About Us
+                <i class="fas fa-info-circle ml-2"></i>
               </a>
             </div>
           </div>
@@ -123,20 +127,20 @@ $team_image_url = trim($team_image_url);
     </div>
     
     <!-- Desktop: Side by Side Layout -->
-    <div class="hidden lg:flex lg:items-stretch lg:min-h-[70vh]">
+    <div class="hidden lg:flex lg:items-stretch" style="min-height: 100vh;">
       <!-- Image Section (Desktop - Left Side) -->
-      <div class="w-1/2 flex-shrink-0 overflow-hidden">
+      <div class="w-1/2 flex-shrink-0 bg-gray-100 flex items-center justify-center overflow-hidden">
         <img 
           src="<?php echo htmlspecialchars($team_image_url); ?>" 
           alt="ManuelCode"
-          class="w-full h-full object-cover object-center"
-          style="max-height: 70vh; object-fit: cover; object-position: center;"
+          class="w-full h-full object-contain object-center"
+          style="max-height: 100vh;"
           loading="eager">
       </div>
       
       <!-- About Section (Desktop - Right Side) -->
-      <div class="w-1/2 flex items-center px-8 xl:px-12 py-12">
-        <div class="w-full space-y-6">
+      <div class="w-1/2 flex items-center justify-center px-8 xl:px-12 py-12" style="min-height: 100vh;">
+        <div class="w-full max-w-2xl space-y-6">
           <div>
             <h1 class="text-5xl xl:text-6xl font-bold text-gray-900 mb-4">
               ManuelCode
@@ -167,12 +171,13 @@ $team_image_url = trim($team_image_url);
           
           <div class="pt-6">
             <div class="flex flex-col sm:flex-row gap-4">
-              <a href="about.php" class="inline-flex items-center justify-center px-8 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
-                Learn More About Us
-                <i class="fas fa-arrow-right ml-2"></i>
+              <a href="store.php" class="inline-flex items-center justify-center px-8 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
+                Store
+                <i class="fas fa-store ml-2"></i>
               </a>
-              <a href="contact.php" class="inline-flex items-center justify-center px-8 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
-                Get In Touch
+              <a href="about.php" class="inline-flex items-center justify-center px-8 py-3 border-2 border-[#536895] text-[#536895] font-semibold rounded-lg hover:bg-[#536895] hover:text-white transition-all duration-300">
+                About Us
+                <i class="fas fa-info-circle ml-2"></i>
               </a>
             </div>
           </div>
@@ -182,115 +187,10 @@ $team_image_url = trim($team_image_url);
   </div>
 </section>
 
-<!-- Services Section -->
-<section class="py-16 bg-gray-50">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        Our <span class="text-[#536895]">Services</span>
-      </h2>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-        Comprehensive software solutions tailored to your business needs
-      </p>
-    </div>
-    
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Web Development -->
-      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6">
-        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
-          <i class="fas fa-code text-white text-xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Web Development</h3>
-        <p class="text-gray-600 mb-4">Modern, responsive websites and web applications built with cutting-edge technologies.</p>
-        <ul class="space-y-2 text-sm text-gray-600">
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>React & Vue.js</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Node.js & PHP</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Responsive Design</li>
-        </ul>
-      </div>
 
-      <!-- Mobile Development -->
-      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6">
-        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-4">
-          <i class="fas fa-mobile-alt text-white text-xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Mobile Apps</h3>
-        <p class="text-gray-600 mb-4">Native and cross-platform mobile applications for iOS and Android platforms.</p>
-        <ul class="space-y-2 text-sm text-gray-600">
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>React Native</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flutter</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Native iOS/Android</li>
-        </ul>
-      </div>
-
-      <!-- API Development -->
-      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6">
-        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mb-4">
-          <i class="fas fa-cogs text-white text-xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">API Development</h3>
-        <p class="text-gray-600 mb-4">Robust RESTful APIs and microservices for seamless integration.</p>
-        <ul class="space-y-2 text-sm text-gray-600">
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>RESTful APIs</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>GraphQL</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Microservices</li>
-        </ul>
-      </div>
-
-      <!-- Database Design -->
-      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6">
-        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mb-4">
-          <i class="fas fa-database text-white text-xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Database Design</h3>
-        <p class="text-gray-600 mb-4">Optimized database architecture and data management solutions.</p>
-        <ul class="space-y-2 text-sm text-gray-600">
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>MySQL & PostgreSQL</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>MongoDB</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Redis</li>
-        </ul>
-      </div>
-
-      <!-- Cloud Solutions -->
-      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6">
-        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center mb-4">
-          <i class="fas fa-cloud text-white text-xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Cloud Solutions</h3>
-        <p class="text-gray-600 mb-4">Scalable cloud infrastructure and deployment solutions.</p>
-        <ul class="space-y-2 text-sm text-gray-600">
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>AWS & Azure</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Docker & Kubernetes</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>CI/CD Pipelines</li>
-        </ul>
-      </div>
-
-      <!-- Digital Products -->
-      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6">
-        <div class="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center mb-4">
-          <i class="fas fa-shopping-cart text-white text-xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Digital Products</h3>
-        <p class="text-gray-600 mb-4">Ready-to-use software products and digital solutions.</p>
-        <ul class="space-y-2 text-sm text-gray-600">
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>E-commerce Platforms</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>CMS Solutions</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Custom Software</li>
-        </ul>
-      </div>
-    </div>
-    
-    <div class="text-center mt-12">
-      <a href="services.php" class="inline-flex items-center px-8 py-4 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300 transform hover:scale-105">
-        View All Services
-        <i class="fas fa-arrow-right ml-2"></i>
-      </a>
-    </div>
-  </div>
-</section>
-
-
-
-
-
-<?php include 'includes/footer.php'; ?>
+<?php 
+// Only include footer if not on homepage
+if (!isset($is_homepage) || !$is_homepage) {
+    include 'includes/footer.php';
+}
+?>

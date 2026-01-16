@@ -34,6 +34,11 @@ if (!function_exists('isCurrentPage')) {
     }
 }
 
+// Check if we're on the homepage (default to false if not set)
+if (!isset($is_homepage)) {
+    $is_homepage = (basename($_SERVER['PHP_SELF']) === 'index.php');
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -1390,6 +1395,11 @@ if (function_exists('isLoggedIn') && isLoggedIn()) {
 
 
 <!-- Desktop Navigation Only -->
+<?php 
+// Check if we're on the homepage
+$is_homepage = isset($is_homepage) && $is_homepage;
+if (!$is_homepage): 
+?>
 <div class="hidden lg:block relative z-[99999]">
   <nav class="bg-[#f8f9fa] backdrop-blur-sm border-b border-gray-200 shadow-sm relative z-[99999]">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
@@ -1496,8 +1506,10 @@ if (function_exists('isLoggedIn') && isLoggedIn()) {
     </div>
   </nav>
 </div>
+<?php endif; ?>
 
 <!-- Mobile Navigation (Keep existing for mobile) -->
+<?php if (!$is_homepage): ?>
 <div class="lg:hidden">
   <nav class="bg-white shadow-md relative nav-container z-[9999]">
     <div class="max-w-6xl mx-auto px-4">
@@ -1633,6 +1645,7 @@ if (function_exists('isLoggedIn') && isLoggedIn()) {
     </div>
   </nav>
 </div>
+<?php endif; ?>
 
 <script>
 // Mobile Navigation JavaScript
