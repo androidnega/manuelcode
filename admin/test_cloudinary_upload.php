@@ -4,9 +4,13 @@
  * Handles test image uploads to Cloudinary
  */
 
-// Set error reporting for debugging (remove in production)
+// Enable error logging
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // Don't display errors, but log them
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+// Start output buffering to catch any unexpected output
+ob_start();
 
 header('Content-Type: application/json');
 session_start();
@@ -46,27 +50,42 @@ $base_dir = dirname(__DIR__);
 $db_file = $base_dir . '/includes/db.php';
 $cloudinary_file = $base_dir . '/includes/cloudinary_helper.php';
 
-if (!file_exists($db_file)) {
-    http_response_code(500);
-    error_log("test_cloudinary_upload.php: db.php not found at $db_file");
-    echo json_encode(['success' => false, 'error' => 'Database configuration not found.']);
-    exit;
-}
-
-if (!file_exists($cloudinary_file)) {
-    http_response_code(500);
-    error_log("test_cloudinary_upload.php: cloudinary_helper.php not found at $cloudinary_file");
-    echo json_encode(['success' => false, 'error' => 'Cloudinary helper not found.']);
-    exit;
-}
-
-include $db_file;
-include $cloudinary_file;
+// Clear any output before including files
+ob_clean();
 
 try {
+    if (!file_exists($db_file)) {
+        throw new Exception("Database file not found at: $db_file");
+    }
+    
+    if (!file_exists($cloudinary_file)) {
+        throw new Exception("Cloudinary helper file not found at: $cloudinary_file");
+    }
+    
+    require_once $db_file;
+    require_once $cloudinary_file;
+    
+    // Verify database connection
+    if (!isset($pdo)) {
+        throw new Exception("Database connection not established");
+    }
+    
+} catch (Exception $e) {
+    ob_end_clean();
+    http_response_code(500);
+    error_log("test_cloudinary_upload.php include error: " . $e->getMessage());
+    echo json_encode(['success' => false, 'error' => 'Configuration error: ' . $e->getMessage()]);
+    exit;
+}
+
+try {
+    // Clear any output before processing
+    ob_clean();
+    
     $cloudinaryHelper = new CloudinaryHelper($pdo);
     
     if (!$cloudinaryHelper->isEnabled()) {
+        ob_end_clean();
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Cloudinary is not enabled. Please enable it in System Settings.']);
         exit;
@@ -92,6 +111,21 @@ try {
         exit;
     }
     
+    // Verify file exists and is readable
+    if (!file_exists($_FILES['test_image']['tmp_name'])) {
+        ob_end_clean();
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Temporary file not found. Upload may have failed.']);
+        exit;
+    }
+    
+    if (!is_readable($_FILES['test_image']['tmp_name'])) {
+        ob_end_clean();
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Temporary file is not readable.']);
+        exit;
+    }
+    
     // Upload to Cloudinary
     $uploadResult = $cloudinaryHelper->uploadImage(
         $_FILES['test_image']['tmp_name'],
@@ -101,6 +135,9 @@ try {
             'overwrite' => true
         ]
     );
+    
+    // Clear any output before sending response
+    ob_end_clean();
     
     if ($uploadResult && isset($uploadResult['url'])) {
         echo json_encode([
@@ -114,25 +151,32 @@ try {
         ]);
     } else {
         http_response_code(500);
+        $error_msg = 'Failed to upload image to Cloudinary.';
+        if (is_array($uploadResult) && isset($uploadResult['error'])) {
+            $error_msg .= ' Error: ' . $uploadResult['error'];
+        }
+        error_log("Cloudinary upload failed. Result: " . json_encode($uploadResult));
         echo json_encode([
             'success' => false,
-            'error' => 'Failed to upload image to Cloudinary. Please check your Cloudinary configuration and error logs.'
+            'error' => $error_msg . ' Please check your Cloudinary configuration and error logs.'
         ]);
     }
     
 } catch (Exception $e) {
+    ob_end_clean();
     http_response_code(500);
     $error_message = $e->getMessage();
     $error_trace = $e->getTraceAsString();
     error_log("Cloudinary test upload error: " . $error_message);
     error_log("Stack trace: " . $error_trace);
     
-    // Don't expose full error details to client in production
+    // Return more detailed error for debugging (can be removed in production)
     echo json_encode([
         'success' => false,
-        'error' => 'An error occurred during upload. Please check error logs for details.'
+        'error' => 'An error occurred: ' . $error_message
     ]);
 } catch (Error $e) {
+    ob_end_clean();
     http_response_code(500);
     $error_message = $e->getMessage();
     $error_trace = $e->getTraceAsString();
@@ -141,7 +185,15 @@ try {
     
     echo json_encode([
         'success' => false,
-        'error' => 'A fatal error occurred. Please check error logs.'
+        'error' => 'A fatal error occurred: ' . $error_message
+    ]);
+} catch (Throwable $e) {
+    ob_end_clean();
+    http_response_code(500);
+    error_log("Cloudinary test upload throwable error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'error' => 'An unexpected error occurred: ' . $e->getMessage()
     ]);
 }
 ?>

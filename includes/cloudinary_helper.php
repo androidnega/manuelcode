@@ -108,7 +108,7 @@ class CloudinaryHelper {
                 $signature = $this->generateSignature($params);
                 $params['signature'] = $signature;
             } else {
-                error_log("Cloudinary upload error: No upload preset and missing API credentials");
+                error_log("Cloudinary upload error: No upload preset and missing API credentials. Cloud Name: " . ($this->cloud_name ?? 'empty') . ", API Key: " . (!empty($this->api_key) ? 'set' : 'empty') . ", API Secret: " . (!empty($this->api_secret) ? 'set' : 'empty'));
                 return false;
             }
             
