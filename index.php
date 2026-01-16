@@ -73,12 +73,11 @@ $is_homepage = true;
     <!-- Mobile: Stacked Layout -->
     <div class="block lg:hidden">
       <!-- Image Section (Mobile) -->
-      <div class="w-full overflow-hidden">
+      <div class="w-full overflow-hidden bg-white flex items-center justify-center py-8">
         <img 
           src="<?php echo htmlspecialchars($team_image_url); ?>?v=<?php echo time(); ?>" 
           alt="ManuelCode"
-          class="w-full h-auto block"
-          style="max-width: 100%; height: auto; display: block;"
+          class="max-w-full max-h-[60vh] object-contain object-center block mx-auto"
           loading="eager">
       </div>
       
@@ -124,20 +123,20 @@ $is_homepage = true;
     </div>
     
     <!-- Desktop: Side by Side Layout -->
-    <div class="hidden lg:flex lg:items-stretch" id="desktop-hero-section">
+    <div class="hidden lg:flex lg:items-center lg:justify-center min-h-screen" id="desktop-hero-section">
       <!-- Image Section (Desktop - Left Side) -->
-      <div class="w-1/2 flex-shrink-0 bg-gray-100 flex items-center justify-center overflow-hidden" id="image-container">
+      <div class="w-1/2 flex-shrink-0 bg-white flex items-center justify-center" id="image-container">
         <img 
           src="<?php echo htmlspecialchars($team_image_url); ?>?v=<?php echo time(); ?>" 
           alt="ManuelCode"
-          class="w-full h-full object-contain object-center"
+          class="max-w-full max-h-screen object-contain object-center"
           id="hero-image"
           loading="eager">
       </div>
       
       <!-- About Section (Desktop - Right Side) -->
-      <div class="w-1/2 flex items-center justify-center px-8 xl:px-12 py-12" id="text-container">
-        <div class="w-full max-w-2xl space-y-6">
+      <div class="w-1/2 flex items-center justify-center px-8 xl:px-12" id="text-container">
+        <div class="w-full max-w-2xl space-y-6 text-center">
           <div>
             <h1 class="text-5xl xl:text-6xl font-bold text-gray-900 mb-4">
               ManuelCode
@@ -161,7 +160,7 @@ $is_homepage = true;
           </div>
           
           <div class="pt-6">
-            <div class="flex flex-col sm:flex-row gap-4">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="store.php" class="inline-flex items-center justify-center px-8 py-3 bg-[#536895] text-white font-semibold rounded-lg hover:bg-[#4a5a7a] transition-all duration-300">
                 Store
                 <i class="fas fa-store ml-2"></i>
@@ -197,7 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function setHeights() {
+            // Get the actual height of the image container (which adapts to image)
             const imageHeight = imageContainer.offsetHeight;
+            // Set text container to match image container height exactly
             textContainer.style.height = imageHeight + 'px';
         }
         

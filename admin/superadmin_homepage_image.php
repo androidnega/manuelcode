@@ -91,12 +91,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['homepage_image'])) {
                         if (!$cloudinaryHelper->isEnabled()) {
                             $error_message = 'Cloudinary is enabled but not properly configured. Please check your Cloudinary settings in System Settings.';
                         } else {
+                            // Delete old image first to ensure it updates
+                            try {
+                                $oldPublicId = 'homepage/team';
+                                $cloudinaryHelper->deleteImage($oldPublicId);
+                                error_log("Attempted to delete old image with public_id: " . $oldPublicId);
+                            } catch (Exception $e) {
+                                error_log("Note: Could not delete old image (may not exist): " . $e->getMessage());
+                            }
+                            
                             $uploadResult = $cloudinaryHelper->uploadImage(
                                 $_FILES['homepage_image']['tmp_name'], 
                                 'homepage', 
                                 [
-                                    'public_id' => 'team',
-                                    'overwrite' => true
+                                    'public_id' => 'team'
                                 ]
                             );
                             
