@@ -274,6 +274,7 @@ if (!isset($is_homepage)) {
   <!-- Defer Non-Critical Scripts -->
   <script src="assets/js/session-timeout.js" defer></script>
   <script src="assets/js/analytics.js" defer></script>
+  <script src="assets/js/mouse-follower.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   
@@ -1256,6 +1257,20 @@ if (!isset($is_homepage)) {
             line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+          }
+          
+          /* Mouse Follower - Black Circle */
+          #mouse-follower {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background-color: #000000;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999999;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            will-change: transform;
           }
         </style>
         
